@@ -1,0 +1,52 @@
+{% extends 'general/components/base.html' %}
+{% load static %}
+
+{% block site_title %}User list | {% endblock %}
+
+{% block content %}
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h5>รายชื่อผู้ใช้งาน</h5>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h5>รายชื่อผู้ใช้งาน</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>NameTH</th>
+                                    <th>NameEN</th>
+                                    <th>Department</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                <tr>
+                                    <td>{{ user.nameTH }}</td>
+                                    <td>{{ user.nameEN }}</td>
+                                    <td>{{ user.department.name }}</td>
+                                    <td>{{ user.phone_number }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.role }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3">ไม่มีข้อมูลผู้ใช้งาน</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,675 @@
+{% extends 'general/components/base.html' %}
+{% load static %}
+
+{% block content %}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Dashboard</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+  
+    <section class="section dashboard">
+      <div class="row">
+  
+        <div class="col-lg-12">
+          <div class="row">
+            <!-- New Card -->
+            <div class="col-xxl-3 col-md-6">
+              <div class="card info-card new-card">
+  
+                <div class="card-body">
+                    <h6 class="card-title">ใบแจ้งซ่อมใหม่ </h6>
+  
+                    <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-chat-square-dots"></i>
+                    </div>
+                    <div class="ps-5">
+                        <h6>1 <span class="text-muted pt-2 ps-1">รายการ</span></h6>
+                    </div>
+                    </div>
+                </div>
+  
+                </div>
+            </div><!-- End New Card -->
+  
+            <!-- Wait Card -->
+            <div class="col-xxl-3 col-md-6">
+                <div class="card info-card wait-card">
+  
+                <div class="card-body">
+                    <h6 class="card-title">ใบแจ้งซ่อมรอแก้ไข </h6>
+  
+                    <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-wrench"></i>
+                    </div>
+                    <div class="ps-5">
+                        <h6>8 <span class="text-muted pt-2 ps-1">รายการ</span></h6>
+                    </div>
+                    </div>
+                </div>
+  
+                </div>
+            </div><!-- End Wait Card -->
+  
+            <!-- Month Card -->
+            <div class="col-xxl-3 col-xl-12">
+  
+                <div class="card info-card month-card">
+  
+                <div class="card-body">
+                    <h6 class="card-title">ใบแจ้งซ่อมประจำเดือน </h6>
+  
+                    <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bx bxs-calendar"></i>
+                    </div>
+                    <div class="ps-5">
+                        <h6>10 <span class="text-muted pt-2 ps-1">รายการ</span></h6>
+                    </div>
+                    </div>
+  
+                </div>
+                </div>
+  
+            </div><!-- End Month Card -->
+  
+            <!-- Years Card -->
+            <div class="col-xxl-3 col-xl-12">
+  
+                <div class="card info-card years-card">
+  
+                <div class="card-body">
+                    <h6 class="card-title">ใบแจ้งซ่อมประจำปี </h6>
+  
+                    <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-clipboard-data"></i>
+                    </div>
+                    <div class="ps-5">
+                        <h6>145 <span class="text-muted pt-2 ps-1">รายการ</span></h6>
+                    </div>
+                    </div>
+  
+                </div>
+                </div>
+  
+            </div><!-- End Years Card -->
+  
+          </div>
+        </div>
+  
+        <div class="col-lg-12">
+          <div class="row">
+            <!-- Recent Sales -->
+            <div class="col-lg-12">
+              <div class="card recent-sales overflow-auto">
+  
+                <div class="card-body">
+                  <h5 class="card-title" style="color: #2f5f98;">รายการใบแจ้งซ่อม</h5>
+                      <ul class="nav nav-tabs" id="myTab" role="tablist">
+                          <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab" aria-controls="tab1" aria-selected="true">รอรับงาน</button>
+                          </li>
+                          <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab" aria-controls="tab2" aria-selected="false">รอการแก้ไข</button>
+                          </li>
+                          <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab" aria-controls="tab3" aria-selected="false">แก้ไขเรียบร้อย</button>
+                          </li>
+                          <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" type="button" role="tab" aria-controls="tab4" aria-selected="false">รายการยกเลิก</button>
+                          </li>
+                      </ul>
+                      <!-- Table with stripped rows -->
+                      <div class="tab-content" id="myTabContent">
+                          <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
+                          <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff;">
+                          <table id="table-waiting" class="table table-striped mt-3" style="font-size: 14px;">
+                              <thead class="text-center">
+                              <tr>
+                                  <th>เลขที่ใบแจ้งซ่อม</th>
+                                  <th>หน่วยงาน</th>
+                                  <th>ผู้แจ้ง</th>
+                                  <th>รายละเอียดปัญหา</th>
+                                  <th>วันเวลาที่แจ้ง</th>
+                                  <th>สถานะ</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr class="text-center">
+                                  <td><a href="">MIT67-0024</a></td>
+                                  <td>MN</td>
+                                  <td>คุณปรัชญา สุขเผือก</td>
+                                  <td>เม้าส์เลื่อนไม่ได้ ของกล้องวงจรปิด</td>
+                                  <td>30 ส.ค. 2567 14:06</td>
+                                  <td class="text-center" style="width: 10%;"><i class="fas fa-stopwatch fa-shake"></i></td>
+                              </tr>
+                              <tr class="text-center">
+                                  <td><a href="">MIT67-0023</a></td>
+                                  <td>FA</td>
+                                  <td>สำนักงาน 1 ชั้น 1</td>
+                                  <td>ปริ้นท์ติดขัดและสะดุดในบางจังหวะ</td>
+                                  <td>30 ส.ค. 2567 13:05</td>
+                                  <td class="text-center"><i class="fas fa-stopwatch fa-shake"></i></td>
+                              </tr>
+                              </tbody>
+                          </table>
+                          </div>
+                          </div>
+  
+                          <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+                          <table id="table-process" class="table table-striped mt-3" style="font-size: 14px;">
+                              <thead class="text-center">
+                              <tr>
+                                  <th scope="col">เลขที่ใบแจ้งซ่อม</th>
+                                  <th scope="col">หน่วยงาน</th>
+                                  <th scope="col">ผู้แจ้ง</th>
+                                  <th scope="col">รายละเอียดปัญหา</th>
+                                  <th scope="col">วันเวลาที่แจ้ง</th>
+                                  <th scope="col">วันเวลาที่รับงาน</th>
+                                  <th scope="col">วันที่อัพเดต</th>
+                                  <th scope="col">สถานะ</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                                  <tr class="text-center">
+                                      <td><a href="">MIT67-0022</a></td>
+                                      <td>MN</td>
+                                      <td>คุณปรัชญา สุขเผือก</td>
+                                      <td>เม้าส์เลื่อนไม่ได้ ของกล้องวงจรปิด</td>
+                                      <td>30 ส.ค.2567 14:06</td>
+                                      <td>30 ส.ค.2567 14:06</td>
+                                      <td>30 ส.ค.2567 14:06</td>
+                                      <td class="text-center" style="width: 5%;"><i class="fas fa-spinner fa-spin-pulse" style="color: rgb(41, 48, 241);"></i></td>
+                                  </tr>
+                                  <tr class="text-center">
+                                      <td><a href="">MIT67-0021</a></td>
+                                      <td>FA</td>
+                                      <td>สำนักงาน 1 ชั้น 1</td>
+                                      <td>ปริ้นท์ติดขัดและสะดุดในบางจังหวะ</td>
+                                      <td>30 ส.ค. 2567 13:05</td>
+                                      <td>30 ส.ค. 2567 13:05</td>
+                                      <td>30 ส.ค. 2567 13:05</td>
+                                      <td class="text-center"><i class="fas fa-spinner fa-spin-pulse" style="color: rgb(41, 48, 241);"></i></td>
+                                  </tr>
+                                  <tr class="text-center">
+                                      <td><a href="">MIT67-0020</a></td>
+                                      <td>MN</td>
+                                      <td>ฝ่ายความมั่นคงของมนุษย์</td>
+                                      <td>กล้องเบอร์ IPC022 เสียจำนวน 1 ตัว</td>
+                                      <td>29 ส.ค. 2567 15:20</td>
+                                      <td>29 ส.ค. 2567 15:20</td>
+                                      <td>29 ส.ค. 2567 15:20</td>
+                                      <td class="text-center"><i class="fas fa-spinner fa-spin-pulse" style="color: rgb(41, 48, 241);"></i></td>
+                                  </tr>
+                                  <tr class="text-center">
+                                      <td><a href="">MIT67-0019</a></td>
+                                      <td>DC</td>
+                                      <td>คุณปรัชญา สุขเผือก</td>
+                                      <td>เม้าส์เลื่อนไม่ได้ ของกล้องวงจรปิด</td>
+                                      <td>30 ส.ค.2567 14:06</td>
+                                      <td>30 ส.ค.2567 14:06</td>
+                                      <td>30 ส.ค.2567 14:06</td>
+                                      <td class="text-center"><i class="fas fa-spinner fa-spin-pulse" style="color: rgb(41, 48, 241);"></i></td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                          </div>
+                          <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab" style="overflow-x: auto;">
+                              <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff; overflow-x: auto;">
+                                  <table id="table-success" class="table table-striped mt-3" style="font-size: 14px;">
+                                      <thead class="text-center">
+                                          <tr>
+                                              <th scope="col" style="width: 10%;">เลขที่ใบแจ้งซ่อม</th>
+                                              <th scope="col" style="width: 10%;">หน่วยงาน</th>
+                                              <th scope="col">ผู้แจ้ง</th>
+                                              <th scope="col" style="width: 20%;">รายละเอียดปัญหา</th>
+                                              <th scope="col">ผู้ดำเนินการ</th>
+                                              <th scope="col">วันที่แจ้ง</th>
+                                              <th scope="col">วันที่รับงาน</th>
+                                              <th scope="col">วันที่เสร็จ</th>
+                                              <th scope="col">รวมเวลาแก้ไข</th>
+                                              <th scope="col" style="width: 5%;">สถานะ</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                          <tr class="text-center">
+                                              <td style="width: 10%;"><a>MIT67-0018</a></td>
+                                              <td>MN</td>
+                                              <td style="text-align: left;">คุณปรัชญา สุขเผือก</td>
+                                              <td style="text-align: left;">เม้าส์เลื่อนไม่ได้ ของกล้องวงจรปิด</td>
+                                              <td>ธีรวัฒน์</td>
+                                              <td>30 ส.ค.2567 </td>
+                                              <td>30 ส.ค.2567 </td>
+                                              <td>30 ส.ค.2567 </td>
+                                              <td>0 day 2 hr 42 min</td>
+                                              <td class="text-center" style="width: 5%;"><i class="fa-solid fa-circle-check" style="color: rgb(54, 187, 54);"></i></td>
+                                          </tr>
+                                          <tr class="text-center">
+                                              <td><a href="">MIT67-0017</a></td>
+                                              <td>FA</td>
+                                              <td style="text-align: left;">สำนักงาน 1 ชั้น 1</td>
+                                              <td style="text-align: left;">ปริ้นท์ติดขัดและสะดุดในบางจังหวะ</td>
+                                              <td>ธีรวัฒน์</td>
+                                              <td>30 ส.ค. 2567</td>
+                                              <td>30 ส.ค. 2567</td>
+                                              <td>30 ส.ค. 2567</td>
+                                              <td>0 day 2 hr 42 min</td>
+                                              <td class="text-center"><i class="fa-solid fa-circle-check" style="color: rgb(54, 187, 54);"></i></td>
+                                          </tr>
+                                          <tr class="text-center">
+                                              <td><a href="">MIT67-0016</a></td>
+                                              <td>MN</td>
+                                              <td style="text-align: left;">ฝ่ายความมั่นคงของมนุษย์</td>
+                                              <td style="text-align: left;">กล้องเบอร์ IPC022 เสียจำนวน 1 ตัว</td>
+                                              <td>ธีรวัฒน์</td>
+                                              <td>29 ส.ค. 2567</td>
+                                              <td>29 ส.ค. 2567</td>
+                                              <td>29 ส.ค. 2567</td>
+                                              <td>0 day 2 hr 42 min</td>
+                                              <td class="text-center"><i class="fa-solid fa-circle-check" style="color: rgb(54, 187, 54);"></i></td>
+                                          </tr>
+                                      </tbody>
+                                  </table>
+                              </div>
+                          </div>
+                          <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4-tab" style="overflow-x: auto;">
+                              <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff; overflow-x: auto;">
+                                  <table id="table-cancel" class="table table-striped mt-3" style="font-size: 14px; ">
+                                      <thead class="text-center">
+                                      <tr>
+                                          <th scope="col">เลขที่ใบแจ้งซ่อม</th>
+                                          <th scope="col">หน่วยงาน</th>
+                                          <th scope="col">ผู้แจ้ง</th>
+                                          <th scope="col">รายละเอียดปัญหา</th>
+                                          <th scope="col">วันเวลาที่แจ้ง</th>
+                                          <th scope="col">วันที่รับงาน</th>
+                                          <th scope="col">วันที่เสร็จ</th>
+                                          <th scope="col">รวมเวลาแก้ไข</th>
+                                          <th scope="col">สถานะ</th>
+                                      </tr>
+                                      </thead>
+                                      <tbody>
+                                          <tr class="text-center">
+                                              <td><a href="">MIT67-0024</a></td>
+                                              <td>MN</td>
+                                              <td style="text-align: left;">คุณปรัชญา สุขเผือก</td>
+                                              <td style="text-align: left;">เม้าส์เลื่อนไม่ได้ ของกล้องวงจรปิด</td>
+                                              <td>30 ส.ค.2567 14:06</td>
+                                              <td>30 ส.ค.2567 14:06</td>
+                                              <td>30 ส.ค.2567 14:06</td>
+                                              <td>30 ส.ค.2567 14:06</td>
+                                              <td class="text-center"><i class="fa-solid fa-circle-xmark" style="color: rgb(254, 81, 81);"></i></td>
+                                          </tr>
+                                          <tr class="text-center">
+                                              <td><a href="">MIT67-0010</a></td>
+                                              <td>FA</td>
+                                              <td>สำนักงาน 1 ชั้น 1</td>
+                                              <td>ปริ้นท์ติดขัดและสะดุดในบางจังหวะ</td>
+                                              <td>30 ส.ค. 2567 13:05</td>
+                                              <td>30 ส.ค. 2567 13:05</td>
+                                              <td>30 ส.ค. 2567 13:05</td>
+                                              <td>30 ส.ค. 2567 13:05</td>
+                                              <td class="text-center"><i class="fa-solid fa-circle-xmark" style="color: rgb(254, 81, 81);"></i></td>
+                                          </tr>
+                                          <tr class="text-center">
+                                              <td><a href="">MIT67-0005</a></td>
+                                              <td>MN</td>
+                                              <td>ฝ่ายความมั่นคงของมนุษย์</td>
+                                              <td>กล้องเบอร์ IPC022 เสียจำนวน 1 ตัว</td>
+                                              <td>29 ส.ค. 2567 15:20</td>
+                                              <td>29 ส.ค. 2567 15:20</td>
+                                              <td>29 ส.ค. 2567 15:20</td>
+                                              <td>29 ส.ค. 2567 15:20</td>
+                                              <td class="text-center"><i class="fa-solid fa-circle-xmark" style="color: rgb(254, 81, 81);"></i></td>
+                                          </tr>
+                                          <tr class="text-center">
+                                              <td style="width: 10%;"><a href="">MIT67-0006</a></td>
+                                              <td style="width: 10%;">DC</td>
+                                              <td style="width: 15%;">คุณปรัชญา สุขเผือก</td>
+                                              <td style="width: 30%;">เม้าส์เลื่อนไม่ได้ ของกล้องวงจรปิด</td>
+                                              <td style="width: 10%;">30 ส.ค.2567 14:06</td>
+                                              <td style="width: 10%;">30 ส.ค.2567 14:06</td>
+                                              <td style="width: 10%;">30 ส.ค.2567 14:06</td>
+                                              <td style="width: 10%;">30 ส.ค.2567 14:06</td>
+                                              <td class="text-center" style="width: 5%;"><i class="fa-solid fa-circle-xmark" style="color: rgb(254, 81, 81);"></i></td>
+                                          </tr>
+                                      </tbody>
+                                  </table>
+                              </div>
+                          </div>
+                      </div>
+                </div>
+              </div>
+            </div><!-- End Recent Sales -->
+          </div>
+        </div>
+  
+        <!-- Left side columns -->
+        <div class="col-lg-12">
+          <div class="row">
+  
+            <!-- Reports -->
+            <div class="col-12">
+                
+              <div class="card recent-sales overflow-auto">
+                  <div class="card-body">
+                      <h6 style="color: #2f5f98;">สถิติการแจ้งซ่อม</h6>
+                      <table class="table table-bordered" style="font-size: 13px; width: 100%;">
+                          <thead class="text-center">
+                              <tr>
+                                  <th rowspan="2">ลำดับ</th>
+                                  <th rowspan="2">รายงาน</th>
+                                  <th colspan="3">ปี 2567</th>
+                              </tr>
+                              <tr>
+                                  <th>ผู้ใช้บริการ</th>
+                                  <th>ผู้ให้บริการ</th>
+                                  <th>ค่าใช้จ่าย</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr>
+                                  <td class="text-center">1</td>
+                                  <td colspan="4">ด้านอุปกรณ์เทคโนโลยีสารสนเทศ</td>
+                              </tr>
+                              <tr>
+                                  <td></td>
+                                  <td>- เกี่ยวกับเครื่องคอมพิวเตอร์ลูกข่าย (Case/CPU,Monitor)</td>
+                                  <td class="text-center">36</td>
+                                  <td>IT = 36 , Outsource = 0</td>
+                                  <td>41,560</td>
+                              </tr>
+                              <tr>
+                                  <td></td>
+                                  <td>- เกี่ยวกับเครื่องปริ้นเตอร์</td>
+                                  <td class="text-center">19</td>
+                                  <td>IT = 19 , Outsource = 0</td>
+                                  <td>39,560</td>
+                              </tr>
+                              <tr>
+                                  <td></td>
+                                  <td>- เกี่ยวกับเครื่องสำรองไฟ</td>
+                                  <td class="text-center">21</td>
+                                  <td>IT = 21 , Outsource = 0</td>
+                                  <td>22,580</td>
+                              </tr>
+                              <tr>
+                                  <td></td>
+                                  <td>- เกี่ยวกับอุปกรณ์ต่อพ่วง (เม้าส์, คีย์บอร์ด ฯลฯ)</td>
+                                  <td class="text-center">71</td>
+                                  <td>IT = 71 , Outsource = 0</td>
+                                  <td>32,240</td>
+                              </tr>
+                              <tr>
+                                  <td></td>
+                                  <td>รวม</td>
+                                  <td class="text-center">147</td>
+                              </tr>
+                              <tr>
+                                  <td class="text-center">2</td>
+                                  <td>ด้าน Software</td>
+                                  <td class="text-center">9</td>
+                                  <td>IT = 9 , Outsource = 0</td>
+                                  <td>50</td>
+                              </tr>
+                              <tr>
+                                  <td class="text-center">3</td>
+                                  <td>ด้าน Network และ Internet</td>
+                                  <td class="text-center">4</td>
+                                  <td>IT = 4 , Outsource = 0</td>
+                                  <td>26,900</td>
+                              </tr>
+                              <tr>
+                                  <td class="text-center">4</td>
+                                  <td>กล้องวงจรปิด</td>
+                                  <td class="text-center">21</td>
+                                  <td>IT = 21 , Outsource = 0</td>
+                                  <td>18,700</td>
+                              </tr>
+                              <tr>
+                                  <td class="text-center">5</td>
+                                  <td>ประชาสัมพันธ์บนป้ายโฆษณา LED</td>
+                                  <td class="text-center">1</td>
+                                  <td>IT = 1 , Outsource = 0</td>
+                                  <td>0</td>
+                              </tr>
+                              <tr>
+                                  <td class="text-center">6</td>
+                                  <td>ขอรับบริการเครื่องพิมพ์ขนาดใหญ่</td>
+                                  <td class="text-center">49</td>
+                                  <td>IT = 49 , Outsource = 0</td>
+                                  <td>7,316</td>
+                              </tr>
+                              <tr>
+                                  <td class="text-center">7</td>
+                                  <td>ขอรับบริการ VDO Conference</td>
+                                  <td class="text-center">27</td>
+                                  <td>IT = 27 , Outsource = 0</td>
+                                  <td>0</td>
+                              </tr>
+                             
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+            </div><!-- End Reports -->
+  
+            <!-- Recent Sales -->
+            <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+                <div class="card-body">
+                    <h6 style="color: #2f5f98;">สถิติการแจ้งซ่อมแยกประเภท</h6>
+                    <table class="table table-bordered" style="font-size: 14px; width: 100%;">
+                          <thead class="text-center">
+                              <tr>
+                                  <th rowspan="2" class="text-center">ประเภท</th>
+                                  <th colspan="5" class="text-center">งาน</th>
+  
+                              </tr>
+                              <tr>
+                                  <th>รอรับงาน</th>
+                                  <th>รอการแก้ไข</th>
+                                  <th>แก้ไขเรียบร้อย</th>
+                                  <th>ยกเลิก</th>
+                                  <th>รวม</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr class="text-center">
+                                  <td style="text-align: left">อุปกรณ์ IT</td>
+                                  <td>0</td>
+                                  <td>4</td>
+                                  <td>2364</td>
+                                  <td>74</td>
+                                  <td>2442</td>
+                              </tr>
+                              <tr class="text-center">
+                                  <td style="text-align: left;">โปรแกรมและระบบ ERP</td>
+                                  <td>0</td>
+                                  <td>1</td>
+                                  <td>578</td>
+                                  <td>20</td>
+                                  <td>599</td>
+                              </tr>
+                              <tr class="text-center">
+                                  <td style="text-align: left;">ระบบ Network และระบบ Internet</td>
+                                  <td>0</td>
+                                  <td>0</td>
+                                  <td>327</td>
+                                  <td>5</td>
+                                  <td>332</td>
+                              </tr>
+                              <tr class="text-center">
+                                  <td style="text-align: left;">กล้องวงจรปิด</td>
+                                  <td>0</td>
+                                  <td>2</td>
+                                  <td>129</td>
+                                  <td>16</td>
+                                  <td>147</td>
+                              </tr>
+                              <tr class="text-center">
+                                  <td style="text-align: left;">ประชาสัมพันธ์บนป้ายโฆษณา LED</td>
+                                  <td>0</td>
+                                  <td>0</td>
+                                  <td>33</td>
+                                  <td>0</td>
+                                  <td>33</td>
+                              </tr>
+                              <tr class="text-center">
+                                  <td style="text-align: left;">ขอรับบริการเครื่องพิมพ์ขนาดใหญ่</td>
+                                  <td>0</td>
+                                  <td>0</td>
+                                  <td>431</td>
+                                  <td>5</td>
+                                  <td>436</td>
+                              </tr>
+                              <tr class="text-center">
+                                  <td style="text-align: left;">ขอรับบริการ VDO Conference</td>
+                                  <td>0</td>
+                                  <td>1</td>
+                                  <td>129</td>
+                                  <td>7</td>
+                                  <td>137</td>
+                              </tr>
+                              <tr class="text-center">
+                                  <td style="text-align: left;">รวม</td>
+                                  <td>0</td>
+                                  <td>8</td>
+                                  <td>3991</td>
+                                  <td>127</td>
+                                  <td>4126</td>
+                              </tr>
+                          </tbody>
+                    </table>
+                </div>
+              </div>
+            </div><!-- End Recent Sales -->
+  
+          </div>
+        </div><!-- End Left side columns -->
+  
+        <!-- Right side columns -->
+        <div class="col-lg-6">
+  
+          <!-- Website Traffic -->
+          <div class="card">
+  
+            <div class="card-body pb-0">
+              <h6 style="color: #2f5f98;">สถิติการแจ้งซ่อม</h6>
+  
+              <div id="pairChart" class="mt-3" style="min-height: 400px;" class="echart"></div>
+  
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  echarts.init(document.querySelector("#pairChart")).setOption({
+                      tooltip: {
+                          trigger: 'item'
+                      },
+                      legend: {
+                          orient: 'horizontal',
+                          left: 'left'
+                      },
+                      series: [{
+                          name: 'สถิติการแจ้งซ่อม',
+                          type: 'pie',
+                          radius: '60%',
+                          data: [
+                              { value: 1048, name: 'อุปกรณ์ IT' },
+                              { value: 439, name: 'โปรแกรมและระบบERP' },
+                              { value: 332, name: 'ระบบ Network และ Internet' },
+                              { value: 244, name: 'กล้องวงจรปิด' },
+                              { value: 3, name: 'ประชาสัมพันธ์บนป้ายโฆษณา LED' },
+                              { value: 15, name: 'ขอรับบริการเครื่องพิมพ์ขนาดใหญ่' },
+                              { value: 20, name: 'ขอรับบริการ VDO Conference' },
+                          ],
+                          emphasis: {
+                              itemStyle: {
+                                  shadowBlur: 10,
+                                  shadowOffsetX: 0,
+                                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+                              }
+                          },
+                          label: {
+                              show: false,  // แสดงป้ายชื่อเสมอ
+                              fontSize: 12  // ขนาดฟอนต์
+                          },
+                          labelLine: {
+                              show: false  // แสดงเส้นเชื่อมระหว่างชิ้นส่วนกับป้ายชื่อ
+                          }
+                      }]
+                  });
+                });
+              </script>
+  
+            </div>
+          </div><!-- End Website Traffic -->
+  
+        </div>
+
+        <div class="col-md-6">
+          <!-- Website Traffic -->
+          <div class="card">
+  
+            <div class="card-body pb-0">
+              <h6 style="color: #2f5f98;">สรุปความพึงพอใจในปี 2567</h6>
+  
+              <div id="pieChart" class="mt-3" style="min-height: 400px;" class="echart"></div>
+  
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  echarts.init(document.querySelector("#pieChart")).setOption({
+                      tooltip: {
+                          trigger: 'item'
+                      },
+                      legend: {
+                          orient: 'horizontal',
+                          left: 'left'
+                      },
+                      series: [{
+                          name: 'ความพึงพอใจ',
+                          type: 'pie',
+                          radius: '60%',
+                          data: [
+                              { value: 1048, name: 'พอใจมากที่สุด' },
+                              { value: 735, name: 'พอใจมาก' },
+                              { value: 580, name: 'พอใจปานกลาง' },
+                              { value: 484, name: 'พอใจน้อย' },
+                              { value: 300, name: 'พอใจน้อยที่สุด' }
+                          ],
+                          emphasis: {
+                              itemStyle: {
+                                  shadowBlur: 10,
+                                  shadowOffsetX: 0,
+                                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+                              }
+                          },
+                          label: {
+                              show: false,  // แสดงป้ายชื่อเสมอ
+                              fontSize: 12  // ขนาดฟอนต์
+                          },
+                          labelLine: {
+                              show: false  // แสดงเส้นเชื่อมระหว่างชิ้นส่วนกับป้ายชื่อ
+                          }
+                      }]
+                  });
+                });
+              </script>
+  
+            </div>
+          </div><!-- End Website Traffic -->
+  
+        </div><!-- End Right side columns -->
+      </div>
+    </section>
+  
+  </main><!-- End #main -->
+{% endblock content %}

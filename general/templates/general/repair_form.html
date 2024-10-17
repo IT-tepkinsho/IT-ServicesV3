@@ -1,0 +1,195 @@
+{% extends 'general/components/base.html' %}
+{% load static %}
+
+{% block site_title %}ฟอร์มแจ้งซ่อม | {% endblock %}
+
+{% block content %}
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h5>ฟอร์มแจ้งข้อมูล / ปัญหาทางด้าน IT</h5>
+    </div><!-- End Page Title -->
+    <section class="section dashboard">
+        <div class="row">
+            
+            <div class="card mt-3">
+                <div class="card-body">
+                  <!-- <p class="card-title">ฟอร์มแจ้งข้อมูล / ปัญหาทางด้าน IT</p> -->
+    
+                  <!-- Multi Columns Form -->
+                  <form class="row g-3">
+                    <div class="col-md-6">
+                      <label for="inputName5" class="form-label">ประเภทการซ่อม</label>
+                      <select id="inputType" class="form-select">
+                        <option selected disabled>Choose...</option>
+                        <option value="1">อุปกรณ์ IT</option>
+                        <option value="2">โปรแกรมและระบบ ERP</option>
+                        <option value="3">ระบบเครือข่ายและระบบอินเทอร์เน็ต</option>
+                        <option value="4">กล้องวงจรปิด</option>
+                        <option value="5">ประชาสัมพันธ์บนป้ายโฆษณา LED</option>
+                        <option value="6">ขอรับบริการเครื่องพิมพ์ขนาดใหญ่</option>
+                        <option value="7">ขอรับบริการ VDO Conference</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="inputEmail5" class="form-label">หัวข้อการซ่อม</label>
+                      <select id="inputDetail" class="form-select">
+                        <option selected>Choose...</option>
+                        <option>...</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="inputPassword5" class="form-label" style="color: red;">ผู้แจ้ง *</label>
+                      <input type="text" class="form-control" id="inputOwner" list="ownerList" autocomplete="off">
+                      <datalist id="ownerList"></datalist>
+                    </div>
+                    <div class="col-md-3">
+                      <label for="inputAddress5" class="form-label" style="color: red;">หน่วยงาน *</label>
+                      <input type="text" class="form-control" id="inputDepartment" readonly>
+                    </div>
+                    <div class="col-md-3">
+                      <label for="inputAddress2" class="form-label">เบอร์ติดต่อ</label>
+                      <input type="text" class="form-control" id="inputPhone">
+                    </div>
+                    <div class="col-md-6">
+                      <label for="inputCity" class="form-label" style="color: red;">รหัสอุปกรณ์ *</label>
+                      <input type="text" class="form-control" id="inputDeviceCode">
+                    </div>
+                    <div class="col-md-6">
+                      <label for="inputState" class="form-label">แนบไฟล์</label>
+                      <input type="file" class="form-control" id="inputCity">
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label for="inputZip" class="form-label">ปัญหา / อาการเบื้องต้น</label>
+                        <textarea type="text" class="form-control" id="inputZip"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="inputZip" class="form-label">วันเวลาที่แจ้ง</label>
+                        <input type="text" class="form-control" id="inputZip" value="19.09.2024 17:00" disabled>
+                      </div>
+                    <!-- <div class="col-12">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="gridCheck">
+                        <label class="form-check-label" for="gridCheck">
+                          Check me out
+                        </label>
+                      </div>
+                    </div> -->
+                    <div style="text-align: right;">
+                        <button type="reset" class="btn btn-danger">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                  </form><!-- End Multi Columns Form -->
+                </div>
+            </div>
+        </div>
+      </section>
+</main>
+
+<script>
+  // Object ที่เก็บรายละเอียดหัวข้อการซ่อมตามประเภทการซ่อม
+  const repairDetails = {
+    1: ['คอมพิวเตอร์', 'อุปกรณ์ต่อพ่วง', 'เครื่องพิมพ์', 'เครื่องสำรองไฟ', 'อื่นๆ'],
+    2: ['ขอติดตั้งโปรแกรม ERP', 'แก้ไขระบบ ERP', 'อื่นๆ'],
+    3: ['ตั้งค่าเครือข่าย', 'แก้ไขปัญหาอินเทอร์เน็ต'],
+    4: ['กล้องภายนอก', 'กล้องภายใน'],
+    5: ['ป้าย LED เล็ก', 'ป้าย LED ใหญ่'],
+    6: ['เครื่องพิมพ์ขนาดใหญ่ A0', 'เครื่องพิมพ์ขนาดใหญ่ A1'],
+    7: ['การตั้งค่า VDO Conference', 'ปัญหาไมโครโฟน'],
+  };
+
+  document.getElementById('inputType').addEventListener('change', function() {
+    const selectedType = this.value;
+    const detailSelect = document.getElementById('inputDetail');
+    
+    // ล้างข้อมูลเดิม
+    detailSelect.innerHTML = '<option selected disabled>Choose...</option>';
+
+    if (repairDetails[selectedType]) {
+      repairDetails[selectedType].forEach(function(detail) {
+        const option = document.createElement('option');
+        option.textContent = detail;
+        detailSelect.appendChild(option);
+      });
+    }
+  });
+
+  // ข้อมูลจำลองของผู้ครอบครอง
+const ownerData = [
+  {
+    name: 'สมชาย ศรีสุข',
+    department: 'IT',
+    phone: '0812345678',
+    deviceCode: 'COM001'
+  },
+  {
+    name: 'สมหญิง ดีงาม',
+    department: 'HR',
+    phone: '0912345678',
+    deviceCode: 'COM002'
+  },
+  {
+    name: 'สมปอง คงดี',
+    department: 'FA',
+    phone: '0612345678',
+    deviceCode: 'COM003'
+  },
+  {
+    name: 'มานะ ใจดี',
+    department: 'IT',
+    phone: '0812345678',
+    deviceCode: 'COM004'
+  },
+  {
+    name: 'ปกรณ์ บุญกุศล',
+    department: 'HR',
+    phone: '0912345678',
+    deviceCode: 'NOTE005'
+  },
+  {
+    name: 'พร้อมพงษ์ มากดี',
+    department: 'FA',
+    phone: '0612345678',
+    deviceCode: 'NOTE006'
+  }
+];
+
+// เมื่อพิมพ์ชื่อ ให้ทำการแสดง autocomplete list
+document.getElementById('inputOwner').addEventListener('input', function() {
+  const input = this.value.toLowerCase();
+  const dataList = document.getElementById('ownerList');
+  
+  // ล้างรายการเดิม
+  dataList.innerHTML = '';
+
+  // กรองชื่อที่ตรงกับสิ่งที่พิมพ์
+  const filteredOwners = ownerData.filter(owner => owner.name.toLowerCase().includes(input));
+
+  // เพิ่มตัวเลือกที่ตรงกับการพิมพ์ลงใน datalist
+  filteredOwners.forEach(owner => {
+    const option = document.createElement('option');
+    option.value = owner.name;
+    dataList.appendChild(option);
+  });
+});
+
+// เมื่อผู้ใช้เลือกชื่อผู้ครอบครอง ให้เติมข้อมูลในฟิลด์อื่นๆ
+document.getElementById('inputOwner').addEventListener('change', function() {
+  const selectedOwner = ownerData.find(owner => owner.name === this.value);
+
+  if (selectedOwner) {
+    document.getElementById('inputDepartment').value = selectedOwner.department;
+    document.getElementById('inputPhone').value = selectedOwner.phone;
+    document.getElementById('inputDeviceCode').value = selectedOwner.deviceCode;
+  } else {
+    // เคลียร์ข้อมูลถ้าไม่มีการเลือกชื่อที่ตรง
+    document.getElementById('inputDepartment').value = '';
+    document.getElementById('inputPhone').value = '';
+    document.getElementById('inputDeviceCode').value = '';
+  }
+});
+
+</script>
+
+{% endblock content %}

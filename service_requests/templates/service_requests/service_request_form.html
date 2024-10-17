@@ -1,0 +1,121 @@
+{% extends 'general/components/base.html' %}
+{% load static %}
+
+{% block site_title %}Service request form | {% endblock %}
+
+{% block content %}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h5>ฟอร์มแจ้งข้อมูล / ปัญหาทางด้าน IT</h5>
+
+    </div>
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card mt-3">
+            <div class="card-body">
+              <h5>service request</h5>
+
+              <!-- Multi Columns Form -->
+              <form method="post" class="row g-3 mt-3" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="col-md-6">
+                  <label for="repair_type" class="form-label">ประเภทการซ่อม <span style="color: red;">*</span></label>
+                  <select id="repair_type_id" name="repair_type" class="form-select">
+                      <option value="">กรุณาเลือกประเภทการซ่อม</option>
+                      {% for repair_type in repair_types %}
+                          <option value="{{ repair_type.id }}">{{ repair_type.name }}</option>
+                      {% endfor %}
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="inputDetail" class="form-label">หัวข้อการซ่อม <span style="color: red;">*</span></label>
+                  <select id="repairTopic" name="repair_topic" class="form-control" required>
+                      <option value="">กรุณาเลือกประเภทการซ่อมก่อน</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="inputOwner" class="form-label">ผู้แจ้ง <span style="color: red;">*</span></label>
+                    {{ form.user_name }}
+                    <datalist id="ownerList">
+                        <!-- Fill this with your owner options -->
+                    </datalist>
+                </div>
+                <div class="col-md-3">
+                    <label for="inputDepartment" class="form-label">หน่วยงาน</label>
+                    {{ form.user_department }}
+                </div>
+                <div class="col-md-3">
+                    <label for="inputPhone" class="form-label">เบอร์ติดต่อ</label>
+                    {{ form.user_contact }}
+                </div>
+                <div class="col-md-6">
+                    <label for="inputDeviceCode" class="form-label">รหัสอุปกรณ์ <span style="color: red;">*</span></label>
+                    {{ form.equipment }}
+                </div>
+                <div class="col-md-6">
+                    <label for="inputFile" class="form-label">แนบไฟล์</label>
+                    {{ form.attached_file }}
+                </div>
+                
+                <div class="col-md-6">
+                    <label for="inputDescription" class="form-label">ปัญหา / อาการเบื้องต้น</label>
+                    {{ form.request_description }}
+                </div>
+                <div class="col-md-6">
+                    <label for="inputRequestDate" class="form-label">วันเวลาที่แจ้ง</label>
+                    <input type="text" class="form-control" id="inputRequestDate" value="{{ form.instance.request_date|default:current_datetime }}" readonly disabled>
+                </div>
+                <div style="text-align: right;">
+                    <button type="reset" class="btn btn-danger">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+</main><!-- End #main -->
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const repairTypeSelect = document.getElementById('repair_type_id');  // ID ของ select สำหรับประเภทการซ่อม
+      const repairTopicSelect = document.getElementById('repairTopic');  // ID ของ select สำหรับหัวข้อการซ่อม
+  
+      repairTypeSelect.addEventListener('change', function() {
+          const repairTypeId = this.value;
+          repairTopicSelect.innerHTML = '<option value="">Loading...</option>';  // แสดงข้อความโหลด
+  
+          if (repairTypeId) {
+              fetch(`/requests/get-repair-topics/?repair_type_id=${repairTypeId}`)// เรียก URL ของ view
+
+              .then(response => response.json())
+              .then(data => {
+                  repairTopicSelect.innerHTML = '<option value="">กรุณาเลือกหัวข้อการซ่อม</option>';  // ล้างและแสดงผลหัวข้อการซ่อม
+                  data.forEach(topic => {
+                      const option = document.createElement('option');
+                      option.value = topic.id;
+                      option.text = topic.name;
+                      repairTopicSelect.appendChild(option);  // เพิ่มตัวเลือกใน select
+                  });
+              })
+              .catch(error => {
+                  console.error('Error fetching repair topics:', error);
+                  repairTopicSelect.innerHTML = '<option value="">Error loading topics</option>';  // แสดงข้อความผิดพลาด
+              });
+          } else {
+              repairTopicSelect.innerHTML = '<option value="">กรุณาเลือกประเภทการซ่อมก่อน</option>';
+          }
+      });
+  });
+  </script>
+  
+
+{% endblock content %}
+

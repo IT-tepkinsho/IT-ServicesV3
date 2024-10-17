@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block site_title %}{% endblock %} IT Service</title>
+
+    <!-- Favicons -->
+    <link rel="icon" href="{% static 'general/img/favicon.png' %}">
+
+    <!-- CSS Style -->
+    <link rel="stylesheet" href="{% static 'general/css/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'general/css/style.css' %}">
+
+    <!-- Vendor CSS Files -->
+    <link rel="stylesheet" href="{% static 'general/vendor/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'general/vendor/bootstrap-icons/bootstrap-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'general/vendor/fontawesome/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'general/vendor/boxicons/css/boxicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'general/vendor/quill/quill.snow.css' %}">
+    <link rel="stylesheet" href="{% static 'general/vendor/quill/quill.bubble.css' %}">
+    <link rel="stylesheet" href="{% static 'general/vendor/remixicon/remixicon.css' %}">
+
+</head>
+<body>
+    {% include 'general/components/site_header.html' %}
+    {% include 'general/components/site_sidebar.html' %}
+    {% block content %}{% endblock content %}
+    {% include 'general/components/site_footer.html' %}
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <script src="{% static 'general/vendor/apexcharts/apexcharts.min.js' %}"></script>
+    <script src="{% static 'general/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'general/vendor/chart.js/chart.umd.js' %}"></script>
+    <script src="{% static 'general/vendor/echarts/echarts.min.js' %}"></script>
+    <script src="{% static 'general/vendor/quill/quill.js' %}"></script>
+    <script src="{% static 'general/vendor/tinymce/tinymce.min.js' %}"></script>
+    <script src="{% static 'general/vendor/tinymce/tinymce.min.js' %}"></script>
+    <script src="{% static 'general/vendor/DataTables/datatables.min.js' %}"></script>
+    <script src="{% static 'general/js/main.js' %}"></script>
+
+</body>
+</html>
