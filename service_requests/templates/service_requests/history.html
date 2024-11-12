@@ -1,0 +1,53 @@
+<form method="GET" action="{% url 'get_repair_history' %}">
+    <div class="row">
+        <div class="col-md-5">
+            <input type="text" class="form-control" name="owner_name" placeholder="ค้นหาชื่อผู้ครอบครอง" value="{{ request.GET.owner_name }}">
+        </div>
+        <div class="col-md-5">
+            <input type="text" class="form-control" name="equipment_code" placeholder="ค้นหารหัสอุปกรณ์" value="{{ request.GET.equipment_code }}">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-outline-primary" name="search"><i class="fas fa-search"></i> search</button>
+        </div>
+    </div>
+</form>
+
+<div class="card recent-sales overflow-auto mt-3" style="border-top: 3px solid #2f5f98;">
+    <div class="card-body">
+        <h5 class="card-title" style="color: #2f5f98;">ประวัติการซ่อม</h5>
+        <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff;">
+            <table id="table-list" class="table table-striped mt-3" style="font-size: 14px; width: 100%;">
+                <thead>
+                    <tr>
+                        <th>เลขที่ใบแจ้งซ่อม</th>
+                        <th>หน่วยงาน</th>
+                        <th>ผู้แจ้ง</th>
+                        <th>รายละเอียดปัญหา</th>
+                        <th>วันเวลาที่แจ้ง</th>
+                        <th>รวมเวลาแก้ไข</th>
+                        <th>สถานะ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in service_requests %}
+                    <tr>
+                        <td><a href="#">{{ request.service_request_number }}</a></td>
+                        <td>{{ request.user_department }}</td>
+                        <td>{{ request.user_name }}</td>
+                        <td>{{ request.request_description }}</td>
+                        <td>{{ request.request_date }}</td>
+                        <td>{{ request.request_date }}</td> <!-- สามารถคำนวณเวลารวมได้ที่นี่ -->
+                        <td class="text-center">
+                            {% if request.request_status == 'in_progress' %}
+                                <i class="fas fa-stopwatch fa-shake"></i>
+                            {% else %}
+                                <span>{{ request.get_request_status_display }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

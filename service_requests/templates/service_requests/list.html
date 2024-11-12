@@ -1,0 +1,22 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th>เลขที่ใบแจ้งซ่อม</th>
+            <th>ผู้แจ้ง</th>
+            <th>ประเภทการซ่อม</th>
+            <th>สถานะ</th>
+            <th>วันที่แจ้ง</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for request in requests %}
+        <tr>
+            <td>{{ request.service_request_number }}</td> <!-- แสดงเลขที่ใบแจ้งซ่อม -->
+            <td>{{ request.user_name }}</td>
+            <td>{{ request.repair_type }}</td>
+            <td>{{ request.get_request_status_display }}</td>
+            <td>{{ request.request_date|date:"d M Y H:i" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

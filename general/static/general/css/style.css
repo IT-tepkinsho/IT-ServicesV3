@@ -36,7 +36,8 @@
 html {
   color: #333333;
   font-family: 'Mitr', sans-serif;
-  font-weight: 400;
+  font-weight: 300;
+  font-size: 14px;
   
 }
 
@@ -166,6 +167,43 @@ table th, table td {
   
 }
 
+.select2-container {
+  width: 100% !important;
+}
+
+/* Custom Modal Styles */
+.custom-modal-content {
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+.custom-modal-content .modal-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  font-weight: bold;
+  text-align: center;
+}
+
+.custom-modal-content .input-group-text {
+  background-color: #f8f9fa;
+  border-right: 0;
+}
+
+.custom-modal-content .form-control {
+  border-left: 0;
+}
+
+.custom-modal-content .btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  border-radius: 5px;
+}
+
+.custom-modal-content .btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
 /*--------------------------------------------------------------
 # Header
 --------------------------------------------------------------*/
@@ -182,7 +220,7 @@ table th, table td {
 }
 
 .logo img {
-  max-height: 26px;
+  max-height: 40px;
   margin-right: 6px;
 }
 
@@ -388,6 +426,8 @@ table th, table td {
   padding: 5px 0 0 0;
   margin: 0;
   list-style: none;
+  background-color: #f5f7fc;
+  border-radius: 5px;
 }
 
 .sidebar-nav .nav-content a {
@@ -399,11 +439,12 @@ table th, table td {
   transition: 0.3;
   padding: 10px 0 10px 40px;
   transition: 0.3s;
+  text-decoration: none;
 }
 
 .sidebar-nav .nav-content a i {
-  font-size: 6px;
-  margin-right: 8px;
+  font-size: 16px;
+  margin-right: 15px;
   line-height: 0;
   border-radius: 50%;
 }
@@ -505,10 +546,10 @@ table th, table td {
 }
 
 .dashboard .new-card .card-icon {
-  color: #ffe51d;
-  background: #faffcd;
-  /* color: #2eca6a;
-  background: #e0f8e9; */
+  /* color: #ffe51d;
+  background: #faffcd; */
+  color: #2eca6a;
+  background: #e0f8e9;
   margin-top: 10px;
 }
 

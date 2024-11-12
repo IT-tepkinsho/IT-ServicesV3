@@ -1,0 +1,56 @@
+{% extends 'general/components/base.html' %}
+{% load static %}
+
+{% block site_title %}Vendor | {% endblock %}
+
+{% block content  %}
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item active">Management Type</li>
+          </ol>
+        </nav>
+      </div><!-- End Page Title -->
+  
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+  
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Vendor list</h5>
+                <a href="{% url 'create_vendor' %}" class="btn btn-outline-primary btn-sm"><i class="fa fa-add"></i> New Add</a>
+                <table class="table table-bordered table-striped mt-3">
+                  <thead>
+                    <tr>
+                        <th style="width: 45%;">Vendor code</th>
+                        <th style="width: 45%;">Vendor name</th>
+                        <th style="width: 10%;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for vendor in vendors %}
+                    <tr>
+                        <td>{{ vendor.vendor_code }}</td>
+                        <td>{{ vendor.vendor_name }}</td>
+                        <td>
+                            <a href="{% url 'vendor_update' vendor.pk %}" class="btn btn-warning btn-sm" style="color: rgb(46, 46, 46);"><i class="fa fa-edit"></i> Edit</a>
+                            <a href="" class="btn btn-danger btn-sm" style="color: aliceblue;"><i class="fa fa-trash-alt"></i> Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+            </div>
+          </div>
+  
+        </div>
+      </div>
+    </section>
+  
+</main><!-- End #main -->
+{% endblock %}

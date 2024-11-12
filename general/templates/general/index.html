@@ -1,0 +1,619 @@
+{% extends 'general/components/base.html' %}
+{% load static %}
+
+{% block content %}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Dashboard</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+  
+     <!-- แสดงข้อความแจ้งเตือนที่นี่ -->
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div class="alert 
+                {% if message.tags == 'success' %}alert-success
+                {% elif message.tags == 'error' %}alert-danger
+                {% elif message.tags == 'warning' %}alert-warning
+                {% elif message.tags == 'info' %}alert-info
+                {% else %}alert-secondary{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <h1>Hello World</h1>
+    <section class="section dashboard">
+      <div class="row">
+  
+        <div class="col-lg-12">
+          <div class="row">
+            <!-- New Card -->
+            <div class="col-xxl-3 col-md-6">
+              <div class="card info-card new-card" style="border-top: 3px solid #2eca6a;">
+  
+                <div class="card-body">
+                    <h6 class="card-title">ใบแจ้งซ่อมใหม่ </h6>
+  
+                    <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-chat-square-dots"></i>
+                    </div>
+                    <div class="ps-5">
+                        <h6>{{ new_requests_count }} <span class="text-muted pt-2 ps-3">รายการ</span></h6>
+                    </div>
+                    </div>
+                </div>
+  
+                </div>
+            </div><!-- End New Card -->
+  
+            <!-- Wait Card -->
+            <div class="col-xxl-3 col-md-6">
+                <div class="card info-card wait-card" style="border-top: 3px solid #db5353;">
+  
+                <div class="card-body">
+                    <h6 class="card-title">ใบแจ้งซ่อมรอแก้ไข </h6>
+  
+                    <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-wrench"></i>
+                    </div>
+                    <div class="ps-5">
+                        <h6>{{ in_progress_requests_count }} <span class="text-muted pt-2 ps-3">รายการ</span></h6>
+                    </div>
+                    </div>
+                </div>
+  
+                </div>
+            </div><!-- End Wait Card -->
+  
+            <!-- Month Card -->
+            <div class="col-xxl-3 col-xl-12">
+  
+                <div class="card info-card month-card" style="border-top: 3px solid #ec9158;">
+  
+                <div class="card-body">
+                    <h6 class="card-title">ใบแจ้งซ่อมประจำเดือน </h6>
+  
+                    <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bx bxs-calendar"></i>
+                    </div>
+                    <div class="ps-5">
+                        <h6>{{ monthly_requests_count }} <span class="text-muted pt-2 ps-3">รายการ</span></h6>
+                    </div>
+                    </div>
+  
+                </div>
+                </div>
+  
+            </div><!-- End Month Card -->
+  
+            <!-- Years Card -->
+            <div class="col-xxl-3 col-xl-12">
+  
+                <div class="card info-card years-card" style="border-top: 3px solid #2f5f98;">
+  
+                <div class="card-body">
+                    <h6 class="card-title">ใบแจ้งซ่อมประจำปี </h6>
+  
+                    <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-clipboard-data"></i>
+                    </div>
+                    <div class="ps-5">
+                        <h6>{{ yearly_requests_count }} <span class="text-muted pt-2 ps-3">รายการ</span></h6>
+                    </div>
+                    </div>
+  
+                </div>
+                </div>
+  
+            </div><!-- End Years Card -->
+  
+          </div>
+        </div>
+  
+        <div class="col-lg-12">
+          <div class="row">
+            <!-- Recent Sales -->
+            <div class="col-lg-12">
+              <div class="card recent-sales overflow-auto" style="border-top: 3px solid #2f5f98;">
+  
+                <div class="card-body">
+                  <h5 class="card-title" style="color: #2f5f98;">รายการใบแจ้งซ่อม</h5>
+                      <ul class="nav nav-tabs" id="myTab" role="tablist">
+                          <li class="nav-item" role="presentation">
+                          <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab" aria-controls="tab1" aria-selected="true">รอรับงาน
+                            <span class="badge bg-danger">{{ pending_count }}</span>
+                          </button>
+                          </li>
+                          <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab" aria-controls="tab2" aria-selected="false">รอการแก้ไข
+                            <span class="badge bg-primary">{{ in_progress_count }}</span>
+                          </button>
+                          </li>
+                          <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab" aria-controls="tab3" aria-selected="false">แก้ไขเรียบร้อย
+                            <span class="badge bg-success">{{ completed_count }}</span>
+                          </button>
+                          </li>
+                          <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" type="button" role="tab" aria-controls="tab4" aria-selected="false">รายการยกเลิก
+                            <span class="badge bg-secondary">{{ canceled_count }}</span>
+                          </button>
+                          </li>
+                      </ul>
+                      <!-- Table with stripped rows -->
+                      <div class="tab-content" id="myTabContent">
+                          <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
+                          <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff;">
+                          <table id="table-pending" class="table table-striped mt-3 text-center" style="font-size: 14px; ">
+                              <thead class="text-center">
+                              <tr>
+                                  <th>เลขที่ใบแจ้งซ่อม</th>
+                                  <th>หน่วยงาน</th>
+                                  <th>ผู้แจ้ง</th>
+                                  <th style="text-align: left;">รายละเอียดปัญหา</th>
+                                  <th>วันเวลาที่แจ้ง</th>
+                                  <th>สถานะ</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                                {% for request in pending_requests %}
+                                    <tr>
+                                        <td><a href="{% url 'service_request_detail' request.pk %}">{{ request.service_request_number }}</a></td>
+                                        <td>{{ request.user_department }}</td>
+                                        <td>{{ request.user_name }}</td>
+                                        <td style="text-align: left;">{{ request.request_description }}</td>
+                                        <td>{{ request.request_date|date:'j N Y, H:i' }}</td>
+                                        <td><i class="fas fa-stopwatch fa-shake" style="color: rgb(255, 160, 44);"></i></td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="6">ไม่มีคำร้องที่รอการดำเนินการ</td>
+                                    </tr>
+                                {% endfor %}
+                              </tbody>
+                          </table>
+                          </div>
+                          </div>
+  
+                          <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+                          <table id="table-process" class="table table-striped mt-3" style="font-size: 14px;">
+                              <thead class="text-center">
+                              <tr>
+                                  <th scope="col">เลขที่ใบแจ้งซ่อม</th>
+                                  <th scope="col">หน่วยงาน</th>
+                                  <th scope="col">ผู้แจ้ง</th>
+                                  <th scope="col">รายละเอียดปัญหา</th>
+                                  <th scope="col">วันเวลาที่แจ้ง</th>
+                                  <th scope="col">วันเวลาที่รับงาน</th>
+                                  <th scope="col">วันที่อัพเดต</th>
+                                  <th scope="col">สถานะ</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                                {% for request in in_progress_requests %}
+                                    <tr>
+                                        <td><a href="{% url 'service_request_detail' request.pk %}">{{ request.service_request_number }}</a></td>
+                                        <td>{{ request.user_department }}</td>
+                                        <td>{{ request.user_name }}</td>
+                                        <td>{{ request.request_description }}</td>
+                                        <td>{{ request.request_date }}</td>
+                                        <td>{{ request.date_received|default_if_none:"" }}</td>
+                                        <td>{{ request.repair_date|default_if_none:"" }}</td>
+                                        <td><i class="fas fa-spinner fa-spin-pulse" style="color: #235a9e;"></i></td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="8">ไม่มีคำร้องที่กำลังดำเนินการ</td>
+                                    </tr>
+                                {% endfor %}
+                              </tbody>
+                          </table>
+                          </div>
+                          <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab" style="overflow-x: auto;">
+                              <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff; overflow-x: auto;">
+                                  <table id="table-success" class="table table-striped mt-3" style="font-size: 14px;">
+                                      <thead class="text-center">
+                                          <tr>
+                                              <th scope="col" style="width: 10%;">เลขที่ใบแจ้งซ่อม</th>
+                                              <th scope="col" style="width: 10%;">หน่วยงาน</th>
+                                              <th scope="col">ผู้แจ้ง</th>
+                                              <th scope="col" style="width: 20%;">รายละเอียดปัญหา</th>
+                                              <th scope="col">ผู้ดำเนินการ</th>
+                                              <th scope="col">วันที่แจ้ง</th>
+                                              <th scope="col">วันที่รับงาน</th>
+                                              <th scope="col">วันที่เสร็จ</th>
+                                              <th scope="col">รวมเวลาแก้ไข</th>
+                                              <th scope="col" style="width: 5%;">สถานะ</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                        {% for request in completed_requests %}
+                                            <tr>
+                                                <td><a href="{% url 'service_request_detail' request.pk %}">{{ request.service_request_number }}</a></td>
+                                                <td>{{ request.user_department }}</td>
+                                                <td>{{ request.user_name }}</td>
+                                                <td>{{ request.request_description }}</td>
+                                                <td>{{ request.operator }}</td>
+                                                <td>{{ request.request_date }}</td>
+                                                <td>{{ request.date_received }}</td>
+                                                <td>{{ request.date_completed|default_if_none:"" }}</td>
+                                                <td>{{ request.total_repair_time|default_if_none:""}}</td>
+                                                <td><i class="fa-solid fa-circle-check" style="color: rgb(18, 183, 18);"></i></td>
+                                            </tr>
+                                            {% empty %}
+                                            <tr>
+                                                <td colspan="10">ไม่มีคำร้องที่เสร็จสิ้นแล้ว</td>
+                                            </tr>   
+                                        {% endfor %}
+                                      </tbody>
+                                  </table>
+                              </div>
+                          </div>
+                          <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4-tab" style="overflow-x: auto;">
+                              <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff; overflow-x: auto;">
+                                  <table id="table-cancel" class="table table-striped mt-3" style="font-size: 14px; ">
+                                      <thead class="text-center">
+                                      <tr>
+                                          <th scope="col">เลขที่ใบแจ้งซ่อม</th>
+                                          <th scope="col">หน่วยงาน</th>
+                                          <th scope="col">ผู้แจ้ง</th>
+                                          <th scope="col">รายละเอียดปัญหา</th>
+                                          <th scope="col">วันเวลาที่แจ้ง</th>
+                                          <th scope="col">วันที่รับงาน</th>
+                                          <th scope="col">วันที่เสร็จ</th>
+                                          <th scope="col">รวมเวลาแก้ไข</th>
+                                          <th scope="col">สถานะ</th>
+                                      </tr>
+                                      </thead>
+                                      <tbody>
+                                        {% for request in canceled_requests %}
+                                            <tr>
+                                                <td><a href="{% url 'service_request_detail' request.pk %}">{{ request.service_request_number }}</a></td>
+                                                <td>{{ request.user_department }}</td>
+                                                <td>{{ request.user_name }}</td>
+                                                <td>{{ request.request_description }}</td>
+                                                <td>{{ request.request_date }}</td>
+                                                <td>{{ request.date_received|default_if_none:"" }}</td>
+                                                <td>{{ request.date_completed|default_if_none:"" }}</td>
+                                                <td>{{ request.total_repair_time|default_if_none:""  }}</td>
+                                                <td><i class="fa-solid fa-circle-xmark" style="color: crimson;"></i></td>
+                                            </tr>
+                                            {% empty %}
+                                            <tr>
+                                                <td colspan="9">ไม่มีคำร้องที่ถูกยกเลิก</td>
+                                            </tr>
+                                        {% endfor %}
+                                      </tbody>
+                                  </table>
+                              </div>
+                          </div>
+                      </div>
+                </div>
+              </div>
+            </div><!-- End Recent Sales -->
+          </div>
+        </div>
+  
+        <!-- Left side columns -->
+        <div class="col-lg-12">
+            <div class="row">
+                <!-- Reports -->
+                <div class="col-12">
+                    
+                    <div class="card recent-sales overflow-auto">
+                        <div class="card-body">
+                        <h6 class="card-title" style="color: #2f5f98;">สถิติการแจ้งซ่อม</h6>
+                            <ul class="nav nav-tabs" id="tabStatistics" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button type="button" class="nav-link active" id="Statistics1-tab" data-bs-toggle="tab" data-bs-target="#Statistics1" role="tab" aria-controls="tab1" aria-selected="true">สถิติการแจ้งซ่อม</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button type="button" class="nav-link" id="Statistics2-tab" data-bs-toggle="tab" data-bs-target="#Statistics2" role="tab" aria-controls="tab2" aria-selected="true">สถิติการแจ้งซ่อมแยกประเภท</button>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content" id="tabStatisticsContent">
+                                <div class="tab-pane fade show active" id="Statistics1" role="tabpanel" aria-labelledby="Statistics1-tab">
+                                    <table class="table table-bordered table-striped mt-3" style="font-size: 13px; width: 100%;">
+                                        <thead class="text-center">
+                                            <tr>
+                                                <th rowspan="2">ลำดับ</th>
+                                                <th rowspan="2">รายงาน</th>
+                                                <th colspan="3">ปี 2567</th>
+                                            </tr>
+                                            <tr>
+                                                <th>ผู้ใช้บริการ</th>
+                                                <th>ผู้ให้บริการ</th>
+                                                <th>ค่าใช้จ่าย</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center">1</td>
+                                                <td colspan="4">ด้านอุปกรณ์เทคโนโลยีสารสนเทศ</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>- เกี่ยวกับเครื่องคอมพิวเตอร์ลูกข่าย (Case/CPU,Monitor)</td>
+                                                <td class="text-center">36</td>
+                                                <td>IT = 36 , Outsource = 0</td>
+                                                <td>41,560</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>- เกี่ยวกับเครื่องปริ้นเตอร์</td>
+                                                <td class="text-center">19</td>
+                                                <td>IT = 19 , Outsource = 0</td>
+                                                <td>39,560</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>- เกี่ยวกับเครื่องสำรองไฟ</td>
+                                                <td class="text-center">21</td>
+                                                <td>IT = 21 , Outsource = 0</td>
+                                                <td>22,580</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>- เกี่ยวกับอุปกรณ์ต่อพ่วง (เม้าส์, คีย์บอร์ด ฯลฯ)</td>
+                                                <td class="text-center">71</td>
+                                                <td>IT = 71 , Outsource = 0</td>
+                                                <td>32,240</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>รวม</td>
+                                                <td class="text-center">147</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">2</td>
+                                                <td>ด้าน Software</td>
+                                                <td class="text-center">9</td>
+                                                <td>IT = 9 , Outsource = 0</td>
+                                                <td>50</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">3</td>
+                                                <td>ด้าน Network และ Internet</td>
+                                                <td class="text-center">4</td>
+                                                <td>IT = 4 , Outsource = 0</td>
+                                                <td>26,900</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">4</td>
+                                                <td>กล้องวงจรปิด</td>
+                                                <td class="text-center">21</td>
+                                                <td>IT = 21 , Outsource = 0</td>
+                                                <td>18,700</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">5</td>
+                                                <td>ประชาสัมพันธ์บนป้ายโฆษณา LED</td>
+                                                <td class="text-center">1</td>
+                                                <td>IT = 1 , Outsource = 0</td>
+                                                <td>0</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">6</td>
+                                                <td>ขอรับบริการเครื่องพิมพ์ขนาดใหญ่</td>
+                                                <td class="text-center">49</td>
+                                                <td>IT = 49 , Outsource = 0</td>
+                                                <td>7,316</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">7</td>
+                                                <td>ขอรับบริการ VDO Conference</td>
+                                                <td class="text-center">27</td>
+                                                <td>IT = 27 , Outsource = 0</td>
+                                                <td>0</td>
+                                            </tr>
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="tab-pane fade" id="Statistics2" role="tabpanel" aria-labelledby="Statistics2-tab">
+                                    <table class="table table-bordered table-striped mt-3" style="font-size: 14px; width: 100%;">
+                                        <thead class="text-center">
+                                            <tr>
+                                                <th rowspan="2" class="text-center">ประเภท</th>
+                                                <th colspan="5" class="text-center">งาน</th>
+                
+                                            </tr>
+                                            <tr>
+                                                <th>รอรับงาน</th>
+                                                <th>รอการแก้ไข</th>
+                                                <th>แก้ไขเรียบร้อย</th>
+                                                <th>ยกเลิก</th>
+                                                <th>รวม</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="text-center">
+                                                <td style="text-align: left">อุปกรณ์ IT</td>
+                                                <td>0</td>
+                                                <td>4</td>
+                                                <td>2364</td>
+                                                <td>74</td>
+                                                <td>2442</td>
+                                            </tr>
+                                            <tr class="text-center">
+                                                <td style="text-align: left;">โปรแกรมและระบบ ERP</td>
+                                                <td>0</td>
+                                                <td>1</td>
+                                                <td>578</td>
+                                                <td>20</td>
+                                                <td>599</td>
+                                            </tr>
+                                            <tr class="text-center">
+                                                <td style="text-align: left;">ระบบ Network และระบบ Internet</td>
+                                                <td>0</td>
+                                                <td>0</td>
+                                                <td>327</td>
+                                                <td>5</td>
+                                                <td>332</td>
+                                            </tr>
+                                            <tr class="text-center">
+                                                <td style="text-align: left;">กล้องวงจรปิด</td>
+                                                <td>0</td>
+                                                <td>2</td>
+                                                <td>129</td>
+                                                <td>16</td>
+                                                <td>147</td>
+                                            </tr>
+                                            <tr class="text-center">
+                                                <td style="text-align: left;">ประชาสัมพันธ์บนป้ายโฆษณา LED</td>
+                                                <td>0</td>
+                                                <td>0</td>
+                                                <td>33</td>
+                                                <td>0</td>
+                                                <td>33</td>
+                                            </tr>
+                                            <tr class="text-center">
+                                                <td style="text-align: left;">ขอรับบริการเครื่องพิมพ์ขนาดใหญ่</td>
+                                                <td>0</td>
+                                                <td>0</td>
+                                                <td>431</td>
+                                                <td>5</td>
+                                                <td>436</td>
+                                            </tr>
+                                            <tr class="text-center">
+                                                <td style="text-align: left;">ขอรับบริการ VDO Conference</td>
+                                                <td>0</td>
+                                                <td>1</td>
+                                                <td>129</td>
+                                                <td>7</td>
+                                                <td>137</td>
+                                            </tr>
+                                            <tr class="text-center">
+                                                <td style="text-align: left;">รวม</td>
+                                                <td>0</td>
+                                                <td>8</td>
+                                                <td>3991</td>
+                                                <td>127</td>
+                                                <td>4126</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- End Reports -->
+            </div>
+        </div><!-- End Left side columns -->
+
+        <div class="col-md-6">
+            <!-- Repair Chart -->
+            <div class="card">
+    
+                <div class="card-body pb-0">
+                <h6 style="color: #2f5f98;">สถิติการแจ้งซ่อม</h6>
+    
+                <div id="repairChart" style="min-height: 400px;" class="echart"></div>
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                      echarts.init(document.querySelector("#repairChart")).setOption({
+                        tooltip: {
+                            trigger: 'item'
+                        },
+                        legend: {
+                            top: '5%',
+                            orient: 'horizontal',
+                            left: 'left'
+                        },
+                        series: [
+                            {
+                            top: '15%',
+                            name: 'สถิติการแจ้งซ่อม',
+                            type: 'pie',
+                            radius: '50%',
+                            data: [
+                                { value: 1048, name: 'อุปกรณ์ IT' },
+                                { value: 735, name: 'โปรแกรมและระบบ ERP' },
+                                { value: 580, name: 'ระบบ Network' },
+                                { value: 484, name: 'กล้องวงจรปิด' },
+                                { value: 300, name: 'ประชาสัมพันธ์บนป้ายโฆษณา LED' },
+                                { value: 250, name: 'ขอรับบริการเครื่องพิมพ์ขนาดใหญ่' },
+                                { value: 200, name: 'ขอรับบริการ VDO Conference' },
+                            ],
+                            emphasis: {
+                                itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                            }
+                        ]
+                      });
+                    });
+                </script>
+    
+                </div>
+            </div><!-- End Repair Chart -->
+        </div>
+
+        <div class="col-md-6">
+            <!-- Score Chart -->
+            <div class="card">
+    
+                <div class="card-body pb-0">
+                <h6 style="color: #2f5f98;">สรุปความพึงพอใจในปี 2567</h6>
+    
+                <div id="scoreChart" style="min-height: 400px;" class="echart"></div>
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                      echarts.init(document.querySelector("#scoreChart")).setOption({
+                        tooltip: {
+                            trigger: 'item'
+                        },
+                        legend: {
+                            top: '5%',
+                            left: 'center'
+                        },
+                        series: [
+                            {
+                            name: 'ความพึงพอใจ',
+                            type: 'pie',
+                            radius: ['40%', '70%'],
+                            center: ['50%', '70%'],
+                            // adjust the start and end angle
+                            startAngle: 180,
+                            endAngle: 360,
+                            data: [
+                                { value: 1048, name: 'พอใจมากที่สุด' },
+                                { value: 735, name: 'พอใจมาก' },
+                                { value: 580, name: 'พอใจปานกลาง' },
+                                { value: 484, name: 'พอใจน้อย' },
+                                { value: 300, name: 'พอใจน้อยที่สุด' }
+                            ],
+                            }
+                        ]
+                      });
+                    });
+                </script>
+    
+                </div>
+            </div><!-- End Score Chart -->
+        </div>
+
+      </div>
+    </section>
+  
+  </main><!-- End #main -->
+{% endblock content %}

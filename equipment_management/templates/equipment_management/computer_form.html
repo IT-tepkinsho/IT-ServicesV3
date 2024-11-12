@@ -1,0 +1,319 @@
+{% extends 'general/components/base.html' %}
+
+{% block content %}
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+        <!-- <h3>รายละเอียดข้อมูล</h3> -->
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item active">Computer</li>
+          </ol>
+        </nav>
+      </div><!-- End Page Title -->
+
+      <section class="section">
+        <div class="row">
+          <div class="col-lg-12">
+              {% if form.errors %}
+                  <div class="alert alert-danger">
+                      <ul>
+                          {% for field, errors in form.errors.items %}
+                              {% for error in errors %}
+                                  <li>{{ field }}: {{ error }}</li>
+                              {% endfor %}
+                          {% endfor %}
+                      </ul>
+                  </div>
+              {% endif %}
+            <div class="card mt-3">
+              <h5 class="card-header">รายละเอียดข้อมูล</h5>
+                <div class="card-body">
+                  
+                  <!-- Multi Columns Form -->
+                  <form method="post" class="row g-3 mt-3" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="col-md-6">
+                        <label for="{{ form.equipment_code.id_for_label }}" class="form-label">รหัสอุปกรณ์ :</label>
+                        {{ form.equipment_code }}
+                        {% if form.equipment_code.errors %}
+                            <div class="text-danger">{{ form.equipment_code.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6">
+                      <label for="{{ form.equipment_type.id_for_label }}" class="form-label">Equipment Type :</label>
+                      {{ form.equipment_type }}
+                      {% if form.equipment_type.errors %}
+                          <div class="text-danger">{{ form.equipment_type.errors }}</div>
+                      {% endif %}
+                    </div>
+
+                                    
+                    <div class="col-md-6">
+                      <label for="{{ form.spec.id_for_label }}" class="form-label">ข้อมูลเครื่อง :</label>
+                      {{ form.spec }}
+                      {% if form.spec.errors %}
+                          <div class="text-danger">{{ form.spec.errors }}</div>
+                      {% endif %}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="{{ form.ip_address.id_for_label }}" class="form-label">IP Address :</label>
+                        {{ form.ip_address }}
+                        {% if form.ip_address.errors %}
+                            <div class="text-danger">{{ form.ip_address.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-2 mt-5">
+                        {{ form.internet_connection }} 
+                        <label for="{{ form.internet_connection.id_for_label }}" class="form-label">เชื่อมต่อ Internet </label>
+                        {% if form.internet_connection.errors %}
+                            <div class="text-danger">{{ form.internet_connection.errors }}</div>
+                        {% endif %}
+                    </div>
+                
+                    <div class="col-md-6">
+                        <label for="{{ form.owner.id_for_label }}" class="form-label">ผู้ครอบครอง :</label>
+                        {{ form.owner }} 
+                        {% if form.owner.errors %}
+                            <div class="text-danger">{{ form.owner.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="{{ form.owner.id_for_label }}" class="form-label">หน่วยงาน :</label>
+                        {{ form.owner }}
+                        {% if form.owner.errors %}
+                            <div class="text-danger">{{ form.owner.errors }}</div>
+                        {% endif %}
+                    </div>
+      
+                    <div class="col-md-6">
+                        <label for="{{ form.equipment_condition.id_for_label }}" class="form-label">สภาพอุปกรณ์ :</label>
+                        {{ form.equipment_condition }}
+                        {% if form.equipment_condition.errors %}
+                            <div class="text-danger">{{ form.equipment_condition.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label for="{{ form.equipment_status.id_for_label }}" class="form-label">สถานะ :</label>
+                        {{ form.equipment_status }}
+                        {% if form.equipment_status.errors %}
+                            <div class="text-danger">{{ form.equipment_status.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="{{ form.vendor.id_for_label }}" class="form-label">Vendor :</label>
+                        {{ form.vendor }}
+                        {% if form.vendor.errors %}
+                            <div class="text-danger">{{ form.vendor.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="{{ form.purchase_date.id_for_label }}" class="form-label">Purchase Date :</label>
+                        {{ form.purchase_date }}
+                        {% if form.purchase_date.errors %}
+                            <div class="text-danger">{{ form.purchase_date.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="{{ form.other.id_for_label }}" class="form-label">อื่นๆ :</label>
+                      {{ form.other }}
+                      {% if form.other.errors %}
+                          <div class="text-danger">{{ form.other.errors }}</div>
+                      {% endif %}
+                    </div>
+
+                    <div class="col-md-12">
+                      <hr>
+                      <p style="text-decoration: underline; color: #2f5f98;">อุปกรณ์ต่อพ่วง</p>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="{{ form.monitor.id_for_label }}" class="form-label">Monitor :</label>
+                      {{ form.monitor }}
+                      {% if form.monitor.errors %}
+                          <div class="text-danger">{{ form.monitor.errors }}</div>
+                      {% endif %}
+                    </div>
+                  
+                    <div class="col-md-6">
+                      <label for="{{ form.monitor_model.id_for_label }}" class="form-label">รุ่น :</label>
+                      {{ form.monitor_model }}
+                      {% if form.monitor_model.errors %}
+                          <div class="text-danger">{{ form.monitor_model.errors }}</div>
+                      {% endif %}
+                    </div>
+              
+                    <div class="col-md-6">
+                      <label for="{{ form.keyboard.id_for_label }}" class="form-label">Keyboard :</label>
+                      {{ form.keyboard }}
+                      {% if form.keyboard.errors %}
+                          <div class="text-danger">{{ form.keyboard.errors }}</div>
+                      {% endif %}
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="{{ form.keyboard_brand.id_for_label }}" class="form-label">ยี่ห้อ :</label>
+                      {{ form.keyboard_brand }}
+                      {% if form.keyboard_brand.errors %}
+                          <div class="text-danger">{{ form.keyboard_brand.errors }}</div>
+                      {% endif %}
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="{{ form.mouse.id_for_label }}" class="form-label">Mouse :</label>
+                      {{ form.mouse }}
+                      {% if form.mouse.errors %}
+                          <div class="text-danger">{{ form.mouse.errors }}</div>
+                      {% endif %}
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="{{ form.mouse_brand.id_for_label }}" class="form-label">ยี่ห้อ :</label>
+                      {{ form.mouse_brand }}
+                      {% if form.mouse_brand.errors %}
+                          <div class="text-danger">{{ form.mouse_brand.errors }}</div>
+                      {% endif %}
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="{{ form.printer.id_for_label }}" class="form-label">Printer :</label>
+                      {{ form.printer }}
+                      {% if form.printer.errors %}
+                          <div class="text-danger">{{ form.printer.errors }}</div>
+                      {% endif %}
+                    </div>
+                  
+                    <div class="col-md-6">
+                      <label for="{{ form.printer_model.id_for_label }}" class="form-label">รุ่น :</label>
+                      {{ form.printer_model }}
+                      {% if form.printer_model.errors %}
+                          <div class="text-danger">{{ form.printer_model.errors }}</div>
+                      {% endif %}
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="{{ form.scanner.id_for_label }}" class="form-label">Scanner :</label>
+                      {{ form.scanner }}
+                      {% if form.scanner.errors %}
+                          <div class="text-danger">{{ form.scanner.errors }}</div>
+                      {% endif %}
+                    </div>
+                  
+                    <div class="col-md-6">
+                      <label for="{{ form.scanner_model.id_for_label }}" class="form-label">รุ่น :</label>
+                      {{ form.scanner_model }}
+                      {% if form.scanner_model.errors %}
+                          <div class="text-danger">{{ form.scanner_model.errors }}</div>
+                      {% endif %}
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="{{ form.ups.id_for_label }}" class="form-label">UPS : </label>
+                      {{ form.ups }}
+                      {% if form.ups.errors %}
+                          <div class="text-danger">{{ form.ups.errors }}</div>
+                      {% endif %}
+                    </div>
+                  
+                    <div class="col-md-6">
+                      <label for="{{ form.ups_model.id_for_label }}" class="form-label">รุ่น :</label>
+                      {{ form.ups_model }}
+                      {% if form.ups_model.errors %}
+                          <div class="text-danger">{{ form.ups_model.errors }}</div>
+                      {% endif %}
+                    </div>
+                  
+                    <div class="col-md-12">
+                      <hr>
+                      <p style="text-decoration: underline; color: #2f5f98;">Software</p>
+                      <!-- <button type="button" id="add-software" class="btn btn-outline-success btn-sm">
+                        <i class="bi bi-plus"></i> Add Software
+                      </button> -->
+                    </div>
+
+                    <!-- Container for software forms -->
+                    <div id="software-forms">
+                      <div class="row align-items-center software-form">
+                          <div class="col-md-2">
+                              <label for="{{ form.software.id_for_label }}" class="form-label">รหัส software :</label>
+                              {{ form.software }}
+                              {% if form.software.errors %}
+                                  <div class="text-danger">{{ form.software.errors }}</div>
+                              {% endif %}
+                          </div>
+                          
+                          <div class="col-md-4">
+                              <label for="{{ form.software_name.id_for_label }}" class="form-label">ชื่อโปรแกรม :</label>
+                              {{ form.software_name }}
+                              {% if form.software_name.errors %}
+                                  <div class="text-danger">{{ form.software_name.errors }}</div>
+                              {% endif %}
+                          </div>
+                          
+                          <div class="col-md-4">
+                              <label for="{{ form.license_key.id_for_label }}" class="form-label">Product key :</label>
+                              {{ form.license_key }}
+                              {% if form.license_key.errors %}
+                                  <div class="text-danger">{{ form.license_key.errors }}</div>
+                              {% endif %}
+                          </div>
+                          
+                            <!-- No "remove" button for the first row -->
+                            <div class="col-md-2 d-flex align-items-end mt-4">
+                              <button type="button" id="add-software" class="btn btn-outline-success btn-sm">
+                                  <i class="fa fa-plus"></i> Add
+                              </button>
+                          </div>
+                      </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <button type="reset" class="btn btn-danger">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                  </form>
+                </div>
+            </div>
+    
+          </div>
+        </div>
+      </section>
+
+</main><!-- End #main -->
+
+
+<script>
+document.getElementById('add-software').addEventListener('click', function() {
+    const softwareForms = document.getElementById('software-forms');
+    const newForm = softwareForms.children[0].cloneNode(true); // คัดลอกฟอร์มแรก
+
+    // เคลียร์ค่าในฟอร์มที่คัดลอก
+    newForm.querySelectorAll('input').forEach(input => input.value = '');
+
+    // เปลี่ยนปุ่ม "Add" ของฟอร์มใหม่ให้เป็นปุ่ม "ลบ"
+    const addButton = newForm.querySelector('#add-software');
+    addButton.classList.remove('btn-outline-success');
+    addButton.classList.add('btn-outline-danger', 'remove-software');
+    addButton.innerHTML = '<i class="fa fa-trash-alt"></i>';
+    addButton.removeAttribute('id'); // ลบ id="add-software" ออกจากปุ่มใหม่
+    
+    // เพิ่ม event listener สำหรับปุ่ม "ลบ"
+    addButton.addEventListener('click', function() {
+        softwareForms.removeChild(newForm); // ลบฟอร์มที่ต้องการ
+    });
+
+    // เพิ่มฟอร์มใหม่เข้าไปในคอนเทนเนอร์
+    softwareForms.appendChild(newForm);
+});
+</script>
+
+{% endblock %}

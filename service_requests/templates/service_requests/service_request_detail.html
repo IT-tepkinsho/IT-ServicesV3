@@ -1,0 +1,168 @@
+{% extends 'general/components/base.html' %}
+{% load static %}
+
+{% block site_title %}Service request detail | {% endblock  %}
+
+{% block content %}
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h5>รายละเอียดการแจ้งซ่อม</h5>
+        <!-- <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item active">รายการซ่อม</li>
+          </ol>
+        </nav> -->
+      </div><!-- End Page Title -->
+  
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card mt-3" style="border-top: 3px solid #2f5f98;">
+            <div class="card-body">
+              <form method="post" action="{% url 'cancel_service_request' service_request.pk %}" class="row g-4 mt-2">
+                {% csrf_token %}
+                <div class="col-md-5">
+                    <label for="inputZip" class="form-label">
+                      <span style="margin-left: 10px; color: #2f5f98;">เลขที่ใบแจ้งซ่อม : </span><span style="margin-left: 10px; ">{{ service_request.service_request_number }} </span>
+                    </label>
+                </div>
+                <div class="col-md-5">
+                    <label for="inputZip" class="form-label">
+                      <span style="margin-left: 10px; color: #2f5f98;">วันที่แจ้งซ่อม : </span><span style="margin-left: 10px;"> {{ service_request.request_date|date:'j N Y' }} </span>
+                    </label>
+                </div>
+                <div class="col-md-2">
+                    <label for="inputZip" class="form-label">
+                      <span style="margin-left: 10px; color: #2f5f98;">สถานะ : </span>
+                        {% if service_request.repair_status.name == 'pending' %}
+                            <span style="margin-left: 10px; color: rgb(255, 160, 44);">
+                                <i class="fa fa-stopwatch fa-shake"></i> Pending
+                            </span>
+                        
+                        {% elif service_request.repair_status.name == 'in_progress' %}
+                            <span style="margin-left: 10px; color: #235a9e;">
+                                <i class="fa fa-spinner fa-spin-pulse"></i> In Progress
+                            </span>
+
+                        {% elif service_request.repair_status.name == 'completed' %}
+                            <span style="margin-left: 10px; color: rgb(18, 183, 18);">
+                                <i class="fa fa-circle-check"></i> Completed
+                            </span>
+
+                        {% elif  service_request.repair_status.name == 'canceled' %}
+                                <span style="margin-left: 10px; color: crimson;">
+                                    <i class="fa fa-circle-xmark"></i> Canceled
+                                </span>
+                        {% endif %}
+                    </label>
+                </div>
+                <div class="col-md-5">
+                    <label for="inputZip" class="form-label">
+                      <span style="margin-left: 10px; color: #2f5f98;">รหัสอุปกรณ์ : </span><span style="margin-left: 10px;"> {{ service_request.equipment }} </span>
+                    </label>
+                </div>
+                <div class="col-md-7">
+                    <label for="inputZip" class="form-label">
+                      <span style="margin-left: 10px; color: #2f5f98;">ประเภทการแจ้งซ่อม : </span><span style="margin-left: 10px;"> {{ service_request.repair_type }} {{ service_request.repair_title }}  </span>
+                    </label>
+                </div>
+                <div class="col-md-5">
+                    <label for="inputZip" class="form-label">
+                      <span style="margin-left: 10px; color: #2f5f98;">ผู้แจ้ง : </span><span style="margin-left: 10px;"> {{ service_request.user_name }} </span>
+                    </label>
+                </div>
+                <div class="col-md-5">
+                    <label for="inputZip" class="form-label">
+                      <span style="margin-left: 10px; color: #2f5f98;">เบอร์ติดต่อ : </span><span style="margin-left: 10px;"> {{ service_request.user_contact }} </span>
+                    </label>
+                </div>
+                <div class="col-md-2">
+                  <button type="submit" class="btn btn-outline-danger">ยกเลิกใบแจ้งซ่อม</button>
+                </div>
+                <div class="col-md-12">
+                    <label for="inputZip" class="form-label">
+                      <span style="margin-left: 10px; color: #2f5f98;">ปัญหา / อาการเบื้องต้น : </span><span style="margin-left: 10px;"> {{ service_request.request_description }} </span>
+                    </label>
+                </div>
+                <div class="col-md-6">
+                  {% if service_request.attached_file %}
+                      <label for="inputZip" class="form-label" style="margin-left: 10px;">
+                            {% with ext=service_request.attached_file.url|slice:"-4:" %}
+                                {% if ext in '.jpg.jpeg.png.gif' %}
+                                  <a href="{{ service_request.attached_file.url }}" target="_blank" style="text-decoration: none;">
+                                    <i class="fa fa-image"></i> แสดงไฟล์แนบ
+                                  </a>
+                                {% else %}
+                                    <a href="{{ service_request.attached_file.url }}" target="_blank" style="text-decoration: none;">
+                                        <i class="fa fa-paperclip"></i> แสดงไฟล์แนบ
+                                    </a>
+                                {% endif %}
+                            {% endwith %}
+                      </label>
+                  {% endif %}
+                </div>
+
+                <div class="col-md-12">
+                  <hr>
+                </div>
+                <div class="col-md-10">
+                  <label for="inputZip">
+                    <span style="margin-left: 10px; color: #2f5f98;">รายละเอียดการดำเนินการ :</span><span style="margin-left: 10px;"> {{ service_request.repair_by }} </span>
+                  </label>
+                </div>
+
+                <!-- <div class="col-md-4">
+                  <label>
+                    <span style="margin-left: 10px; color: #2f5f98;">ผู้ดำเนินการ :</span><span style="margin-left: 10px;"> IT Admin</span>
+                  </label>
+                </div> -->
+                <div class="col-md-12">
+                  <label>
+                    <span style="margin-left: 10px; color: #2f5f98;">วิธีการแก้ไข :</span>
+                    <span style="margin-left: 10px;"> {{ service_request.method_of_repair }} </span>
+                    {% if repairs %}
+                      {% for repair in repairs %}
+                        <span class="row" style="margin-left: 100px; color: dimgray; margin-top: 5px;"> {{ repair.repair_details }} {{ repair.repair_date }}</span>
+                      {% endfor %}
+                    {% endif %}
+                  </label>
+                </div>
+                <div class="col-md-12">
+                  <label>
+                    <span style="margin-left: 10px; color: #2f5f98;">ค่าใช้จ่าย :</span>
+                  </label>
+                </div>
+                <div class="col-md-12">
+                  <label>
+                    {% if service_request.method_of_repair %}
+                      <span style="margin-left: 10px; color: #2f5f98;">วันที่ซ่อมเสร็จ :</span><span style="margin-left: 10px;"> {{ service_request.date_completed }} </span>
+                    {% else %}
+                      <span style="margin-left: 10px; color: #2f5f98;">วันที่ซ่อมเสร็จ :</span>
+                    {% endif %}
+                    
+                  </label>
+                </div>
+                <div class="col-md-12">
+                  <label>
+                    {% if service_request.operator %}
+                    <span style="margin-left: 10px; color: #2f5f98;">ผู้ดำเนินการ :</span><span style="margin-left: 10px;"> {{ service_request.operator }}</span>
+                    {% else %}
+                    <span style="margin-left: 10px; color: #2f5f98;">ผู้ดำเนินการ :</span>
+                    {% endif %}
+                  </label>
+                </div>
+                
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  
+</main><!-- End #main -->
+
+{% endblock  %}

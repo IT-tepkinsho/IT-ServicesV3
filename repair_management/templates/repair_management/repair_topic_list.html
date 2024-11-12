@@ -7,7 +7,6 @@
 <main id="main" class="main">
 
     <div class="pagetitle">
-        <h3>Management Type</h3>
         <nav>
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="index.html">Home</a></li>
@@ -22,24 +21,28 @@
   
           <div class="card">
             <div class="card-body">
-                <h5>ประเภทการซ่อม</h5>
-                <a href="{% url 'create_repair_topic' %}" class="btn btn-outline-primary btn-sm">เพิ่มประเภทการซ่อมใหม่</a>
+                <h5 class="card-title">หัวข้อการแจ้งซ่อม</h5>
+                <a href="{% url 'create_repair_topic' %}" class="btn btn-outline-primary btn-sm">เพิ่มหัวข้อการแจ้งซ่อม</a>
                 <table class="table table-bordered table-striped mt-3">
+                  <thead>
                     <tr>
-                        <th style="width: 40%;">Repair Topic</th>
-                        <th style="width: 40%;">Repair Type</th>
+                        <th style="width: 45%;">Repair Topic</th>
+                        <th style="width: 45%;">Repair Type</th>
                         <th>Actions</th>
                     </tr>
+                  </thead>
+                  <tbody>
                     {% for repair_topic in repair_topics %}
                     <tr>
                         <td>{{ repair_topic.name }}</td>
                         <td>{{ repair_topic.repair_type }}</td>
                         <td>
-                            <a href="{% url 'edit_repair_topic' repair_topic.pk %}" class="btn btn-warning btn-sm" style="color: dimgray;"><i class="fa fa-edit"></i> Edit</a>
+                            <a href="{% url 'edit_repair_topic' repair_topic.pk %}" class="btn btn-warning btn-sm" style="color: rgb(46, 46, 46);"><i class="fa fa-edit"></i> Edit</a>
                             <a href="{% url 'delete_repair_topic' repair_topic.pk %}" class="btn btn-danger btn-sm" style="color: aliceblue;"><i class="fa fa-trash-alt"></i> Delete</a>
                         </td>
                     </tr>
                     {% endfor %}
+                  </tbody>
                 </table>
             </div>
           </div>

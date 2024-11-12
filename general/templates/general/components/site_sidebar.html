@@ -1,34 +1,141 @@
 {% load static %}
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
-
   <ul class="sidebar-nav" id="sidebar-nav">
 
+    {% if request.session.user_id %}
+    <!-- เมนูสำหรับเจ้าหน้าที่ -->
     <li class="nav-item">
-      <a class="nav-link" href="">
+      <a class="nav-link collapsed" href="{% url 'staff_dashboard' %}">
+        <i class="bi bi-grid"></i>
+        <span>Dashboard</span>
+      </a>
+    </li><!-- End Staff Dashboard Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#equipment-nav" data-bs-toggle="collapse" href="#">
+        <i class="fa fa-toolbox"></i><span>Equipment</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="equipment-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+          <a href="{% url 'computer_list' %}">
+            <i class="bi bi-laptop"></i><span>Computer</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'monitor_list' %}">
+            <i class="bi bi-display"></i><span>Monitor</span>
+          </a>
+        </li>
+        <li>
+          <a href="charts-echarts.html">
+            <i class="bi bi-mouse"></i><span>Mouse</span>
+          </a>
+        </li>
+        <li>
+          <a href="charts-echarts.html">
+            <i class="bi bi-keyboard"></i><span>Keyboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="charts-echarts.html">
+            <i class="bi bi-printer"></i><span>Printer</span>
+          </a>
+        </li>
+        <li>
+          <a href="charts-echarts.html">
+            <i class="bi bi-camera-video"></i><span>CCTV</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Charts Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="{% url 'user_list' %}">
+        <i class="fa fa-user-gear"></i>
+        <span>จัดการข้อมูลผู้ใช้</span>
+      </a>
+    </li><!-- End Manage Users Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#general-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-gear"></i><span>จัดการข้อมูลทั่วไป</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="general-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+          <a href="{% url 'repair_type_list' %}">
+            <i class="fa fa-gears"></i><span>ประเภทการแจ้งซ่อม</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'repair_topic_list' %}">
+            <i class="fa fa-sliders"></i><span>หัวข้อการแจ้งซ่อม</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'department_list' %}">
+            <i class="fa fa-building"></i><span>Department</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'vendor_list' %}">
+            <i class="fa fa-address-card"></i><span>Vendor</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <!-- เมนูสำหรับผู้ใช้ทั่วไป -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="{% url 'create_service_request' %}">
+        <i class="bi bi-journal-text"></i>
+        <span>ฟอร์มแจ้งซ่อม</span>
+      </a>
+    </li><!-- End Service Request Form Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="{% url 'service_request_list' %}">
+        <i class="bi bi-menu-button-wide"></i>
+        <span>รายการซ่อม</span>
+      </a>
+    </li><!-- End Service List Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="{% url 'service_request_history' %}">
+        <i class="bi bi-layout-text-window-reverse"></i>
+        <span>ประวัติการซ่อม</span>
+      </a>
+    </li><!-- End Service History Nav -->
+
+    {% else %}
+    <!-- เมนูสำหรับผู้ใช้ทั่วไป -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="{% url 'home' %}">
         <i class="bi bi-grid"></i>
         <span>Dashboard</span>
       </a>
     </li><!-- End Dashboard Nav -->
 
     <li class="nav-item">
-      <a class="nav-link collapsed" href="">
-        <i class="bi bi-journal-text"></i><span>ฟอร์มแจ้งซ่อม</span>
+      <a class="nav-link collapsed" href="{% url 'create_service_request' %}">
+        <i class="bi bi-journal-text"></i>
+        <span>ฟอร์มแจ้งซ่อม</span>
       </a>
-    </li><!-- End Components Nav -->
+    </li><!-- End Service Request Form Nav -->
 
     <li class="nav-item">
-      <a class="nav-link collapsed" href="">
-        <i class="bi bi-menu-button-wide"></i><span>รายการซ่อม</span>
+      <a class="nav-link collapsed" href="{% url 'service_request_list' %}">
+        <i class="bi bi-menu-button-wide"></i>
+        <span>รายการซ่อม</span>
       </a>
-    </li><!-- End Forms Nav -->
+    </li><!-- End Service List Nav -->
 
     <li class="nav-item">
-      <a class="nav-link collapsed" href="">
-        <i class="bi bi-layout-text-window-reverse"></i><span>ประวัติการซ่อม</span>
+      <a class="nav-link collapsed" href="{% url 'service_request_history' %}">
+        <i class="bi bi-layout-text-window-reverse"></i>
+        <span>ประวัติการซ่อม</span>
       </a>
-    </li><!-- End Tables Nav -->
+    </li><!-- End Service History Nav -->
+    {% endif %}
 
   </ul>
-
-</aside><!-- End Sidebar-->
+</aside><!-- End Sidebar -->

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import RepairType, RepairTopic
-from .forms import RepairTypeForm, RepairTopicForm
+from .models import RepairType, RepairTopic, Vendor
+from .forms import RepairTypeForm, RepairTopicForm, VendorForm
 
 # แสดงรายการประเภทการซ่อม
 def repair_type_list(request):
@@ -50,7 +50,7 @@ def create_repair_topic(request):
             return redirect('repair_topic_list')
     else:
         form = RepairTopicForm()
-    return render(request, 'repair_management/repair_topic_form.html', {'form': form} )
+    return render(request, 'repair_management/repair_topic_form.html', {'form': form})
 
 
 # แก้ไขหัวข้อการซ่อม
@@ -58,12 +58,12 @@ def edit_repair_topic(request, pk):
     repair_topic = get_object_or_404(RepairTopic, pk=pk)
     if request.method == 'POST':
         form = RepairTopicForm(request.POST, instance=repair_topic)
-        if form.valid():
+        if form.is_valid():
             form.save()
             return redirect('repair_topic_list')
     else:
             form = RepairTopicForm(instance=repair_topic)
-    return render(request, 'repair_management/repair_topic_form.html', {'form': form} )
+    return render(request, 'repair_management/repair_topic_form.html', {'form': form})
 
 # ลบหัวข้อการซ่อม
 def delete_repair_topic(request, pk):
@@ -72,4 +72,33 @@ def delete_repair_topic(request, pk):
     return redirect('repair_topic_list')
 
 
+def vendor_list(request):
+    vendors = Vendor.objects.all()
+    return render(request, 'repair_management/vendor_list.html', {'vendors': vendors})
 
+def create_vendor(request):
+    if request.method == 'POST':
+        form = VendorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('vendor_list')
+    else:
+        form = VendorForm()
+    return render(request, 'repair_management/vendor_form.html', {'form': form})
+
+def vendor_update(request, pk):
+    vendor = get_object_or_404(Vendor, pk=pk)
+    if request.method == 'POST':
+        form = VendorForm(request.POST, instance=vendor)
+        if form.is_valid():
+            form.save()
+            return redirect('vendor_list')
+    else:
+            form = VendorForm(instance=vendor)
+    return render(request, 'repair_management/vendor_form.html', {'form': form})
+
+def vendor_delete(request, pk):
+    vendor = get_object_or_404(Vendor, pk=pk)
+    if request.method == 'POST':
+        vendor.delete()
+        return redirect('vendor_list')

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import RepairType, RepairTopic
+from .models import RepairType, RepairTopic, Vendor
 
 # ปรับแต่งการแสดงผลในหน้าแอดมินสำหรับ RepairType
 @admin.register(RepairType)
@@ -14,3 +14,7 @@ class RepairTopicAdmin(admin.ModelAdmin):
     search_fields = ('name', 'repair_type__name')  # เพิ่มช่องค้นหาสำหรับฟิลด์ topic
     list_filter = ('repair_type',)  # เพิ่มตัวกรองตามประเภทการซ่อม
 
+@admin.register(Vendor)
+class VendorAdmin(admin.ModelAdmin):
+    list_display = ('id', 'vendor_code', 'vendor_name')
+    search_fields = ('vendor_code', 'vendor_name')
