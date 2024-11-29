@@ -90,6 +90,12 @@ a:hover {
   text-decoration: none;
 }
 
+.section-header {
+  background-color: #658096;
+  color: white;
+  text-align: left;
+}
+
 /* Card */
 .card {
   margin-bottom: 30px;
@@ -332,6 +338,7 @@ table th, table td {
   #main,
   #footer {
     margin-left: 300px;
+    
   }
 }
 
@@ -467,6 +474,7 @@ table th, table td {
   margin-top: 60px;
   padding: 20px 30px;
   transition: all 0.3s;
+  min-height: 100vh;
 }
 
 @media (max-width: 1199px) {
@@ -585,6 +593,7 @@ table th, table td {
   box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);
   background-color: #fff;
   position: relative;
+  
 }
 
 

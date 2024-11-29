@@ -37,17 +37,18 @@ class ServiceRequest(models.Model):
     request_description = models.TextField()  # ปัญหาและอาการ
     request_date = models.DateTimeField(auto_now_add=True)  # วันที่เวลาที่แจ้ง
     repair_status = models.ForeignKey(RequestStatus, on_delete=models.SET_NULL, null=True, default=None)  # สถานะการแจ้งซ่อม
-    repair_by = models.CharField(max_length=50, choices=[
-        ('ซ่อมโดยฝ่ายเทคโนโลยีสารสนเทศ', 'ซ่อมโดยฝ่ายเทคโนโลยีสารสนเทศ'),
-        ('ส่งเคลม', 'ส่งเคลม'),
+    repair_by = models.CharField(max_length=50, null=True, blank=True, choices=[
+        ('it_repair', 'ซ่อมโดยฝ่ายเทคโนโลยีสารสนเทศ'),
+        ('external_repair', 'ส่งซ่อม/ส่งเคลม'),
     ])
 
-    equipment = models.CharField(max_length=50, null=True, blank=True)  # รหัสอุปกรณ์
+    equipment = models.CharField(max_length=50)  # รหัสอุปกรณ์
     method_of_repair = models.TextField(null=True, blank=True, default='')  # วิธีดำเนินการ
     date_received = models.DateTimeField(null=True, blank=True)  # วันที่รับงาน
     date_completed = models.DateTimeField(null=True, blank=True)  # วันที่ซ่อมเสร็จ
     total_repair_time = models.DurationField(null=True, blank=True)  # รวมเวลาซ่อม
     operator = models.CharField(max_length=50, null=True, blank=True, default='')  # ผู้ดำเนินการ
+
 
     def save(self, *args, **kwargs):
         # Set service_request_number if it's not set
@@ -64,29 +65,17 @@ class ServiceRequest(models.Model):
             except ObjectDoesNotExist:
                 raise ValueError("ServiceRequestConfig instance not found.")
             
-        # ตั้งค่า repair_status ให้เป็น 'pending' ถ้ายังไม่ถูกตั้งค่า
+                # ตั้งค่า repair_status ให้เป็น 'pending' ถ้ายังไม่ถูกตั้งค่า
         if self.repair_status is None:
             try:
                 self.repair_status = RequestStatus.objects.get(name='pending')  # ค้นหาค่าจากโมเดล RequestStatus
             except ObjectDoesNotExist:
                 raise ValueError("RequestStatus instance with name 'pending' not found.")
         
-        # ถูกตั้งค่าเมื่อสถานะ repair_status ถูกเปลี่ยนเป็น 'in_progress'
-        if self.repair_status == 'in_progress' and not self.date_received:
-            self.date_received = timezone.now()
-
-        # ถูกตั้งค่าเมื่อสถานะ repair_status เปลี่ยนเป็น 'completed'
-        if self.repair_status == 'completed' and not self.date_completed:
-            self.date_completed = timezone.now()
-
-            # ถูกคำนวณเมื่อทั้ง date_received และ date_completed ถูกตั้งค่าเรียบร้อยแล้ว
-            if self.date_received:
-                self.total_repair_time = self.date_completed - self.date_received
-
-        super(ServiceRequest, self).save(*args, **kwargs)
+        super(ServiceRequest, self).save(*args, **kwargs) 
     
     def __str__(self):
-        return f"Service Request {self.service_request_number}"
+        return f"{self.service_request_number}"
     
 
 class Repair(models.Model):
@@ -123,4 +112,13 @@ class ActivityLog(models.Model):
 
     def __str__(self):
         return f"Activity for {self.service_request.equipment.name} - Action: {self.action_taken}"
+    
 
+class RepairUpdateLog(models.Model):
+    service_request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)  # ลิงก์กับ ServiceRequest
+    update_datetime = models.DateTimeField(default=timezone.now)  # วันที่เวลาที่อัพเดต
+    total_repair_time = models.DurationField(null=True, blank=True)  # เวลารวมในการซ่อม
+    details = models.TextField(null=True)  # รายละเอียดของการอัพเดต
+
+    def __str__(self):
+        return f"Repair Update for {self.service_request.service_request_number} at {self.update_datetime}"

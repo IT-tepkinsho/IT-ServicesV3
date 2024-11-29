@@ -1,0 +1,64 @@
+<form method="post">
+    {% csrf_token %}
+    {{ computer_form.as_p }}
+
+    <!-- Render Formset -->
+    <div id="software-forms">
+        {{ software_formset.management_form }}
+        {% for form in software_formset %}
+            <div class="row align-items-center software-form">
+                <div class="col-md-3">
+                    <label>รหัส Software:</label>
+                    {{ form.software }}
+                </div>
+                <div class="col-md-4">
+                    <label>ชื่อโปรแกรม:</label>
+                    {{ form.software_name }}
+                </div>
+                <div class="col-md-4">
+                    <label>License Key:</label>
+                    {{ form.license_key }}
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-outline-danger btn-sm remove-form">ลบ</button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <button type="button" id="add-software" class="btn btn-outline-success">เพิ่ม Software</button>
+    <button type="submit" class="btn btn-primary">บันทึก</button>
+</form>
+
+<script>
+document.getElementById('add-software').addEventListener('click', function () {
+    const softwareForms = document.getElementById('software-forms');
+    const totalForms = document.getElementById('id_form-TOTAL_FORMS'); // ตัวนับฟอร์ม
+
+    // Clone ฟอร์มตัวอย่าง
+    const newForm = softwareForms.children[0].cloneNode(true);
+    const formIndex = parseInt(totalForms.value, 10); // ดึง index ล่าสุด
+    newForm.innerHTML = newForm.innerHTML.replace(/-0-/g, `-${formIndex}-`);
+
+    // เพิ่มฟอร์มใหม่
+    totalForms.value = formIndex + 1;
+    softwareForms.appendChild(newForm);
+
+    // ล้างค่าของฟอร์มใหม่
+    newForm.querySelectorAll('input').forEach(input => input.value = '');
+});
+
+document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('remove-form')) {
+        const form = e.target.closest('.software-form');
+        form.remove();
+    }
+});
+</script>
+
+from django.urls import path
+from .views import computer_create_view
+
+urlpatterns = [
+    path('add-computer/', computer_create_view, name='add_computer'),
+]

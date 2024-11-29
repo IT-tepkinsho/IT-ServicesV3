@@ -69,6 +69,8 @@ def custom_login(request):
             if check_password(password, user.password):
                 request.session['user_id'] = user.id
                 request.session['username'] = user.username
+                request.session['name'] = user.name
+                request.session['role'] = user.role  # เก็บ role ใน session
                 request.session.set_expiry(3600)  # หมดอายุใน 1 ชั่วโมง
                 messages.success(request, "เข้าสู่ระบบสำเร็จ")
 

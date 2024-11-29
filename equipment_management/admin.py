@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import (EquipmentCondition, EquipmentGroup, EquipmentStatus, EquipmentType, Computer, Monitor, Mouse,
-                      Keyboard, Printer, Server, Software, Program, Equipment, Scanner, Ups)
+from .models import (CameraCCTV, EquipmentCondition, EquipmentGroup, EquipmentStatus, EquipmentType, Computer, Monitor, Mouse,
+                      Keyboard, Network, Printer, Server, Software, GroupProgram, Equipment, Scanner, Ups)
 
 # Register the EquipmentGroup model
 @admin.register(EquipmentGroup)
@@ -32,58 +32,58 @@ class MonitorAdmin(admin.ModelAdmin):
 # Register the Mouse model
 @admin.register(Mouse)
 class MouseAdmin(admin.ModelAdmin):
-    list_display = ('equipment_code', 'name', 'brand', 'model', 'connection_type', 'purchase_date', 'equipment_type')
+    list_display = ('equipment_code', 'brand', 'model', 'connection_type', 'cost', 'owner','vendor', 'status', 'equipment_type')
     search_fields = ('equipment_code', 'brand', 'model')
     list_filter = ('equipment_type',)
 
 # Register the Keyboard model
 @admin.register(Keyboard)
 class KeyboardAdmin(admin.ModelAdmin):
-    list_display = ('equipment_code', 'name', 'brand', 'model', 'layout', 'connection_type', 'purchase_date', 'equipment_type')
+    list_display = ('id', 'equipment_code', 'brand', 'model', 'connection_type', 'cost', 'owner','vendor', 'status',  'equipment_type')
     search_fields = ('equipment_code', 'brand', 'model')
     list_filter = ('equipment_type',)
-
+# 
 # Register the Printer model
 @admin.register(Printer)
 class PrinterAdmin(admin.ModelAdmin):
-    list_display = ('equipment_code', 'name', 'brand', 'model', 'print_type', 'purchase_date', 'equipment_type')
+    list_display = ('equipment_code', 'brand', 'model', 'print_type', 'warranty', 'ip_address', 'cost', 'owner','vendor', 'status', 'equipment_type')
     search_fields = ('equipment_code', 'brand', 'model')
     list_filter = ('equipment_type',)
 
 # Register the Scanner model
 @admin.register(Scanner)
 class ScannerAdmin(admin.ModelAdmin):
-    list_display = ('equipment_code', 'name', 'brand', 'model', 'scan_type', 'purchase_date', 'equipment_type')
+    list_display = ('equipment_code', 'brand', 'model', 'warranty', 'cost', 'owner','vendor', 'status', 'equipment_type')
     search_fields = ('equipment_code', 'brand', 'model')
     list_filter = ('equipment_type',)
 
 # Register the Server model
 @admin.register(Server)
 class ServerAdmin(admin.ModelAdmin):
-    list_display = ('equipment_code', 'name', 'brand', 'model', 'cpu', 'ram_size', 'storage_size', 'purchase_date', 'equipment_type')
+    list_display = ('equipment_code', 'name', 'spec', 'location', 'ip_address', 'status', 'equipment_type')
     search_fields = ('equipment_code', 'brand', 'model')
     list_filter = ('equipment_type',)
 
 # Register the Ups model
 @admin.register(Ups)
 class UpsAdmin(admin.ModelAdmin):
-    list_display = ('equipment_code', 'name', 'brand', 'model', 'purchase_date', 'equipment_type', 'owner')
+    list_display = ('equipment_code', 'brand', 'model', 'warranty', 'cost', 'owner','vendor', 'status', 'equipment_type')
     search_fields = ('equipment_code', 'brand', 'model')
     list_filter = ('equipment_type',)
 
 # Register the Software model
 @admin.register(Software)
 class SoftwareAdmin(admin.ModelAdmin):
-    list_display = ('equipment_code', 'name', 'version', 'license_key', 'purchase_date', 'equipment_type')
+    list_display = ('equipment_code', 'name', 'version', 'license_key', 'cost', 'group_program', 'owner' )
     search_fields = ('equipment_code', 'name', 'version')
-    list_filter = ('equipment_type',)
+    list_filter = ('group_program',)
 
 # Register the Program model
-@admin.register(Program)
+@admin.register(GroupProgram)
 class ProgramAdmin(admin.ModelAdmin):
-    list_display = ('equipment_code', 'name', 'license_key', 'purchase_date', 'equipment_type')
-    search_fields = ('equipment_code', 'name')
-    list_filter = ('equipment_type',)
+    list_display = ['name']
+    search_fields = ['name']
+
 
 # Register the Equipment model
 @admin.register(Equipment)
@@ -106,3 +106,16 @@ class EquipmentStatusAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     list_filter = ('name',)
 
+
+@admin.register(Network)
+class NetworkAdmin(admin.ModelAdmin):
+    list_display = ('equipment_code', 'name', 'brand', 'model', 'cost', 'ip_address', 'location', 'status')
+    search_fields = ('name', 'brand', 'model',)
+    list_filter = ('status',)
+
+
+@admin.register(CameraCCTV)
+class CameraCCTVAdmin(admin.ModelAdmin):
+    list_display = ('equipment_code', 'name', 'brand', 'model', 'cost', 'ip_address', 'status')
+    search_fields = ('name', 'brand', 'model',)
+    list_filter = ('status',)

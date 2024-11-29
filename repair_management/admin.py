@@ -16,5 +16,5 @@ class RepairTopicAdmin(admin.ModelAdmin):
 
 @admin.register(Vendor)
 class VendorAdmin(admin.ModelAdmin):
-    list_display = ('id', 'vendor_code', 'vendor_name')
+    list_display = ('id', 'vendor_code', 'vendor_name', 'vendor_phone', 'email')
     search_fields = ('vendor_code', 'vendor_name')

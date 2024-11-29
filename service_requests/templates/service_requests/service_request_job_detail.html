@@ -1,0 +1,344 @@
+{% extends 'general/components/base.html' %}
+{% load static %}
+
+{% block site_title %}Service request detail | {% endblock  %}
+
+{% block content %}
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h5>รายละเอียดการแจ้งซ่อม</h5>
+        <h5>รับงานแจ้งซ่อม</h5>
+        <!-- <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item active">รายการซ่อม</li>
+          </ol>
+        </nav> -->
+      </div><!-- End Page Title -->
+  
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card mt-3" style="border-top: 3px solid #2f5f98;">
+            <div class="card-body">
+              <form method="post" class="row g-4 mt-2">
+                {% csrf_token %}
+                <div class="col-md-5">
+                    <label for="inputZip" class="form-label">
+                      <span style="margin-left: 10px; color: #2f5f98;">เลขที่ใบแจ้งซ่อม : </span><span style="margin-left: 10px; ">{{ service_request.service_request_number }} </span>
+                    </label>
+                </div>
+                <div class="col-md-5">
+                    <label for="inputZip" class="form-label">
+                      <span style="margin-left: 10px; color: #2f5f98;">วันที่แจ้งซ่อม : </span><span style="margin-left: 10px;"> {{ service_request.request_date|date:'j N Y' }} </span>
+                    </label>
+                </div>
+                <div class="col-md-2">
+                    <label for="inputZip" class="form-label">
+                      <span style="margin-left: 10px; color: #2f5f98;">สถานะ : </span>
+                        {% if service_request.repair_status.name == 'pending' %}
+                            <span style="margin-left: 10px; color: rgb(255, 160, 44);">
+                                <i class="fa fa-stopwatch fa-shake"></i> Pending
+                            </span>
+                        
+                        {% elif service_request.repair_status.name == 'in_progress' %}
+                            <span style="margin-left: 10px; color: #235a9e;">
+                                <i class="fa fa-spinner fa-spin-pulse"></i> In Progress
+                            </span>
+
+                        {% elif service_request.repair_status.name == 'completed' %}
+                            <span style="margin-left: 10px; color: rgb(18, 183, 18);">
+                                <i class="fa fa-circle-check"></i> Completed
+                            </span>
+
+                        {% elif  service_request.repair_status.name == 'canceled' %}
+                                <span style="margin-left: 10px; color: crimson;">
+                                    <i class="fa fa-circle-xmark"></i> Canceled
+                                </span>
+                        {% endif %}
+                    </label>
+                </div>
+                <div class="col-md-5">
+                    <label for="inputZip" class="form-label">
+                      <span style="margin-left: 10px; color: #2f5f98;">รหัสอุปกรณ์ : </span><span style="margin-left: 10px;"> {{ service_request.equipment }} </span>
+                    </label>
+                </div>
+                <div class="col-md-7">
+                    <label for="inputZip" class="form-label">
+                      <span style="margin-left: 10px; color: #2f5f98;">ประเภทการแจ้งซ่อม : </span><span style="margin-left: 10px;"> {{ service_request.repair_type }} {{ service_request.repair_title }}  </span>
+                    </label>
+                </div>
+                <div class="col-md-5">
+                    <label for="inputZip" class="form-label">
+                      <span style="margin-left: 10px; color: #2f5f98;">ผู้แจ้ง : </span><span style="margin-left: 10px;"> {{ service_request.user_name }} </span>
+                    </label>
+                </div>
+                <div class="col-md-5">
+                    <label for="inputZip" class="form-label">
+                      <span style="margin-left: 10px; color: #2f5f98;">เบอร์ติดต่อ : </span><span style="margin-left: 10px;"> {{ service_request.user_contact }} </span>
+                    </label>
+                </div>
+                <div class="col-md-12">
+                    <label for="inputZip" class="form-label">
+                      <span style="margin-left: 10px; color: #2f5f98;">ปัญหา / อาการเบื้องต้น : </span><span style="margin-left: 10px;"> {{ service_request.request_description }} </span>
+                    </label>
+                </div>
+                <div class="col-md-6">
+                  {% if service_request.attached_file %}
+                      <label for="inputZip" class="form-label" style="margin-left: 10px;">
+                            {% with ext=service_request.attached_file.url|slice:"-4:" %}
+                                {% if ext in '.jpg.jpeg.png.gif' %}
+                                  <a href="{{ service_request.attached_file.url }}" target="_blank" style="text-decoration: none;">
+                                    <i class="fa fa-image"></i> แสดงไฟล์แนบ
+                                  </a>
+                                {% else %}
+                                    <a href="{{ service_request.attached_file.url }}" target="_blank" style="text-decoration: none;">
+                                        <i class="fa fa-paperclip"></i> แสดงไฟล์แนบ
+                                    </a>
+                                {% endif %}
+                            {% endwith %}
+                      </label>
+                  {% endif %}
+                </div>
+
+                <div class="col-md-12">
+                  <hr>
+                </div>
+
+                <div class="row mb-4">
+                  <label for="repairOptions" class="col-sm-2 col-form-label" style="margin-left: 10px; color: #2f5f98;">รายละเอียดการดำเนินการ :</label>
+                  <div class="col-sm-3">
+                    <select class="form-select" id="repairOptions" name="repairOptions" aria-label="Default select example">
+                      {% if service_request.repair_by %}
+                        <option value="{{ service_request.repair_by }}" selected>{{ service_request.get_repair_by_display }}</option>
+                      {% else %}
+                        <option value="" selected>---------</option>
+                      {% endif %}
+                      <option value="it_repair">ซ่อมโดยฝ่ายเทคโนโลยีสารสนเทศ</option>
+                      <option value="external_repair">ส่งซ่อม/ส่งเคลม</option>
+                    </select>
+                  </div>
+
+                  <div class="col-sm-1"></div>
+                <!-- Update Status Form -->
+                  {% if service_request.repair_status.name == 'completed' or service_request.repair_status.name == 'canceled' %}
+                    &nbsp;
+                  {% else %}
+                    <label for="status" class="col-form-label col-sm-1" style="margin-right: 10px; color: #2f5f98;">Change : </label>
+                      <div class="col-sm-2">
+                        <select name="repair_status" class="form-select" id="status" onchange="updateStatus()">
+                          {% for status in request_statuses %}
+                              <option value="{{ status.id }}" {% if service_request.repair_status.id == status.id %} selected {% endif %}>
+                                  {{ status.name }}
+                              </option>
+                          {% endfor %}
+                        </select>
+                      </div>
+
+                    <!-- Update Work Details Button -->
+                    <div class="col-md-2">
+                      <button type="button" class="btn btn-light" style="background-color: #4e63ca; color: aliceblue;" 
+                          data-bs-toggle="modal" data-bs-target="#updateWorkModal" data-service-request-id="{{ service_request.pk }}">
+                          <i class="fa fa-edit"></i> อัพเดตงาน
+                      </button>
+                    </div>
+                  {% endif %}
+                </div>
+
+                <!-- Modal for Status Update Confirmation -->
+                <div class="modal fade" id="statusUpdateModal" tabindex="-1" aria-labelledby="statusUpdateModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="statusUpdateModalLabel">Change Status</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        สถานะของใบแจ้งซ่อมนี้ได้อัพเดตเรียบร้อยแล้ว
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                        <button type="button" class="btn btn-primary" id="refreshPageBtn">ตกลง</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Modal for Updating Work Details -->
+                <div class="modal fade" id="updateWorkModal" tabindex="-1" aria-labelledby="updateWorkModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title" id="updateWorkModalLabel">อัพเดตข้อมูลการซ่อม</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                              <form id="repairForm">
+                                  {% csrf_token %}
+                                  <label for="repair-details" class="form-label">รายละเอียดการดำเนินการ</label>
+                                  <textarea class="form-control" id="repair-details" rows="3"></textarea>
+                              </form>
+                          </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                              <button type="button" class="btn btn-primary" onclick="saveRepairDetails()">บันทึก</button>
+                          </div>
+                      </div>
+                  </div>
+                </div>  
+
+                <div class="col-md-12 mb-4">
+                  <label>
+                    <span style="margin-left: 10px; color: #2f5f98;">วิธีการแก้ไข :</span>
+                    <span style="margin-left: 10px;"> {{ service_request.method_of_repair }} </span>
+                    {% if repairs %}
+                      {% for repair in repairs %}
+                        <span class="row" style="margin-left: 100px; color: dimgray; margin-top: 5px;"> {{ repair.details }} {{ repair.update_datetime }}</span>
+                      {% endfor %}
+                    {% endif %}
+                  </label>
+                </div>
+                <div class="col-md-12 mb-4">
+                  <label>
+                    <span style="margin-left: 10px; color: #2f5f98;">ค่าใช้จ่าย :</span>
+                  </label>
+                </div>
+                <div class="col-md-12 mb-4">
+                  <label>
+                    {% if service_request.method_of_repair %}
+                      <span style="margin-left: 10px; color: #2f5f98;">วันที่ซ่อมเสร็จ :</span><span style="margin-left: 10px;"> {{ service_request.date_completed }} </span>
+                    {% else %}
+                      <span style="margin-left: 10px; color: #2f5f98;">วันที่ซ่อมเสร็จ :</span>
+                    {% endif %}
+                    
+                  </label>
+                </div>
+                <div class="col-md-12 mb-4">
+                  <label>
+                    {% if service_request.operator %}
+                    <span style="margin-left: 10px; color: #2f5f98;">ผู้ดำเนินการ :</span><span style="margin-left: 10px;"> {{ service_request.operator }}</span>
+                    {% else %}
+                    <span style="margin-left: 10px; color: #2f5f98;">ผู้ดำเนินการ :</span>
+                    {% endif %}
+                  </label>
+                </div>
+                
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  
+</main><!-- End #main -->
+
+<script>
+  document.getElementById("repairOptions").addEventListener("change", function() {
+    const selectedOption = this.value;
+    console.log("Selected option: ", selectedOption);  // ตรวจสอบค่าที่ได้จากการเลือก
+
+    if (selectedOption === "it_repair") {
+
+      window.location.href = "/requests/it-repair-form/";
+    }
+    if (selectedOption === "external_repair") {
+
+      window.location.href = "/requests/external-repair-form/";
+    }
+  });
+
+function updateStatus() {
+    var statusId = document.getElementById("status").value; 
+    var serviceRequestId = "{{ service_request.id }}";  
+
+    function getCsrfToken() {
+        var csrfToken = null;
+        document.cookie.split(';').forEach(function(cookie) {
+            if (cookie.trim().startsWith('csrftoken=')) {
+                csrfToken = cookie.trim().substring('csrftoken='.length);
+            }
+        });
+        return csrfToken;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/requests/update-status/', 
+        data: JSON.stringify({
+            'service_request_id': serviceRequestId,
+            'status': statusId
+        }),
+        contentType: 'application/json',  
+        headers: {
+            'X-CSRFToken': getCsrfToken() 
+        },
+        success: function(response) {
+            if (response.success) {
+
+                $('#statusUpdateModal').modal('show');
+            } else {
+                alert("เกิดข้อผิดพลาด: " + response.error);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+
+    $('#refreshPageBtn').click(function() {
+        location.reload();  
+    });
+}
+
+document.getElementById('updateWorkModal').addEventListener('show.bs.modal', function (event) {
+    var button = event.relatedTarget; // ปุ่มที่ถูกคลิก
+    var serviceRequestId = button.getAttribute('data-service-request-id'); // ดึงค่า service_request_id
+    window.currentServiceRequestId = serviceRequestId; // เก็บค่าไว้สำหรับการใช้งาน
+    document.getElementById('repair-details').value = ''; // รีเซ็ตข้อความใน textarea
+});
+
+// ฟังก์ชันบันทึกการซ่อม
+function saveRepairDetails() {
+    const serviceRequestId = window.currentServiceRequestId;
+    const repairDetails = document.getElementById('repair-details').value;
+
+    fetch('/requests/update-repair-details/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken(), // ดึงค่า CSRF Token
+        },
+        body: JSON.stringify({
+            service_request_id: serviceRequestId,
+            repair_details: repairDetails,
+        })
+    })
+    .then(response => {
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            alert('บันทึกรายละเอียดการซ่อมสำเร็จ!');
+            $('#updateWorkModal').modal('hide');
+            location.reload(); // รีเฟรชหน้า
+        } else {
+            alert('ไม่สามารถบันทึกรายละเอียดได้: ' + (data.message || 'เกิดข้อผิดพลาด.'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('เกิดข้อผิดพลาด.');
+    });
+}
+
+// ฟังก์ชันดึงค่า CSRF Token
+function getCSRFToken() {
+    return document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+}
+</script>
+
+{% endblock  %}

@@ -1,0 +1,73 @@
+{% extends 'general/components/base.html' %}
+{% load static %}
+
+{% block site_title %}Service request history | {% endblock  %}
+{% block content %}
+    
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item active">Tracking Claim</li>
+          </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+  <section class="section dashboard">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <!-- Recent Sales -->
+                <div class="col-lg-12">
+                    <div class="card recent-sales overflow-auto mt-3" style="border-top: 3px solid #2f5f98;">
+                        <div class="card-header">ติดตามการส่งเคลม</div>
+                            <div class="card-body">
+                                <h5 class="card-title" style="color: #2f5f98;">ประวัติการซ่อม <span class="badge text-bg-primary">{{ service_requests|length }}</span></h5>
+                                    <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff;">
+                                    <!-- Table with stripped rows -->
+                                    <table id="table-list" class="table table-striped mt-3 text-center" style="font-size: 14px; width: 100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>รหัสส่งเคลม</th>
+                                                <th>วันที่ส่งเคลม</th>
+                                                <th>รหัสอุปกรณ์</th>
+                                                <th style="text-align: left;">รายละเอียด</th>
+                                                <th>สถานะ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for request in service_requests %}
+                                            <tr>
+                                                <td><a href="{% url 'service_request_detail' request.pk %}">{{ request.service_request_number}}</a></td>
+                                                <td>{{ request.request_date|date:'j N Y, H:i' }}</td>
+                                                <td style="text-align: left;">{{ request.request_description }}</td>
+                                                <td>{{ request.total_repair_time|date:'j N Y, H:i' }}</td>
+                                                <td>{% if request.repair_status.name == 'pending' %}
+                                                    <i class="fas fa-stopwatch fa-shake" style="color: rgb(255, 160, 44);"></i>
+                                                  {% elif request.repair_status.name == 'in_progress' %}
+                                                    <i class="fas fa-spinner fa-spin-pulse" style="color: #235a9e;"></i>
+                                                  {% elif request.repair_status.name == 'completed' %}
+                                                    <i class="fa-solid fa-circle-check" style="color: rgb(18, 183, 18);"></i>
+                                                  {% elif request.repair_status.name == 'canceled' %}
+                                                    <i class="fa-solid fa-circle-xmark" style="color: crimson;"></i>
+                                                  {% endif %}
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    </div>
+                            </div>
+                        <!-- </div> -->
+                    </div>
+                </div><!-- End Recent Sales -->
+            </div>
+        </div>
+    </div>
+  </section>
+
+</main><!-- End #main -->
+
+{% endblock content %}

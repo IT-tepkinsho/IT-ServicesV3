@@ -8,8 +8,8 @@
         <!-- <h3>รายละเอียดข้อมูล</h3> -->
         <nav>
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-            <li class="breadcrumb-item active">Monitor</li>
+            <li class="breadcrumb-item"><a href="{% url 'staff_dashboard' %}">Home</a></li>
+            <li class="breadcrumb-item active">Mouse</li>
           </ol>
         </nav>
       </div><!-- End Page Title -->
@@ -28,8 +28,8 @@
                       </ul>
                   </div>
               {% endif %}
-            <div class="card mt-3">
-              <h5 class="card-header">รายละเอียดข้อมูล</h5>
+            <div class="card mt-3" style="border-bottom: 3px solid #2f5f98;">
+              <h5 class="card-header" style="background-color: #2f5f98; color: aliceblue;">รายละเอียดข้อมูล</h5>
                 <div class="card-body">
                   
                   <!-- Multi Columns Form -->
@@ -53,192 +53,70 @@
                     </div>
 
                                     
-                    <div class="col-md-6">
-                      <label for="{{ form.spec.id_for_label }}" class="form-label">ข้อมูลเครื่อง :</label>
-                      {{ form.spec }}
-                      {% if form.spec.errors %}
-                          <div class="text-danger">{{ form.spec.errors }}</div>
+                    <div class="col-md-3">
+                      <label for="{{ form.brand.id_for_label }}" class="form-label">Brand :</label>
+                      {{ form.brand }}
+                      {% if form.brand.errors %}
+                          <div class="text-danger">{{ form.brand.errors }}</div>
                       {% endif %}
                     </div>
 
-                    <div class="col-md-4">
-                        <label for="{{ form.ip_address.id_for_label }}" class="form-label">IP Address :</label>
-                        {{ form.ip_address }}
-                        {% if form.ip_address.errors %}
-                            <div class="text-danger">{{ form.ip_address.errors }}</div>
+                    <div class="col-md-5">
+                        <label for="{{ form.model.id_for_label }}" class="form-label">Model :</label>
+                        {{ form.model }}
+                        {% if form.model.errors %}
+                            <div class="text-danger">{{ form.model.errors }}</div>
                         {% endif %}
                     </div>
-
-                    <div class="col-md-2 mt-5">
-                        {{ form.internet_connection }} 
-                        <label for="{{ form.internet_connection.id_for_label }}" class="form-label">เชื่อมต่อ Internet </label>
-                        {% if form.internet_connection.errors %}
-                            <div class="text-danger">{{ form.internet_connection.errors }}</div>
-                        {% endif %}
-                    </div>
-                
-                    <div class="col-md-6">
-                        <label for="{{ form.owner.id_for_label }}" class="form-label">ผู้ครอบครอง :</label>
-                        {{ form.owner }} 
-                        {% if form.owner.errors %}
-                            <div class="text-danger">{{ form.owner.errors }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="col-md-6">
-                        <label for="{{ form.owner.id_for_label }}" class="form-label">หน่วยงาน :</label>
-                        {{ form.owner }}
-                        {% if form.owner.errors %}
-                            <div class="text-danger">{{ form.owner.errors }}</div>
-                        {% endif %}
-                    </div>
-      
-                    <div class="col-md-6">
-                        <label for="{{ form.equipment_condition.id_for_label }}" class="form-label">สภาพอุปกรณ์ :</label>
-                        {{ form.equipment_condition }}
-                        {% if form.equipment_condition.errors %}
-                            <div class="text-danger">{{ form.equipment_condition.errors }}</div>
+                    <div class="col-md-2">
+                        <label for="{{ form.connection_type.id_for_label }}" class="form-label">Connection type :</label>
+                        {{ form.connection_type }}
+                        {% if form.connection_type.errors %}
+                            <div class="text-danger">{{ form.connection_type.errors }}</div>
                         {% endif %}
                     </div>
                     
+                    <div class="col-md-2">
+                      <label for="{{ form.cost.id_for_label }}" class="form-label">Cost :</label>
+                      {{ form.cost }}
+                      {% if form.cost.errors %}
+                          <div class="text-danger">{{ form.cost.errors }}</div>
+                      {% endif %}
+                    </div>
+
                     <div class="col-md-6">
-                        <label for="{{ form.equipment_status.id_for_label }}" class="form-label">สถานะ :</label>
-                        {{ form.equipment_status }}
-                        {% if form.equipment_status.errors %}
-                            <div class="text-danger">{{ form.equipment_status.errors }}</div>
+                      <label for="{{ form.vendor.id_for_label }}" class="form-label">Vendor :</label>
+                      {{ form.vendor }}
+                      {% if form.vendor.errors %}
+                          <div class="text-danger">{{ form.vendor.errors }}</div>
+                      {% endif %}
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="{{ form.condition.id_for_label }}" class="form-label">สภาพอุปกรณ์ :</label>
+                        {{ form.condition }}
+                        {% if form.condition.errors %}
+                            <div class="text-danger">{{ form.condition.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <label for="{{ form.status.id_for_label }}" class="form-label">สถานะ :</label>
+                        {{ form.status }}
+                        {% if form.status.errors %}
+                            <div class="text-danger">{{ form.status.errors }}</div>
                         {% endif %}
                     </div>
 
-                    <div class="col-md-6">
-                        <label for="{{ form.vendor.id_for_label }}" class="form-label">Vendor :</label>
-                        {{ form.vendor }}
-                        {% if form.vendor.errors %}
-                            <div class="text-danger">{{ form.vendor.errors }}</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="{{ form.purchase_date.id_for_label }}" class="form-label">Purchase Date :</label>
-                        {{ form.purchase_date }}
-                        {% if form.purchase_date.errors %}
-                            <div class="text-danger">{{ form.purchase_date.errors }}</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="col-md-6">
-                      <label for="{{ form.other.id_for_label }}" class="form-label">อื่นๆ :</label>
-                      {{ form.other }}
-                      {% if form.other.errors %}
-                          <div class="text-danger">{{ form.other.errors }}</div>
+                    <div class="col-md-4">
+                      <label for="{{ form.owner.id_for_label }}" class="form-label">owner :</label>
+                      {{ form.owner }}
+                      {% if form.owner.errors %}
+                          <div class="text-danger">{{ form.owner.errors }}</div>
                       {% endif %}
                     </div>
 
-                    <div class="col-md-12">
-                      <hr>
-                      <p style="text-decoration: underline; color: #2f5f98;">อุปกรณ์ต่อพ่วง</p>
-                    </div>
-
-                    <div class="col-md-6">
-                      <label for="{{ form.monitor.id_for_label }}" class="form-label">Monitor :</label>
-                      {{ form.monitor }}
-                      {% if form.monitor.errors %}
-                          <div class="text-danger">{{ form.monitor.errors }}</div>
-                      {% endif %}
-                    </div>
-                  
-                    <div class="col-md-6">
-                      <label for="{{ form.monitor_model.id_for_label }}" class="form-label">รุ่น :</label>
-                      {{ form.monitor_model }}
-                      {% if form.monitor_model.errors %}
-                          <div class="text-danger">{{ form.monitor_model.errors }}</div>
-                      {% endif %}
-                    </div>
-              
-                    <div class="col-md-6">
-                      <label for="{{ form.keyboard.id_for_label }}" class="form-label">Keyboard :</label>
-                      {{ form.keyboard }}
-                      {% if form.keyboard.errors %}
-                          <div class="text-danger">{{ form.keyboard.errors }}</div>
-                      {% endif %}
-                    </div>
-
-                    <div class="col-md-6">
-                      <label for="{{ form.keyboard_brand.id_for_label }}" class="form-label">ยี่ห้อ :</label>
-                      {{ form.keyboard_brand }}
-                      {% if form.keyboard_brand.errors %}
-                          <div class="text-danger">{{ form.keyboard_brand.errors }}</div>
-                      {% endif %}
-                    </div>
-
-                    <div class="col-md-6">
-                      <label for="{{ form.mouse.id_for_label }}" class="form-label">Mouse :</label>
-                      {{ form.mouse }}
-                      {% if form.mouse.errors %}
-                          <div class="text-danger">{{ form.mouse.errors }}</div>
-                      {% endif %}
-                    </div>
-
-                    <div class="col-md-6">
-                      <label for="{{ form.mouse_brand.id_for_label }}" class="form-label">ยี่ห้อ :</label>
-                      {{ form.mouse_brand }}
-                      {% if form.mouse_brand.errors %}
-                          <div class="text-danger">{{ form.mouse_brand.errors }}</div>
-                      {% endif %}
-                    </div>
-
-                    <div class="col-md-6">
-                      <label for="{{ form.printer.id_for_label }}" class="form-label">Printer :</label>
-                      {{ form.printer }}
-                      {% if form.printer.errors %}
-                          <div class="text-danger">{{ form.printer.errors }}</div>
-                      {% endif %}
-                    </div>
-                  
-                    <div class="col-md-6">
-                      <label for="{{ form.printer_model.id_for_label }}" class="form-label">รุ่น :</label>
-                      {{ form.printer_model }}
-                      {% if form.printer_model.errors %}
-                          <div class="text-danger">{{ form.printer_model.errors }}</div>
-                      {% endif %}
-                    </div>
-
-                    <div class="col-md-6">
-                      <label for="{{ form.scanner.id_for_label }}" class="form-label">Scanner :</label>
-                      {{ form.scanner }}
-                      {% if form.scanner.errors %}
-                          <div class="text-danger">{{ form.scanner.errors }}</div>
-                      {% endif %}
-                    </div>
-                  
-                    <div class="col-md-6">
-                      <label for="{{ form.scanner_model.id_for_label }}" class="form-label">รุ่น :</label>
-                      {{ form.scanner_model }}
-                      {% if form.scanner_model.errors %}
-                          <div class="text-danger">{{ form.scanner_model.errors }}</div>
-                      {% endif %}
-                    </div>
-
-                    <div class="col-md-6">
-                      <label for="{{ form.ups.id_for_label }}" class="form-label">UPS : </label>
-                      {{ form.ups }}
-                      {% if form.ups.errors %}
-                          <div class="text-danger">{{ form.ups.errors }}</div>
-                      {% endif %}
-                    </div>
-                  
-                    <div class="col-md-6">
-                      <label for="{{ form.ups_model.id_for_label }}" class="form-label">รุ่น :</label>
-                      {{ form.ups_model }}
-                      {% if form.ups_model.errors %}
-                          <div class="text-danger">{{ form.ups_model.errors }}</div>
-                      {% endif %}
-                    </div>
-                  
-                    <div class="col-md-12">
-                      <hr>
-                      <p style="text-decoration: underline; color: #2f5f98;">Software</p>
-                    </div>
-
-                    <div style="text-align: right;">
+                    <div style="text-align: right; margin-top: 50px;">
                         <button type="reset" class="btn btn-danger">Cancel</button>
                         <button type="submit" class="btn btn-primary">Save</button>
                     </div>

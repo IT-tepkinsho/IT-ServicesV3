@@ -1,6 +1,6 @@
 from urllib import request
 from django.contrib import admin
-from .models import  ServiceRequest, Repair, Claim, ActivityLog, ServiceRequestConfig, RequestStatus
+from .models import  RepairUpdateLog, ServiceRequest, Repair, Claim, ActivityLog, ServiceRequestConfig, RequestStatus
 
 @admin.register(ServiceRequest)
 class ServiceRequestAdmin(admin.ModelAdmin):
@@ -15,6 +15,7 @@ class ServiceRequestAdmin(admin.ModelAdmin):
         'attached_file',
         'request_description',
         'request_date',
+        'repair_status',
         'repair_by',
         )
     
@@ -29,6 +30,7 @@ class ServiceRequestAdmin(admin.ModelAdmin):
         'request_description', 
         'repair_by',
     )
+    list_filter = ['repair_status']
 
 
 @admin.register(Repair)
@@ -56,3 +58,9 @@ class ServiceRequestConfigAdmin(admin.ModelAdmin):
 class RequestStatusAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
     search_fields = ('name',)
+
+
+@admin.register(RepairUpdateLog)
+class RepairUpdateLogAdmin(admin.ModelAdmin):
+    list_display = ('id', 'service_request', 'update_datetime', 'total_repair_time', 'details')
+    search_fields = ['service_request']

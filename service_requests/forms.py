@@ -1,5 +1,5 @@
 from django import forms
-from .models import ServiceRequest, Repair, Claim, RequestStatus, RepairType
+from .models import RepairUpdateLog, ServiceRequest, Repair, Claim, RequestStatus, RepairType
 from user_management.models import User, Department
 from django.utils import timezone
 
@@ -33,7 +33,7 @@ class ServiceRequestForm(forms.ModelForm):
             'repair_type': forms.Select(attrs={'class': 'form-select'}),
             'repair_title': forms.Select(attrs={'class': 'form-select'}),
             'user_department': forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly', 'id': 'id_user_department'}),
-            'user_contact': forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly', 'id': 'id_user_contact'}), 
+            'user_contact': forms.TextInput(attrs={'class': 'form-control', 'id': 'id_user_contact'}), 
             'equipment': forms.TextInput(attrs={'class': 'form-control'}),
             'attached_file': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'request_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
@@ -42,8 +42,9 @@ class ServiceRequestForm(forms.ModelForm):
 
 class RepairForm(forms.ModelForm):
     class Meta:
-        model = Repair
-        fields = ['request', 'repair_details']
+        model = RepairUpdateLog
+        fields = ['service_request', 'details']
+
 
 class ClaimForm(forms.ModelForm):
     class Meta:
@@ -51,19 +52,4 @@ class ClaimForm(forms.ModelForm):
         fields = ['repair', 'claim_description', 'claim_status']
 
 
-class RequestForm(forms.Form):
-    repair_type = forms.ModelChoiceField(
-        queryset=RepairType.objects.all(),
-        empty_label="เลือกประเภทการซ่อม",
-        widget=forms.Select(attrs={'class': 'form-select'})
-    )
-    department = forms.ModelChoiceField(
-        queryset=Department.objects.all(),
-        empty_label="เลือกหน่วยงาน",
-        widget=forms.Select(attrs={'class': 'form-select'})
-    )
-    repair_status = forms.ModelChoiceField(
-        queryset=RequestStatus.objects.all(),
-        empty_label="เลือกสถานะ",
-        widget=forms.Select(attrs={'class': 'form-select'})
-    )
+

@@ -170,7 +170,7 @@
                               <tbody>
                                 {% for request in pending_requests %}
                                     <tr>
-                                        <td><a href="{% url 'service_request_detail' request.pk %}">{{ request.service_request_number }}</a></td>
+                                        <td><a href="{% url 'service_request_job' request.pk %}">{{ request.service_request_number }}</a></td>
                                         <td>{{ request.user_department }}</td>
                                         <td>{{ request.user_name }}</td>
                                         <td style="text-align: left;">{{ request.request_description }}</td>
@@ -204,7 +204,7 @@
                               <tbody>
                                 {% for request in in_progress_requests %}
                                     <tr>
-                                        <td><a href="{% url 'service_request_detail' request.pk %}">{{ request.service_request_number }}</a></td>
+                                        <td><a href="{% url 'service_request_job' request.pk %}">{{ request.service_request_number }}</a></td>
                                         <td>{{ request.user_department }}</td>
                                         <td>{{ request.user_name }}</td>
                                         <td>{{ request.request_description }}</td>
@@ -241,7 +241,7 @@
                                       <tbody>
                                         {% for request in completed_requests %}
                                             <tr>
-                                                <td><a href="{% url 'service_request_detail' request.pk %}">{{ request.service_request_number }}</a></td>
+                                                <td><a href="{% url 'service_request_job' request.pk %}">{{ request.service_request_number }}</a></td>
                                                 <td>{{ request.user_department }}</td>
                                                 <td>{{ request.user_name }}</td>
                                                 <td>{{ request.request_description }}</td>
@@ -280,7 +280,7 @@
                                       <tbody>
                                         {% for request in canceled_requests %}
                                             <tr>
-                                                <td><a href="{% url 'service_request_detail' request.pk %}">{{ request.service_request_number }}</a></td>
+                                                <td><a href="{% url 'service_request_job' request.pk %}">{{ request.service_request_number }}</a></td>
                                                 <td>{{ request.user_department }}</td>
                                                 <td>{{ request.user_name }}</td>
                                                 <td>{{ request.request_description }}</td>
@@ -419,7 +419,13 @@
                                                 <td>IT = 27 , Outsource = 0</td>
                                                 <td>0</td>
                                             </tr>
-                                            
+                                            <tr>
+                                                <td></td>
+                                                <td style="text-align: right;">รวมทั้งสิ้น</td>
+                                                <td class="text-center">312 รายการ</td>
+                                                <td></td>
+                                                <td>220,718</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>

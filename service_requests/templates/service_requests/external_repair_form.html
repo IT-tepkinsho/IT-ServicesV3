@@ -1,0 +1,102 @@
+{% extends 'general/components/base.html' %}
+{% load static %}
+{% block site_title %}Service Repair | {% endblock  %}
+
+{% block content %}
+    
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h5>รายละเอียดการซ่อม</h5>
+    </div>
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <ul>
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ field }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+          <div class="card mt-3" style="border-top: 3px solid #2f5f98;">
+            <h5 class="card-header" style="background-color: #2f5f98; color: aliceblue;"><i class="fas fa-truck"></i> ส่งซ่อม/ส่งเคลม</h5>
+            <div class="card-body">
+              
+              <!-- Multi Columns Form -->
+              <form method="post" class="row g-3 mt-3" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="col-md-6">
+                  <label for="service_request_number" class="form-label">เลขที่ใบแจ้งซ่อม :</label>
+                  <input type="text" class="form-control" name="service_request_number">
+                </div>
+
+                <div class="col-md-3">
+                  <label for="claim" class="form-label">วันที่ส่งเคลม :</label>
+                  <input type="date" class="form-control" name="claim">
+                </div>
+
+                <div class="col-md-3">
+                  <label for="equipment_code" class="form-label">รหัสอุปกรณ์ :</label>
+                  <input type="text" class="form-control" name="equipment_code">
+                </div>
+
+
+                <div class="col-md-6">
+                  <label for="company" class="form-label">ชื่อบริษัท :</label>
+                  <input type="number" class="form-control" name="company">
+                </div>
+
+                <div class="col-md-3">
+                  <label for="car_type" class="form-label">ชนิดรถ :</label>
+                  <input type="text" class="form-control" name="car_type">
+                </div>
+
+                <div class="col-md-3">
+                  <label for="number_register" class="form-label">หมายเลขทะเบียน :</label>
+                  <input type="text" class="form-control" name="number_register">
+                </div>
+
+                <div class="col-md-6">
+                  <label for="method" class="form-label">วัตถุประสงค์ในการนำออก :</label>
+                  <textarea type="text" class="form-control" name="method" rows="3"></textarea>
+                </div>
+
+                <div class="col-md-3">
+                  <label for="cost" class="form-label">ค่าใช้จ่าย :</label>
+                  <input type="number" class="form-control" name="cost">
+                </div>
+
+                <div style="text-align: right; margin-top: 30px;">
+                    <button type="reset" class="btn btn-danger">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+</main>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const checkbox = document.querySelector('input[name="change_device"]');
+
+    checkbox.addEventListener('change', function() {
+      if (this.checked) {
+        // Redirect to the new form page when checkbox is checked
+        window.location.href = "{% url 'new_device_form' %}";
+      }
+    });
+  });
+</script>
+{% endblock  %}

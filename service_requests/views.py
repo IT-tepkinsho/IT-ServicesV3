@@ -2,11 +2,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from repair_management.models import RepairType, RepairTopic 
 from user_management.models import User, Department
-from .models import ServiceRequest, Repair, RequestStatus
-from .forms import ServiceRequestForm, RepairForm, ClaimForm, RequestForm
+from .models import ServiceRequest, Repair, RequestStatus, RepairUpdateLog
+from .forms import ServiceRequestForm, RepairForm, ClaimForm
 from django.http import JsonResponse
+import json
 from django.utils import timezone
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
 
 
 # แสดงรายการ Service Requests List
@@ -79,7 +81,7 @@ def service_request_detail(request, service_request_id):
     
     return render(request, 'service_requests/service_request_detail.html', context)
 
-# ยกเลิกใบแจ้งซ่อม
+#ยกเลิกใบแจ้งซ่อม
 def cancel_service_request(request, pk):
     # Get the service request by primary key (pk)
     service_request = get_object_or_404(ServiceRequest, pk=pk)
@@ -93,6 +95,94 @@ def cancel_service_request(request, pk):
 
     # Redirect back to the service request detail page
     return redirect(reverse('service_request_detail', args=[pk]))
+
+# ดูรายละเอียดใบแจ้งซ่อม Staff
+def service_request_job_detail(request, service_request_id):
+    # ดึงข้อมูล service request ตาม id
+    service_request = get_object_or_404(ServiceRequest, pk=service_request_id)
+    
+    # ดึงข้อมูล repair ที่เชื่อมโยงกับ service request
+    # repairs = Repair.objects.filter(request=service_request)
+    # request_statuses = RequestStatus.objects.filter(name__in=['pending' ,'in_progress', 'canceled'])
+
+    repairs = RepairUpdateLog.objects.filter(service_request=service_request)
+
+    if service_request.repair_status.name == 'pending':
+        request_statuses = RequestStatus.objects.filter(name__in=['pending', 'in_progress', 'canceled'])
+    elif service_request.repair_status.name == 'in_progress':
+        request_statuses = RequestStatus.objects.filter(name__in=['in_progress', 'canceled'])
+    else:
+        request_statuses = []
+    
+    context = {
+        'service_request': service_request,
+        'repairs': repairs,
+        'request_statuses': request_statuses,
+    }
+    
+    return render(request, 'service_requests/service_request_job_detail.html', context)
+
+
+def update_status(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        service_request_id = data.get('service_request_id')
+        status_id = data.get('status')
+
+        try:
+            service_request = ServiceRequest.objects.get(id=service_request_id)
+            status = RequestStatus.objects.get(id=status_id)
+            
+            # สถานะเป็น 'in_progress', ให้บันทึกวันที่เวลาใน date_receive
+            if status.name == 'in_progress' and service_request.date_received is None:
+                service_request.date_received = timezone.now()  # บันทึกเวลาปัจจุบัน
+
+            service_request.repair_status = status
+            service_request.save()
+
+            return JsonResponse({'success': True})
+        except ServiceRequest.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Service request not found'})
+        except RequestStatus.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Status not found'})
+        
+@csrf_exempt
+def update_repair_details(request):
+    if request.method == 'POST':
+        try:
+            # อ่านข้อมูลจาก request.body
+            data = json.loads(request.body)
+            print(f"Data received: {data}")  # แสดงข้อมูลที่ได้รับ
+
+            service_request_id = data.get('service_request_id')
+            details = data.get('repair_details')
+
+            print(f"Service Request ID: {service_request_id}")  # ตรวจสอบ service_request_id
+            print(f"Repair Details: {details}")  # ตรวจสอบ repair_details
+
+            # ตรวจสอบว่ามี service_request_id ในฐานข้อมูล
+            service_request = ServiceRequest.objects.get(id=service_request_id)
+
+            # สร้าง RepairUpdateLog
+            RepairUpdateLog.objects.create(
+                service_request=service_request,
+                details=details
+            )
+
+            return JsonResponse({'success': True, 'message': 'Repair details saved successfully'})
+
+        except ServiceRequest.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Service request not found'}, status=404)
+
+        except ValueError:
+            return JsonResponse({'success': False, 'message': 'Invalid JSON data'}, status=400)
+
+        except Exception as e:
+            # เพิ่มการพิมพ์ข้อความข้อผิดพลาด
+            print(f"Error: {str(e)}")
+            return JsonResponse({'success': False, 'message': str(e)}, status=500)
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method'}, status=405)
 
 # ดึงประเภทการแจ้งซ่อม
 def get_repair_topics(request):
@@ -201,3 +291,47 @@ def create_claim(request, repair_id):
         form = ClaimForm()
     return render(request, 'service_requests/claim_form.html', {'form': form, 'repair': repair})
 
+
+def it_repair_form(request):
+    return render(request, 'service_requests/it_repair_form.html')
+
+def external_repair_form(request):
+    return render(request, 'service_requests/external_repair_form.html')
+
+def new_device_form(request):
+    return render(request, 'service_requests/new_device_form.html')
+
+
+def ticket_request(request):
+    
+    pending_requests = ServiceRequest.objects.filter(repair_status__name='pending')
+    print(pending_requests) 
+
+    in_progress_requests = ServiceRequest.objects.filter(repair_status__name='in_progress')
+    print(in_progress_requests) 
+
+    completed_requests = ServiceRequest.objects.filter(repair_status__name='completed')
+    print(completed_requests)
+
+    canceled_requests = ServiceRequest.objects.filter(repair_status__name='canceled')
+    print(canceled_requests)
+
+
+    # นับจำนวนคำร้องในแต่ละสถานะ
+    pending_count = pending_requests.count()
+    in_progress_count = in_progress_requests.count()
+    completed_count = completed_requests.count()
+    canceled_count = canceled_requests.count()
+
+    context = {
+        'pending_requests': pending_requests,
+        'in_progress_requests': in_progress_requests,
+        'completed_requests': completed_requests,
+        'canceled_requests': canceled_requests,
+        'pending_count': pending_count,
+        'in_progress_count': in_progress_count,
+        'completed_count': completed_count,
+        'canceled_count': canceled_count,
+    }
+
+    return render(request, 'service_requests/ticket_request.html', context)

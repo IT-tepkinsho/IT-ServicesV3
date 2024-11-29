@@ -324,61 +324,59 @@
                                 </li>
                             </ul>
 
-                            <div class="card mt-3" style="background-color: rgb(255, 255, 255, 0.8);">
-                                <div class="card-body">
-                                  <form method="get" action="">
-                                    <div class="row">
-                                          <div class="row mb-3">
-                                            <label class="col-sm-1 col-form-label" style="text-align: right;">เดือน :</label>
-                                            <div class="col-sm-2">
-                                              <select class="form-select" aria-label="Default select example">
-                                                <option selected>---------</option>
-                                                <option value="1">มกราคม</option>
-                                                <option value="2">กุมภาพันธ์</option>
-                                                <option value="3">มีนาคม</option>
-                                                <option value="3">เมษายน</option>
-                                                <option value="3">พฤษภาคม</option>
-                                                <option value="3">มิถุนายน</option>
-                                                <option value="3">กรกฏาคม</option>
-                                                <option value="3">สิงหาคม</option>
-                                                <option value="3">กันยายน</option>
-                                                <option value="3">ตุลาคม</option>
-                                                <option value="3">พฤศจิกายน</option>
-                                                <option value="3">ธันวาคม</option>
-                                              </select>
-                                            </div>
-                                          </div>
-
-                                          <div class="row mb-3">
-                                            <label class="col-sm-1 col-form-label" style="text-align: right;">ปี :</label>
-                                            <div class="col-sm-2">
-                                              <select class="form-select" aria-label="Default select example">
-                                                <option selected>---------</option>
-                                                <option value="1">2020</option>
-                                                <option value="2">2021</option>
-                                                <option value="3">2022</option>
-                                                <option value="4">2023</option>
-                                                <option value="5">2024</option>
-                                                <option value="7">2025</option>
-                                                <option value="8">2026</option>
-                                                <option value="9">2027</option>
-                                                <option value="10">2028</option>
-                                                <option value="11">2029</option>
-                                              </select>
-                                            </div>
-                                          </div>
-                                        <div class="col-md-2 d-flex align-items-end">
-                                          <button type="submit" class="btn btn-outline-primary" name="search">
-                                            <i class="fas fa-search"></i> search
-                                          </button>
-                                        </div>
-                                    </div>
-                                  </form>
-                                </div>
-                            </div>
-
                             <div class="tab-content" id="tabStatisticsContent">
                                 <div class="tab-pane fade show active" id="Statistics1" role="tabpanel" aria-labelledby="Statistics1-tab">
+                                    <div class="mt-5">
+                                        <form method="get" action="">
+                                            <div class="row align-items-end">
+                                                <!-- Month selection -->
+                                                <label class="col-auto col-form-label" style="text-align: right;">เดือน :</label>
+                                                <div class="col-auto">
+                                                    <select class="form-select" aria-label="Select month">
+                                                        <option selected>---------</option>
+                                                        <option value="1">มกราคม</option>
+                                                        <option value="2">กุมภาพันธ์</option>
+                                                        <option value="3">มีนาคม</option>
+                                                        <option value="4">เมษายน</option>
+                                                        <option value="5">พฤษภาคม</option>
+                                                        <option value="6">มิถุนายน</option>
+                                                        <option value="7">กรกฏาคม</option>
+                                                        <option value="8">สิงหาคม</option>
+                                                        <option value="9">กันยายน</option>
+                                                        <option value="10">ตุลาคม</option>
+                                                        <option value="11">พฤศจิกายน</option>
+                                                        <option value="12">ธันวาคม</option>
+                                                    </select>
+                                                </div>
+                                        
+                                                <!-- Year selection -->
+                                                <label class="col-auto col-form-label" style="text-align: right;">ปี :</label>
+                                                <div class="col-auto">
+                                                    <select class="form-select" aria-label="Select year">
+                                                        <option selected>---------</option>
+                                                        <option value="2020">2020</option>
+                                                        <option value="2021">2021</option>
+                                                        <option value="2022">2022</option>
+                                                        <option value="2023">2023</option>
+                                                        <option value="2024">2024</option>
+                                                        <option value="2025">2025</option>
+                                                        <option value="2026">2026</option>
+                                                        <option value="2027">2027</option>
+                                                        <option value="2028">2028</option>
+                                                        <option value="2029">2029</option>
+                                                    </select>
+                                                </div>
+                                        
+                                                <!-- Search button -->
+                                                <div class="col-auto">
+                                                    <button type="submit" class="btn btn-outline-primary" name="search">
+                                                        <i class="fas fa-search"></i> search
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
                                     <table class="table table-bordered table-striped mt-3" style="font-size: 13px; width: 100%;">
                                         <thead class="text-center">
                                             <tr>
@@ -484,6 +482,72 @@
                                 </div>
 
                                 <div class="tab-pane fade" id="Statistics2" role="tabpanel" aria-labelledby="Statistics2-tab">
+                                    <div class="mt-5">
+                                        <form method="get" action="">
+                                            <div class="row align-items-end">
+                                                <!-- type selection -->
+                                                <label class="col-auto col-form-label" style="text-align: right;">ประเภทการซ่อม :</label>
+                                                <div class="col-auto">
+                                                    <select class="form-select" aria-label="Select type">
+                                                        <option selected>---------</option>
+                                                        <option value="1">อุปกรณ์ IT</option>
+                                                        <option value="2">โปรแกรมและระบบ ERP</option>
+                                                        <option value="3">ระบบ Network และ Internet</option>
+                                                        <option value="4">กล้องวงจรปิด</option>
+                                                        <option value="5">ประชาสัมพันธ์บนป้ายโฆษณา LED</option>
+                                                        <option value="6">ขอรับบริการเครื่องพิมพ์ขนาดใหญ่</option>
+                                                        <option value="7">ขอรับบริการ VDO Conference</option>
+                                                    </select>
+                                                </div>
+
+                                                <!-- Month selection -->
+                                                <label class="col-auto col-form-label" style="text-align: right;">เดือน :</label>
+                                                <div class="col-auto">
+                                                    <select class="form-select" aria-label="Select month">
+                                                        <option selected>---------</option>
+                                                        <option value="1">มกราคม</option>
+                                                        <option value="2">กุมภาพันธ์</option>
+                                                        <option value="3">มีนาคม</option>
+                                                        <option value="4">เมษายน</option>
+                                                        <option value="5">พฤษภาคม</option>
+                                                        <option value="6">มิถุนายน</option>
+                                                        <option value="7">กรกฏาคม</option>
+                                                        <option value="8">สิงหาคม</option>
+                                                        <option value="9">กันยายน</option>
+                                                        <option value="10">ตุลาคม</option>
+                                                        <option value="11">พฤศจิกายน</option>
+                                                        <option value="12">ธันวาคม</option>
+                                                    </select>
+                                                </div>
+                                        
+                                                <!-- Year selection -->
+                                                <label class="col-auto col-form-label" style="text-align: right;">ปี :</label>
+                                                <div class="col-auto">
+                                                    <select class="form-select" aria-label="Select year">
+                                                        <option selected>---------</option>
+                                                        <option value="2020">2020</option>
+                                                        <option value="2021">2021</option>
+                                                        <option value="2022">2022</option>
+                                                        <option value="2023">2023</option>
+                                                        <option value="2024">2024</option>
+                                                        <option value="2025">2025</option>
+                                                        <option value="2026">2026</option>
+                                                        <option value="2027">2027</option>
+                                                        <option value="2028">2028</option>
+                                                        <option value="2029">2029</option>
+                                                    </select>
+                                                </div>
+                                        
+                                                <!-- Search button -->
+                                                <div class="col-auto">
+                                                    <button type="submit" class="btn btn-outline-primary" name="search">
+                                                        <i class="fas fa-search"></i> search
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
                                     <table class="table table-bordered table-striped mt-3" style="font-size: 14px; width: 100%;">
                                         <thead class="text-center">
                                             <tr>
@@ -573,6 +637,7 @@
                 </div><!-- End Reports -->
             </div>
         </div><!-- End Left side columns -->
+
 
         <div class="col-md-6">
             <!-- Repair Chart -->

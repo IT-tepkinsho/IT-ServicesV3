@@ -17,6 +17,8 @@ class RepairTopic(models.Model):
 class Vendor(models.Model):
     vendor_code = models.CharField(max_length=50, unique=True)
     vendor_name = models.CharField(max_length=100, null=True, blank=True)
+    vendor_phone = models.CharField(max_length=15, null=True, blank=True, verbose_name='เบอร์โทร')
+    email = models.EmailField(max_length=254, null=True, blank=True, verbose_name='อีเมล')
 
     def __str__(self):
         return f" {self.vendor_code} ({self.vendor_name})"

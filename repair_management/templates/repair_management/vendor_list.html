@@ -11,7 +11,7 @@
         <nav>
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-            <li class="breadcrumb-item active">Management Type</li>
+            <li class="breadcrumb-item active">Vendor</li>
           </ol>
         </nav>
       </div><!-- End Page Title -->
@@ -20,15 +20,17 @@
       <div class="row">
         <div class="col-lg-12">
   
-          <div class="card">
+          <div class="card" style="border-bottom: 3px solid #2f5f98;">
+            <h5 class="card-header" style="background-color: #1f579c; color: aliceblue;">Vendor list</h5>
             <div class="card-body">
-              <h5 class="card-title">Vendor list</h5>
                 <a href="{% url 'create_vendor' %}" class="btn btn-outline-primary btn-sm"><i class="fa fa-add"></i> New Add</a>
                 <table class="table table-bordered table-striped mt-3">
                   <thead>
                     <tr>
                         <th style="width: 45%;">Vendor code</th>
                         <th style="width: 45%;">Vendor name</th>
+                        <th style="width: 45%;">Phone</th>
+                        <th style="width: 45%;">Email</th>
                         <th style="width: 10%;">Action</th>
                     </tr>
                   </thead>
@@ -37,6 +39,20 @@
                     <tr>
                         <td>{{ vendor.vendor_code }}</td>
                         <td>{{ vendor.vendor_name }}</td>
+                        <td>
+                            {% if vendor.vendor_phone %}
+                                {{ vendor.vendor_phone }}
+                            {% else %}
+                                &nbsp;
+                            {% endif %}
+                        </td>
+                        <td>
+                          {% if vendor.email %}
+                            {{ vendor.email }}
+                          {% else %}
+                              &nbsp;
+                          {% endif %}
+                        </td>
                         <td>
                             <a href="{% url 'vendor_update' vendor.pk %}" class="btn btn-warning btn-sm" style="color: rgb(46, 46, 46);"><i class="fa fa-edit"></i> Edit</a>
                             <a href="" class="btn btn-danger btn-sm" style="color: aliceblue;"><i class="fa fa-trash-alt"></i> Delete</a>

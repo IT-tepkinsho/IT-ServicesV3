@@ -13,10 +13,22 @@
     </li><!-- End Staff Dashboard Nav -->
 
     <li class="nav-item">
+      <a class="nav-link collapsed" href="{% url 'ticket_request' %}">
+        <i class="bi bi-postcard"></i>
+        <span>Ticket Request</span>
+      </a>
+    </li>
+
+    <li class="nav-item">
       <a class="nav-link collapsed" data-bs-target="#equipment-nav" data-bs-toggle="collapse" href="#">
         <i class="fa fa-toolbox"></i><span>Equipment</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
       <ul id="equipment-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+          <a href="{% url 'software_list' %}">
+            <i class="bi bi-windows"></i><span>Software</span>
+          </a>
+        </li>
         <li>
           <a href="{% url 'computer_list' %}">
             <i class="bi bi-laptop"></i><span>Computer</span>
@@ -28,23 +40,53 @@
           </a>
         </li>
         <li>
-          <a href="charts-echarts.html">
+          <a href="{% url 'mouse_list' %}">
             <i class="bi bi-mouse"></i><span>Mouse</span>
           </a>
         </li>
         <li>
-          <a href="charts-echarts.html">
+          <a href="{% url 'keyboard_list' %}">
             <i class="bi bi-keyboard"></i><span>Keyboard</span>
           </a>
         </li>
         <li>
-          <a href="charts-echarts.html">
+          <a href="{% url 'printer_list' %}">
             <i class="bi bi-printer"></i><span>Printer</span>
           </a>
         </li>
         <li>
-          <a href="charts-echarts.html">
+          <a href="{% url 'scanner_list' %}">
+            <i class="fa fa-print"></i><span>Scanner</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'server_list' %}">
+            <i class="fa fa-server"></i><span>Server</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'ups_list' %}">
+            <i class="far fa-hard-drive"></i><span>UPS</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'network_list' %}">
+            <i class="fa fa-network-wired"></i><span>Network</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'camera_cctv_list' %}">
             <i class="bi bi-camera-video"></i><span>CCTV</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'camera_cctv_list' %}">
+            <i class="bi bi-tablet"></i><span>Tablet</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'camera_cctv_list' %}">
+            <i class="bi bi-app-indicator"></i><span>Other</span>
           </a>
         </li>
       </ul>

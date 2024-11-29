@@ -18,13 +18,16 @@ class RepairTopicForm(forms.ModelForm):
         widgets = {
             'repair_type': forms.Select(attrs={'class': 'form-select'}),
             'name': forms.TextInput(attrs={'class': 'form-control'}),
+
         }
 
 class VendorForm(forms.ModelForm):
     class Meta:
         model = Vendor
-        fields = ['vendor_code', 'vendor_name']
+        fields = ['vendor_code', 'vendor_name', 'vendor_phone', 'email']
         widgets = {
             'vendor_code': forms.TextInput(attrs={'class': 'form-control'}),
             'vendor_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'vendor_phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
         }

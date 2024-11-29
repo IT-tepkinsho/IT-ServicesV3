@@ -1,7 +1,7 @@
 # equipment_management/forms.py
 
 from django import forms
-from .models import Equipment, Computer, Monitor, Mouse, Keyboard, Printer, Scanner, Server, Software, Program
+from .models import CameraCCTV, Equipment, Computer, Monitor, Mouse, Keyboard, Network, Printer, Scanner, Server, Software, GroupProgram, Ups
 
 class EquipmentForm(forms.ModelForm):
     class Meta:
@@ -11,9 +11,7 @@ class EquipmentForm(forms.ModelForm):
 class ComputerForm(forms.ModelForm):
     class Meta:
         model = Computer
-        fields = ['equipment_code', 'spec', 'brand', 'ip_address', 'internet_connection', 'equipment_status', 'equipment_condition', 'vendor', 'other', 'monitor',
-                  'monitor_model', 'keyboard', 'keyboard_brand', 'mouse', 'mouse_brand', 'printer', 'printer_model', 'ups', 'ups_model', 'scanner', 'scanner_model', 
-                  'software', 'software_name', 'license_key', 'purchase_date', 'equipment_type', 'owner']
+        fields = '__all__'
         widgets = {
             'equipment_code': forms.TextInput(attrs={'class': 'form-control'}),
             'spec': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
@@ -41,7 +39,8 @@ class ComputerForm(forms.ModelForm):
             'license_key': forms.TextInput(attrs={'class': 'form-control'}),
             'purchase_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
             'equipment_type': forms.Select(attrs={'class': 'form-control'}),
-            'owner': forms.Select(attrs={'class': 'form-control'})
+            'owner': forms.Select(attrs={'class': 'form-control'}),
+            'department': forms.TextInput(attrs={'class': 'form-control'})
         }
 
     def __init__(self, *args, **kwargs):
@@ -53,7 +52,7 @@ class ComputerForm(forms.ModelForm):
 class MonitorForm(forms.ModelForm):
     class Meta:
         model = Monitor
-        fields = ['equipment_code', 'brand', 'model', 'serial_number', 'cost', 'warranty', 'vendor', 'status', 'condition', 'equipment_type', 'owner']
+        fields = '__all__'
 
         widgets = {
             'equipment_code': forms.TextInput(attrs={'class': 'form-control'}),
@@ -62,12 +61,12 @@ class MonitorForm(forms.ModelForm):
             'serial_number': forms.TextInput(attrs={'class': 'form-control'}),
             'cost': forms.NumberInput(attrs={'class': 'form-control'}),
             'warranty': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
-            'vendor': forms.Select(attrs={'class': 'form-select'}),
-            'status': forms.Select(attrs={'class': 'form-select'}),
+            'vendor': forms.Select(attrs={'class': 'form-control'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
             'condition': forms.Select(attrs={'class': 'form-control'}),
             'equipment_type': forms.Select(attrs={'class': 'form-control'}),
             'owner': forms.Select(attrs={'class': 'form-control'}),
-        }
+        }                   
 
     def __init__(self, *args, **kwargs):
         super(MonitorForm, self).__init__(*args, **kwargs)
@@ -77,34 +76,210 @@ class MonitorForm(forms.ModelForm):
 class MouseForm(forms.ModelForm):
     class Meta:
         model = Mouse
-        fields = ['equipment_code', 'name', 'brand', 'model', 'connection_type', 'purchase_date', 'equipment_type', 'owner']
+        fields = '__all__'
+
+        widgets = {
+            'equipment_code': forms.TextInput(attrs={'class': 'form-control'}),
+            'brand': forms.TextInput(attrs={'class': 'form-control'}),
+            'model': forms.TextInput(attrs={'class': 'form-control'}),
+            'connection_type': forms.Select(attrs={'class': 'form-control'}),
+            'cost': forms.NumberInput(attrs={'class': 'form-control'}),
+            'vendor': forms.Select(attrs={'class': 'form-control'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
+            'condition': forms.Select(attrs={'class': 'form-control'}),
+            'equipment_type': forms.Select(attrs={'class': 'form-control'}),
+            'owner': forms.Select(attrs={'class': 'form-control'}),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super(MouseForm, self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.required = False
 
 class KeyboardForm(forms.ModelForm):
     class Meta:
         model = Keyboard
-        fields = ['equipment_code', 'name', 'brand', 'model', 'layout', 'connection_type', 'purchase_date', 'equipment_type', 'owner']
+        fields = '__all__'
+
+        widgets = {
+            'equipment_code': forms.TextInput(attrs={'class': 'form-control'}),
+            'brand': forms.TextInput(attrs={'class': 'form-control'}),
+            'model': forms.TextInput(attrs={'class': 'form-control'}),
+            'connection_type': forms.Select(attrs={'class': 'form-control'}),
+            'cost': forms.NumberInput(attrs={'class': 'form-control'}),
+            'vendor': forms.Select(attrs={'class': 'form-control'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
+            'condition': forms.Select(attrs={'class': 'form-control'}),
+            'equipment_type': forms.Select(attrs={'class': 'form-control'}),
+            'owner': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(KeyboardForm, self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.required = False
 
 class PrinterForm(forms.ModelForm):
     class Meta:
         model = Printer
-        fields = ['equipment_code', 'name', 'brand', 'model', 'serial_number', 'print_type', 'purchase_date', 'equipment_type', 'owner']
+        fields = '__all__'
+
+        widgets = {
+            'equipment_code': forms.TextInput(attrs={'class': 'form-control'}),
+            'brand': forms.TextInput(attrs={'class': 'form-control'}),
+            'model': forms.TextInput(attrs={'class': 'form-control'}),
+            'print_type': forms.Select(attrs={'class': 'form-control'}),
+            'warranty': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
+            'cost': forms.NumberInput(attrs={'class': 'form-control'}),
+            'vendor': forms.Select(attrs={'class': 'form-control'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
+            'condition': forms.Select(attrs={'class': 'form-control'}),
+            'equipment_type': forms.Select(attrs={'class': 'form-control'}),
+            'owner': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(PrinterForm, self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.required = False
 
 class ScannerForm(forms.ModelForm):
     class Meta:
         model = Scanner
-        fields = ['equipment_code', 'name', 'brand', 'model', 'serial_number', 'purchase_date', 'equipment_type', 'owner']
+        fields = '__all__'
+
+        widgets = {
+            'equipment_code': forms.TextInput(attrs={'class': 'form-control'}),
+            'brand': forms.TextInput(attrs={'class': 'form-control'}),
+            'model': forms.TextInput(attrs={'class': 'form-control'}),
+            'warranty': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
+            'cost': forms.NumberInput(attrs={'class': 'form-control'}),
+            'vendor': forms.Select(attrs={'class': 'form-control'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
+            'condition': forms.Select(attrs={'class': 'form-control'}),
+            'equipment_type': forms.Select(attrs={'class': 'form-control'}),
+            'owner': forms.Select(attrs={'class': 'form-control'}),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super(ScannerForm, self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.required = False
 
 class ServerForm(forms.ModelForm):
     class Meta:
         model = Server
-        fields = ['equipment_code', 'name', 'brand', 'model', 'cpu', 'ram_size', 'storage_size', 'purchase_date', 'equipment_type']
+        fields = '__all__'
+
+        widgets = {
+            'equipment_code': forms.TextInput(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'spec': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'location': forms.TextInput(attrs={'class': 'form-control'}),
+            'ip_address': forms.TextInput(attrs={'class': 'form-control'}),
+            'serial_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'warranty': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
+            'ibm_warranty': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
+            'vendor': forms.Select(attrs={'class': 'form-control'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
+            'equipment_type': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ServerForm, self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.required = False
 
 class SoftwareForm(forms.ModelForm):
     class Meta:
         model = Software
-        fields = ['equipment_code', 'name', 'version', 'license_key', 'purchase_date', 'equipment_type', 'owner']
+        fields = '__all__'
+
+        widgets = {
+           'equipment_code': forms.TextInput(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'version':  forms.TextInput(attrs={'class': 'form-control'}),
+            'cost': forms.NumberInput(attrs={'class': 'form-control'}),
+            'license_key': forms.TextInput(attrs={'class': 'form-control'}),
+            'group_program': forms.Select(attrs={'class': 'form-control'}),
+            'owner': forms.Select(attrs={'class': 'form-control'}),
+
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(SoftwareForm, self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.required = False
+
 
 class ProgramForm(forms.ModelForm):
     class Meta:
-        model = Program
-        fields = ['equipment_code', 'name', 'license_key', 'purchase_date', 'equipment_type', 'owner'] 
+        model = GroupProgram
+        fields = ['name'] 
+
+class UpsForm(forms.ModelForm):
+    class Meta:
+        model = Ups
+        fields = '__all__'
+
+        widgets = {
+            'equipment_code': forms.TextInput(attrs={'class': 'form-control'}),
+            'brand': forms.TextInput(attrs={'class': 'form-control'}),
+            'model': forms.TextInput(attrs={'class': 'form-control'}),
+            'warranty': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
+            'cost': forms.NumberInput(attrs={'class': 'form-control'}),
+            'vendor': forms.Select(attrs={'class': 'form-control'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
+            'condition': forms.Select(attrs={'class': 'form-control'}),
+            'equipment_type': forms.Select(attrs={'class': 'form-control'}),
+            'owner': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+class NetworkForm(forms.ModelForm):
+    class  Meta:
+        model = Network
+        fields = '__all__'
+
+        widgets = {
+            'equipment_code': forms.TextInput(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'brand': forms.TextInput(attrs={'class': 'form-control'}),
+            'model': forms.TextInput(attrs={'class': 'form-control'}),
+            'ip_address': forms.TextInput(attrs={'class': 'form-control'}),
+            'serial_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'warranty': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
+            'cost': forms.NumberInput(attrs={'class': 'form-control'}),
+            'vendor': forms.Select(attrs={'class': 'form-control'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
+            'location': forms.TextInput(attrs={'class': 'form-control'}),
+            'equipment_type': forms.Select(attrs={'class': 'form-control'}),
+            'owner': forms.Select(attrs={'class': 'form-control'}),
+        }
+    def __init__(self, *args, **kwargs):
+        super(NetworkForm, self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.required = False
+
+class CameraCCTVForm(forms.ModelForm):
+    class Meta:
+        model = CameraCCTV
+        fields = '__all__'
+        
+        widgets = {
+            'equipment_code': forms.TextInput(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'brand': forms.TextInput(attrs={'class': 'form-control'}),
+            'model': forms.TextInput(attrs={'class': 'form-control'}),
+            'ip_address': forms.TextInput(attrs={'class': 'form-control'}),
+            'cost': forms.NumberInput(attrs={'class': 'form-control'}),
+            'warranty': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
+            'vendor': forms.Select(attrs={'class': 'form-control'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
+            'equipment_type': forms.Select(attrs={'class': 'form-control'}),
+            'owner': forms.Select(attrs={'class': 'form-control'}),
+
+        }
+    def __init__(self, *args, **kwargs):
+        super(CameraCCTVForm, self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.required = False

@@ -1,5 +1,4 @@
-from asyncio import Condition
-from ipaddress import ip_address
+from platform import mac_ver
 from django.db import models
 from repair_management.models import Vendor
 from user_management.models import User
@@ -37,7 +36,7 @@ class Monitor(models.Model):
     model = models.CharField(max_length=50, null=True, blank=True)
     serial_number = models.CharField(max_length=50, null=True, blank=True)
     cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    warranty = models.DateField()
+    warranty = models.DateField(null=True, blank=True)
     vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, blank=True, related_name='monitors')
     status = models.ForeignKey(EquipmentStatus, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สถานะอุปกรณ์")
     condition = models.ForeignKey(EquipmentCondition, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สภาพอุปกรณ์")
@@ -49,114 +48,137 @@ class Monitor(models.Model):
 
 
 class Mouse(models.Model):
+    CONNECTION_TYPE_CHOICES = [
+        ('wired', 'Wired'),
+        ('wireless', 'Wireless'),
+    ]
+
     equipment_code = models.CharField(max_length=50, unique=True)
-    name = models.CharField(max_length=100, null=True, blank=True)
     brand = models.CharField(max_length=50, null=True, blank=True)
     model = models.CharField(max_length=50, null=True, blank=True)
-    connection_type = models.CharField(max_length=20, null=True, blank=True)  # Wired/Wireless
-    purchase_date = models.DateField()
-    equipment_type = models.ForeignKey(EquipmentType, on_delete=models.CASCADE, related_name='mouse')
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='mouse')
+    cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    connection_type = models.CharField(choices=CONNECTION_TYPE_CHOICES, max_length=20, null=True, blank=True)  # Wired/Wireless
+    status = models.ForeignKey(EquipmentStatus, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สถานะอุปกรณ์")
+    condition = models.ForeignKey(EquipmentCondition, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สภาพอุปกรณ์")
+    vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, blank=True, related_name='mouses')
+    equipment_type = models.ForeignKey(EquipmentType, on_delete=models.CASCADE, related_name='mouses')
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='mouses')
 
     def __str__(self):
-        return f" {self.equipment_code} ({self.name})"
+        return f" {self.equipment_code} ({self.brand})"
 
 class Keyboard(models.Model):
+    CONNECTION_TYPE_CHOICES = [
+        ('wired', 'Wired'),
+        ('wireless', 'Wireless'),
+    ]
+        
     equipment_code = models.CharField(max_length=50, unique=True)
-    name = models.CharField(max_length=100, null=True, blank=True)
     brand = models.CharField(max_length=50, null=True, blank=True)
     model = models.CharField(max_length=50, null=True, blank=True)
-    layout = models.CharField(max_length=20, null=True, blank=True)  # QWERTY, AZERTY, etc.
-    connection_type = models.CharField(max_length=20, null=True, blank=True)  # Wired/Wireless
-    purchase_date = models.DateField()
+    cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    connection_type = models.CharField(choices=CONNECTION_TYPE_CHOICES, max_length=20, null=True, blank=True)  # Wired/Wireless
+    status = models.ForeignKey(EquipmentStatus, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สถานะอุปกรณ์")
+    condition = models.ForeignKey(EquipmentCondition, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สภาพอุปกรณ์")
+    vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, blank=True, related_name='keyboards')
     equipment_type = models.ForeignKey(EquipmentType, on_delete=models.CASCADE, related_name='keyboards')
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='keyboards')
 
     def __str__(self):
-        return f" {self.equipment_code} ({self.name})"
+        return f" {self.equipment_code} ({self.brand})"
 
 class Printer(models.Model):
+    PRINT_TYPE_CHOICES = [
+        ('inkjet', 'Inkjet'),
+        ('laser', 'Laser'),
+        ('dotmatrix', 'Dotmatrix')
+    ]
+        
     equipment_code = models.CharField(max_length=50, unique=True)
-    name = models.CharField(max_length=100, null=True, blank=True)
     brand = models.CharField(max_length=50, null=True, blank=True)
     model = models.CharField(max_length=50, null=True, blank=True)
-    serial_number = models.CharField(max_length=50, null=True, blank=True)
-    print_type = models.CharField(max_length=20, null=True, blank=True)  # Inkjet/Laser
-    purchase_date = models.DateField()
+    cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    print_type = models.CharField(choices=PRINT_TYPE_CHOICES, max_length=20, null=True, blank=True)  # Inkjet/Laser
+    ip_address = models.CharField(max_length=50, null=True, blank=True, verbose_name="IP Address")
+    warranty = models.DateField(null=True, blank=True)
+    status = models.ForeignKey(EquipmentStatus, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สถานะอุปกรณ์")
+    condition = models.ForeignKey(EquipmentCondition, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สภาพอุปกรณ์")
+    vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, blank=True, related_name='printers')
     equipment_type = models.ForeignKey(EquipmentType, on_delete=models.CASCADE, related_name='printers')
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='printers')
-
+    
     def __str__(self):
-        return f" {self.equipment_code} ({self.name})"
+        return f" {self.equipment_code} ({self.brand})"
     
 class Scanner(models.Model):
     equipment_code = models.CharField(max_length=50, unique=True)
-    name = models.CharField(max_length=100, null=True, blank=True)
     brand = models.CharField(max_length=50, null=True, blank=True)
     model = models.CharField(max_length=50, null=True, blank=True)
-    serial_number = models.CharField(max_length=50, null=True, blank=True)
-    scan_type = models.CharField(max_length=20, null=True, blank=True)  # Inkjet/Laser
-    purchase_date = models.DateField()
+    cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    warranty = models.DateField(null=True, blank=True)
+    status = models.ForeignKey(EquipmentStatus, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สถานะอุปกรณ์")
+    condition = models.ForeignKey(EquipmentCondition, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สภาพอุปกรณ์")
+    vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, blank=True, related_name='scanners')
     equipment_type = models.ForeignKey(EquipmentType, on_delete=models.CASCADE, related_name='scanners')
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='scanners')
-
     def __str__(self):
-        return f" {self.equipment_code} ({self.name})"
+        return f" {self.equipment_code} ({self.brand})"
 
 class Server(models.Model):
     equipment_code = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=100, null=True, blank=True)
-    brand = models.CharField(max_length=50, null=True, blank=True)
-    model = models.CharField(max_length=50, null=True, blank=True)
-    cpu = models.CharField(max_length=50, null=True, blank=True)
-    ram_size = models.IntegerField()  # in GB
-    storage_size = models.IntegerField()  # in GB
-    purchase_date = models.DateField()
+    spec = models.TextField(default='N/A')
+    location = models.CharField(max_length=100, null=True, blank=True)
+    ip_address = models.CharField(max_length=50, null=True, blank=True)
+    serial_number = models.CharField(max_length=50, null=True, blank=True)
+    warranty = models.DateField(null=True, blank=True)
+    ibm_warranty = models.DateField(null=True, blank=True)
+    vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, blank=True, related_name='servers')
+    status = models.ForeignKey(EquipmentStatus, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สถานะอุปกรณ์")
     equipment_type = models.ForeignKey(EquipmentType, on_delete=models.CASCADE, related_name='servers')
 
-
     def __str__(self):
-        return f" {self.equipment_code} ({self.name})"
+        return f" {self.equipment_code} ({self.location})"
     
 class Ups(models.Model):
     equipment_code = models.CharField(max_length=50, unique=True)
-    name = models.CharField(max_length=100, null=True, blank=True)
     brand = models.CharField(max_length=50, null=True, blank=True)
     model = models.CharField(max_length=50, null=True, blank=True)
-    purchase_date = models.DateField()
-    equipment_type = models.ForeignKey(EquipmentType, on_delete=models.CASCADE, related_name='ups')
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='ups')
+    cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    warranty = models.DateField(null=True, blank=True)
+    status = models.ForeignKey(EquipmentStatus, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สถานะอุปกรณ์")
+    condition = models.ForeignKey(EquipmentCondition, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สภาพอุปกรณ์")
+    vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, blank=True, related_name='upses')
+    equipment_type = models.ForeignKey(EquipmentType, on_delete=models.CASCADE, related_name='upses')
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='upses')
+    
+    def __str__(self):
+        return f" {self.equipment_code} ({self.brand})"
+
+class GroupProgram(models.Model):
+    name = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
-        return f" {self.equipment_code} ({self.name})"
-
+        return f"{self.name}"
+    
 
 class Software(models.Model):
     equipment_code = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=100, null=True, blank=True)
     version = models.CharField(max_length=50, null=True, blank=True)
     license_key = models.CharField(max_length=100, null=True, blank=True)
-    purchase_date = models.DateField()
-    equipment_type = models.ForeignKey(EquipmentType, on_delete=models.CASCADE, related_name='software')
+    cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    computer = models.ForeignKey('Computer', on_delete=models.SET_NULL, null=True, blank=True, related_name='install_software')
+    group_program = models.ForeignKey(GroupProgram, on_delete=models.SET_NULL, null=True, blank=True, related_name='software')
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='software')
 
     def __str__(self):
         return f" {self.equipment_code} ({self.name})"
 
-class Program(models.Model):
-    equipment_code = models.CharField(max_length=50, unique=True)
-    name = models.CharField(max_length=100, null=True, blank=True)
-    license_key = models.CharField(max_length=100, null=True, blank=True)
-    purchase_date = models.DateField()
-    equipment_type = models.ForeignKey(EquipmentType, on_delete=models.CASCADE, related_name='programs')
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='programs')
 
-    def __str__(self):
-        return f" {self.equipment_code} ({self.name})"
-    
 class Equipment(models.Model):
     EQUIPMENT_TYPE_CHOICES = [
-        ('notebooke', 'Notebook'),
+        ('notebook', 'Notebook'),
         ('computer', 'Computer'),
         ('printer', 'Printer'),
         ('network_device', 'Network Device'),
@@ -176,7 +198,7 @@ class Computer(models.Model):
     equipment_code = models.CharField(max_length=50, unique=True)
     spec = models.TextField(default='N/A')
     brand = models.CharField(max_length=50, null=True, blank=True)
-    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    ip_address = models.CharField(max_length=50, null=True, blank=True)
     internet_connection = models.BooleanField(default=False, verbose_name="เชื่อมต่อ Internet")
     equipment_status = models.ForeignKey(EquipmentStatus, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สถานะอุปกรณ์")
     equipment_condition = models.ForeignKey(EquipmentCondition, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สภาพอุปกรณ์")
@@ -194,14 +216,45 @@ class Computer(models.Model):
     ups_model = models.CharField(max_length=255, null=True, blank=True)
     scanner = models.ForeignKey(Scanner, on_delete=models.SET_NULL, null=True, verbose_name="Scanner")
     scanner_model = models.CharField(max_length=255, null=True, blank=True)
-    software = models.ForeignKey(Software, on_delete=models.SET_NULL, null=True, verbose_name="software license")
+    software = models.ForeignKey(Software, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="software license", related_name='computers')
     software_name = models.CharField(max_length=255, null=True, blank=True)
     license_key = models.CharField(max_length=255, null=True, blank=True)
-    purchase_date = models.DateField()
+    program = models.CharField(max_length=255, null=True, blank=True, verbose_name="โปรแกรมพิเศษ")
+    purchase_date = models.DateField(null=True, blank=True)
     equipment_type = models.ForeignKey(EquipmentType, on_delete=models.SET_NULL, null=True, blank=True, related_name='computers')
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='computers')
+    department = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
         return f" {self.equipment_code} ({self.owner})"
 
+class Network(models.Model):
+    equipment_code = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=100, null=True, blank=True)
+    brand = models.CharField(max_length=50, null=True, blank=True)
+    model = models.CharField(max_length=50, null=True, blank=True)
+    cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    ip_address = models.CharField(max_length=50, null=True, blank=True)
+    serial_number = models.CharField(max_length=50, null=True, blank=True)
+    warranty = models.DateField(null=True, blank=True)
+    vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, blank=True, related_name='networks')
+    status = models.ForeignKey(EquipmentStatus, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สถานะอุปกรณ์")
+    location = models.CharField(max_length=100, null=True, blank=True)
+    equipment_type = models.ForeignKey(EquipmentType, on_delete=models.CASCADE, related_name='networks')
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='networks')
 
+    def __str__(self):
+        return f" {self.equipment_code} ({self.name})"
+    
+class CameraCCTV(models.Model):
+    equipment_code = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=100, null=True, blank=True)
+    brand = models.CharField(max_length=50, null=True, blank=True)
+    model = models.CharField(max_length=50, null=True, blank=True)
+    cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    ip_address = models.CharField(max_length=50, null=True, blank=True)
+    warranty = models.DateField(null=True, blank=True)
+    vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, blank=True, related_name='cctvs')
+    status = models.ForeignKey(EquipmentStatus, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สถานะอุปกรณ์")
+    equipment_type = models.ForeignKey(EquipmentType, on_delete=models.CASCADE, related_name='cctvs')
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='cctvs')
