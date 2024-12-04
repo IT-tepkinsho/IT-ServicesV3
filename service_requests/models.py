@@ -43,6 +43,9 @@ class ServiceRequest(models.Model):
     ])
 
     equipment = models.CharField(max_length=50)  # รหัสอุปกรณ์
+    cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="ค่าใช้จ่าย", null=True, blank=True)
+    change_device = models.BooleanField(default=False, verbose_name="เปลี่ยนอุปกรณ์")
+    equipment_new = models.CharField(max_length=100, verbose_name="รหัสอุปกรณ์ใหม่", null=True, blank=True)
     method_of_repair = models.TextField(null=True, blank=True, default='')  # วิธีดำเนินการ
     date_received = models.DateTimeField(null=True, blank=True)  # วันที่รับงาน
     date_completed = models.DateTimeField(null=True, blank=True)  # วันที่ซ่อมเสร็จ
@@ -72,6 +75,10 @@ class ServiceRequest(models.Model):
             except ObjectDoesNotExist:
                 raise ValueError("RequestStatus instance with name 'pending' not found.")
         
+        # คำนวณ total_repair_time
+        if self.date_received and self.date_completed:
+            self.total_repair_time = self.date_completed - self.date_received
+            
         super(ServiceRequest, self).save(*args, **kwargs) 
     
     def __str__(self):
@@ -115,10 +122,16 @@ class ActivityLog(models.Model):
     
 
 class RepairUpdateLog(models.Model):
-    service_request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)  # ลิงก์กับ ServiceRequest
+    service_request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE, related_name='repair_updates')  # ลิงก์กับ ServiceRequest
     update_datetime = models.DateTimeField(default=timezone.now)  # วันที่เวลาที่อัพเดต
     total_repair_time = models.DurationField(null=True, blank=True)  # เวลารวมในการซ่อม
     details = models.TextField(null=True)  # รายละเอียดของการอัพเดต
 
     def __str__(self):
         return f"Repair Update for {self.service_request.service_request_number} at {self.update_datetime}"
+
+    def save(self, *args, **kwargs):
+            # คำนวณ total_repair_time เมื่อบันทึก
+            if self.service_request and self.service_request.date_received:
+                self.total_repair_time = self.update_datetime - self.service_request.date_received
+            super().save(*args, **kwargs)

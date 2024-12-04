@@ -13,7 +13,7 @@ def home(request):
     pending_requests = ServiceRequest.objects.filter(repair_status__name='pending')
     print(pending_requests) 
 
-    in_progress_requests = ServiceRequest.objects.filter(repair_status__name='in_progress')
+    in_progress_requests = ServiceRequest.objects.filter(repair_status__name='in_progress').prefetch_related('repair_updates')  # Prefetch related updates
     print(in_progress_requests) 
 
     completed_requests = ServiceRequest.objects.filter(repair_status__name='completed')

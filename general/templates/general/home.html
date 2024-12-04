@@ -174,7 +174,7 @@
                                         <td>{{ request.user_department }}</td>
                                         <td>{{ request.user_name }}</td>
                                         <td style="text-align: left;">{{ request.request_description }}</td>
-                                        <td>{{ request.request_date|date:'j N Y, H:i' }}</td>
+                                        <td>{{ request.request_date|default_if_none:""|date:'j N Y, H:i' }}</td>
                                         <td><i class="fas fa-stopwatch fa-shake" style="color: rgb(255, 160, 44);"></i></td>
                                     </tr>
                                     {% empty %}
@@ -208,9 +208,13 @@
                                         <td>{{ request.user_department }}</td>
                                         <td>{{ request.user_name }}</td>
                                         <td style="text-align: left;">{{ request.request_description }}</td>
-                                        <td>{{ request.request_date }}</td>
-                                        <td>{{ request.date_received|default_if_none:"" }}</td>
-                                        <td>{{ request.repair_date|default_if_none:"" }}</td>
+                                        <td>{{ request.request_date|default_if_none:""|date:'j N Y, H:i' }}</td>
+                                        <td>{{ request.date_received|default_if_none:""|date:'j N Y, H:i' }}</td>
+                                        <td>
+                                            {% with request.repair_updates.last as last_update %}
+                                                {{ last_update.update_datetime|default_if_none:""|date:'j N Y, H:i' }}
+                                            {% endwith %}
+                                        </td>
                                         <td><i class="fas fa-spinner fa-spin-pulse" style="color: #235a9e;"></i></td>
                                     </tr>
                                     {% empty %}
@@ -246,9 +250,9 @@
                                                 <td>{{ request.user_name }}</td>
                                                 <td>{{ request.request_description }}</td>
                                                 <td>{{ request.operator }}</td>
-                                                <td>{{ request.request_date }}</td>
-                                                <td>{{ request.date_received }}</td>
-                                                <td>{{ request.date_completed|default_if_none:"" }}</td>
+                                                <td>{{ request.request_date|default_if_none:""|date:'j N Y, H:i' }}</td>
+                                                <td>{{ request.date_received|default_if_none:""|date:'j N Y, H:i' }}</td>
+                                                <td>{{ request.date_completed|default_if_none:""|date:'j N Y, H:i' }}</td>
                                                 <td>{{ request.total_repair_time|default_if_none:""}}</td>
                                                 <td><i class="fa-solid fa-circle-check" style="color: rgb(18, 183, 18);"></i></td>
                                             </tr>
@@ -284,9 +288,9 @@
                                                 <td>{{ request.user_department }}</td>
                                                 <td>{{ request.user_name }}</td>
                                                 <td>{{ request.request_description }}</td>
-                                                <td>{{ request.request_date }}</td>
-                                                <td>{{ request.date_received|default_if_none:"" }}</td>
-                                                <td>{{ request.date_completed|default_if_none:"" }}</td>
+                                                <td>{{ request.request_date|default_if_none:""|date:'j N Y, H:i' }}</td>
+                                                <td>{{ request.date_received|default_if_none:""|date:'j N Y, H:i' }}</td>
+                                                <td>{{ request.date_completed|default_if_none:""|date:'j N Y, H:i' }}</td>
                                                 <td>{{ request.total_repair_time|default_if_none:""  }}</td>
                                                 <td><i class="fa-solid fa-circle-xmark" style="color: crimson;"></i></td>
                                             </tr>

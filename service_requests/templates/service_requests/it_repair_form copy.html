@@ -32,60 +32,39 @@
               <form method="post" class="row g-3 mt-3" enctype="multipart/form-data">
                 {% csrf_token %}
                 
-                
                 <div class="col-md-6">
-                  <label for="{{ form.method_of_repair.id_for_label }}" class="form-label">วิธีการแก้ไข :</label>
-                  {{ form.method_of_repair }}
-                  {% if form.method_of_repair.errors %}
-                    <div class="text-danger">{{ form.method_of_repair.errors }}</div>
-                  {% endif %}
-                </div>
-
-
-                <div class="col-md-2" style="margin-top: 35px; padding-left: 30px;">
-                  {{ form.change_device }}
-                  {% if form.change_device.errors %}
-                    <div class="text-danger">{{ form.change_device.errors }}</div>
-                  {% endif %}
-                  <label for="change_device"> เปลี่ยนอุปกรณ์ </label>
-                </div>
-
-                <div class="col-md-2">
-                  <label for="equipment_new" class="form-label">รหัสอุปกรณ์ใหม่ :</label>
-                  {{ form.equipment_new }}
-                  {% if form.equipment_new.errors %}
-                    <div class="text-danger">{{ form.equipment_new.errors }}</div>
-                  {% endif %}
-                </div>
-
-                <div class="col-md-2">
-                  <label for="equipment" class="form-label">รหัสอุปกรณ์ที่แจ้งซ่อม :</label>
-                  {{ form.equipment }}
-                  {% if form.equipment.errors %}
-                    <div class="text-danger">{{ form.equipment.errors }}</div>
-                  {% endif %}
+                  <label for="method_of_repair" class="form-label">วิธีการแก้ไข :</label>
+                  <textarea type="text" class="form-control" name="method_of_repair" rows="3"></textarea>
                 </div>
 
                 <div class="col-md-3">
                   <label for="cost" class="form-label">ค่าใช้จ่าย :</label>
-                  {{ form.cost }}
-                  {% if form.cost.errors %}
-                    <div class="text-danger">{{ form.cost.errors }}</div>
-                  {% endif %}
+                  <input type="number" class="form-control" name="cost">
                 </div>
 
-                <div class="col-md-9"></div>
-
-                <div class="col-md-3">
-                  <label for="operator" class="form-label">ผู้ดำเนินการ :</label>
-                  {{ form.operator }}
-                  {% if form.operator.errors %}
-                    <div class="text-danger">{{ form.operator.errors }}</div>
-                  {% endif %}
+                <div class="col-md-6">
+                  <label for="equipment_old" class="form-label">รหัสอุปกรณ์เดิม :</label>
+                  <input type="text" class="form-control" name="equipment_old">
                 </div>
-                <input type="hidden" name="repair_by" value="{{ service_request.repair_by }}">
+
+                <div class="col-md-2" style="margin-top: 35px; padding-left: 30px;">
+                  <input type="checkbox" class="form-check-input" name="change_device">
+                  <label for="change_device"> เปลี่ยนอุปกรณ์ </label>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="equipment_new" class="form-label">รหัสอุปกรณ์ใหม่ :</label>
+                  <input type="text" class="form-control" name="equipment_new">
+                </div>
+
                 
-                <div style="text-align: right; margin-top: 30px;">
+                <div class="col-md-6">
+                  <label for="operator" class="form-label">ผู้ดำเนินการ :</label>
+                  <input type="text" class="form-control" name="operator" value="{{ request.session.name }}">
+                </div>
+                
+
+                <div style="text-align: right;">
                     <button type="reset" class="btn btn-danger">Cancel</button>
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>

@@ -9,13 +9,7 @@
 
     <div class="pagetitle">
         <h5>รายละเอียดการแจ้งซ่อม</h5>
-        <h5>รับงานแจ้งซ่อม</h5>
-        <!-- <nav>
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-            <li class="breadcrumb-item active">รายการซ่อม</li>
-          </ol>
-        </nav> -->
+
       </div><!-- End Page Title -->
   
     <section class="section">
@@ -104,24 +98,23 @@
                 </div>
 
                 <div class="col-md-12">
-                  <hr>
+                  <hr class="mb-5">
                 </div>
 
                 <div class="row mb-4">
                   <label for="repairOptions" class="col-sm-2 col-form-label" style="margin-left: 10px; color: #2f5f98;">รายละเอียดการดำเนินการ :</label>
-                  <div class="col-sm-3">
-                    <select class="form-select" id="repairOptions" name="repairOptions" aria-label="Default select example">
+                  <div class="col-sm-4">
+                    <select class="form-select" id="repairOptions" name="repair_by" aria-label="Default select example">
                       {% if service_request.repair_by %}
                         <option value="{{ service_request.repair_by }}" selected>{{ service_request.get_repair_by_display }}</option>
                       {% else %}
-                        <option value="" selected>---------</option>
+                        <option selected disabled>---------</option>
                       {% endif %}
                       <option value="it_repair">ซ่อมโดยฝ่ายเทคโนโลยีสารสนเทศ</option>
                       <option value="external_repair">ส่งซ่อม/ส่งเคลม</option>
                     </select>
                   </div>
 
-                  <div class="col-sm-1"></div>
                 <!-- Update Status Form -->
                   {% if service_request.repair_status.name == 'completed' or service_request.repair_status.name == 'canceled' %}
                     &nbsp;
@@ -202,7 +195,12 @@
                 </div>
                 <div class="col-md-12 mb-4">
                   <label>
-                    <span style="margin-left: 10px; color: #2f5f98;">ค่าใช้จ่าย :</span>
+                    {% if service_request.cost %}
+                      <span style="margin-left: 10px; color: #2f5f98;">ค่าใช้จ่าย :</span><span style="margin-left: 10px;"> {{ service_request.cost }} บาท</span>
+                    {% else %}
+                      <span style="margin-left: 10px; color: #2f5f98;">ค่าใช้จ่าย :</span>
+                    {% endif %}
+                    
                   </label>
                 </div>
                 <div class="col-md-12 mb-4">
@@ -236,19 +234,45 @@
 </main><!-- End #main -->
 
 <script>
-  document.getElementById("repairOptions").addEventListener("change", function() {
+document.getElementById("repairOptions").addEventListener("change", function () {
     const selectedOption = this.value;
-    console.log("Selected option: ", selectedOption);  // ตรวจสอบค่าที่ได้จากการเลือก
+    const requestId = "{{ service_request.id }}"; // ดึง request_id
+    console.log("Selected option: ", selectedOption);
+    console.log("Request ID: ", requestId);
 
-    if (selectedOption === "it_repair") {
+    // ดึง CSRF token จาก DOM
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;  // เอา csrf token
+    const data = {
+        repair_by: selectedOption,
+        csrfmiddlewaretoken: csrfToken
+    };
 
-      window.location.href = "/requests/it-repair-form/";
-    }
-    if (selectedOption === "external_repair") {
 
-      window.location.href = "/requests/external-repair-form/";
-    }
-  });
+    fetch(`/requests/update-repair-by/${requestId}/`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,  // ใส่ CSRF token ที่นี่
+      },
+      body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // เมื่อบันทึกเสร็จแล้ว ให้ redirect ไปยังฟอร์ม
+            if (selectedOption === "it_repair") {
+                window.location.href = `/requests/it-repair-form/${requestId}/`;
+            } else if (selectedOption === "external_repair") {
+                window.location.href = `/requests/external-repair-form/${requestId}/`;
+            }
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
 
 function updateStatus() {
     var statusId = document.getElementById("status").value; 

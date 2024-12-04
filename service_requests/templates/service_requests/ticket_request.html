@@ -105,7 +105,11 @@
                                                         <td style="text-align: left;">{{ request.request_description }}</td>
                                                         <td>{{ request.request_date }}</td>
                                                         <td>{{ request.date_received|default_if_none:"" }}</td>
-                                                        <td>{{ request.repair_date|default_if_none:"" }}</td>
+                                                        <td>
+                                                            {% with request.repair_updates.last as last_update %}
+                                                                {{ last_update.update_datetime|default_if_none:"" }}
+                                                            {% endwith %}
+                                                        </td>
                                                         <td><i class="fas fa-spinner fa-spin-pulse" style="color: #235a9e;"></i></td>
                                                     </tr>
                                                     {% empty %}

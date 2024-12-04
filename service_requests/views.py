@@ -3,7 +3,7 @@ from django.urls import reverse
 from repair_management.models import RepairType, RepairTopic 
 from user_management.models import User, Department
 from .models import ServiceRequest, Repair, RequestStatus, RepairUpdateLog
-from .forms import ServiceRequestForm, RepairForm, ClaimForm
+from .forms import ServiceRequestForm, RepairForm, ClaimForm, RepairDetailForm
 from django.http import JsonResponse
 import json
 from django.utils import timezone
@@ -72,8 +72,8 @@ def service_request_detail(request, service_request_id):
     service_request = get_object_or_404(ServiceRequest, pk=service_request_id)
     
     # ดึงข้อมูล repair ที่เชื่อมโยงกับ service request
-    repairs = Repair.objects.filter(request=service_request)
-    
+    repairs = RepairUpdateLog.objects.filter(service_request=service_request)
+
     context = {
         'service_request': service_request,
         'repairs': repairs,
@@ -152,13 +152,8 @@ def update_repair_details(request):
         try:
             # อ่านข้อมูลจาก request.body
             data = json.loads(request.body)
-            print(f"Data received: {data}")  # แสดงข้อมูลที่ได้รับ
-
             service_request_id = data.get('service_request_id')
             details = data.get('repair_details')
-
-            print(f"Service Request ID: {service_request_id}")  # ตรวจสอบ service_request_id
-            print(f"Repair Details: {details}")  # ตรวจสอบ repair_details
 
             # ตรวจสอบว่ามี service_request_id ในฐานข้อมูล
             service_request = ServiceRequest.objects.get(id=service_request_id)
@@ -178,7 +173,6 @@ def update_repair_details(request):
             return JsonResponse({'success': False, 'message': 'Invalid JSON data'}, status=400)
 
         except Exception as e:
-            # เพิ่มการพิมพ์ข้อความข้อผิดพลาด
             print(f"Error: {str(e)}")
             return JsonResponse({'success': False, 'message': str(e)}, status=500)
 
@@ -291,9 +285,45 @@ def create_claim(request, repair_id):
         form = ClaimForm()
     return render(request, 'service_requests/claim_form.html', {'form': form, 'repair': repair})
 
+# Form IT_Repair
+def it_repair_form(request, request_id):
+    service_request = get_object_or_404(ServiceRequest, id=request_id)
 
-def it_repair_form(request):
-    return render(request, 'service_requests/it_repair_form.html')
+    # ดึงค่าจาก session
+    repair_by = request.session.get('repair_by', None)
+
+    if request.method == 'POST':
+        form = RepairDetailForm(request.POST, instance=service_request)  # ใช้ instance
+        if form.is_valid():
+            # อัปเดตข้อมูลเพิ่มเติม
+            form.instance.operator = request.session.get('name', '')  # ดึง operator จาก session
+            form.instance.date_completed = timezone.now()  # กำหนดวันที่เสร็จ
+
+            # คำนวณ total_repair_time
+            if form.instance.date_received and form.instance.date_completed:
+                form.instance.total_repair_time = form.instance.date_completed - form.instance.date_received
+            
+            # เปลี่ยนสถานะเป็น complete
+            try:
+                complete_status = RequestStatus.objects.get(name='completed')
+                form.instance.repair_status = complete_status
+            except RequestStatus.DoesNotExist:
+                raise ValueError("RequestStatus 'completed' not found.")
+
+            # บันทึกข้อมูลใน ServiceRequest
+            form.save()
+
+            return redirect('service_request_job', service_request_id=service_request.id)
+    else:
+        initial_data = {
+            'operator': request.session.get('name', ''),
+            'equipment': service_request.equipment,
+            'repair_by': service_request.repair_by,
+        }
+
+        form = RepairDetailForm(instance=service_request, initial=initial_data)
+    
+    return render(request, 'service_requests/it_repair_form.html', {'form': form, 'service_request': service_request})
 
 def external_repair_form(request):
     return render(request, 'service_requests/external_repair_form.html')
@@ -302,12 +332,35 @@ def new_device_form(request):
     return render(request, 'service_requests/new_device_form.html')
 
 
-def ticket_request(request):
+def repair_detail_view(request, service_request_id):
+    service_request = get_object_or_404(ServiceRequest, id=service_request_id)
+    if request.method == "POST":
+        form = RepairDetailForm(request.POST)
+        if form.is_valid():
+            repair_detail = form.save(commit=False)
+            repair_detail.service_request = service_request
+            repair_detail.save()
+            return redirect('service_request_detail', id=service_request.id)
+    else:
+        # Pre-fill some fields if needed
+        form = RepairDetailForm(initial={
+            'equipment': service_request.equipment_code,
+            'operator': request.session.get('name')
+        })
     
+    return render(request, 'service_requests/service_request_detail.html', {
+        'form': form,
+        'service_request': service_request
+    })
+
+
+#Table Services Request
+def ticket_request(request):
+
     pending_requests = ServiceRequest.objects.filter(repair_status__name='pending')
     print(pending_requests) 
 
-    in_progress_requests = ServiceRequest.objects.filter(repair_status__name='in_progress')
+    in_progress_requests = ServiceRequest.objects.filter(repair_status__name='in_progress').prefetch_related('repair_updates')  # Prefetch related updates
     print(in_progress_requests) 
 
     completed_requests = ServiceRequest.objects.filter(repair_status__name='completed')
@@ -315,7 +368,6 @@ def ticket_request(request):
 
     canceled_requests = ServiceRequest.objects.filter(repair_status__name='canceled')
     print(canceled_requests)
-
 
     # นับจำนวนคำร้องในแต่ละสถานะ
     pending_count = pending_requests.count()
@@ -335,3 +387,25 @@ def ticket_request(request):
     }
 
     return render(request, 'service_requests/ticket_request.html', context)
+
+@csrf_exempt
+def update_repair_by(request, request_id):
+    if request.method == 'POST':
+        # รับค่า repair_by จาก POST request
+        data = json.loads(request.body)
+        repair_by = data.get('repair_by')
+
+        # หาข้อมูล ServiceRequest
+        service_request = get_object_or_404(ServiceRequest, id=request_id)
+
+        # อัปเดตค่า repair_by
+        if repair_by:
+            service_request.repair_by = repair_by
+            service_request.save()
+
+            return JsonResponse({'success': True})
+
+        return JsonResponse({'success': False, 'error': 'Invalid data'})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+

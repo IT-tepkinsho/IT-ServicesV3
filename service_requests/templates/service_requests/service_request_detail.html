@@ -110,29 +110,34 @@
                 </div>
                 <div class="col-md-10">
                   <label for="inputZip">
-                    <span style="margin-left: 10px; color: #2f5f98;">รายละเอียดการดำเนินการ :</span><span style="margin-left: 10px;"> {{ service_request.repair_by }} </span>
+                    {% if service_request.repair_by %}
+                    <span style="margin-left: 10px; color: #2f5f98;">รายละเอียดการดำเนินการ :</span><span style="margin-left: 10px;"> {{ service_request.get_repair_by_display }} </span>
+                    {% else %}
+                    <span style="margin-left: 10px; color: #2f5f98;">รายละเอียดการดำเนินการ :</span>
+                    {% endif %}
+                    
                   </label>
                 </div>
 
-                <!-- <div class="col-md-4">
-                  <label>
-                    <span style="margin-left: 10px; color: #2f5f98;">ผู้ดำเนินการ :</span><span style="margin-left: 10px;"> IT Admin</span>
-                  </label>
-                </div> -->
                 <div class="col-md-12">
                   <label>
                     <span style="margin-left: 10px; color: #2f5f98;">วิธีการแก้ไข :</span>
                     <span style="margin-left: 10px;"> {{ service_request.method_of_repair }} </span>
                     {% if repairs %}
                       {% for repair in repairs %}
-                        <span class="row" style="margin-left: 100px; color: dimgray; margin-top: 5px;"> {{ repair.repair_details }} {{ repair.repair_date }}</span>
+                        <span class="row" style="margin-left: 100px; color: dimgray; margin-top: 5px;"> {{ repair.details }} {{ repair.update_datetime }}</span>
                       {% endfor %}
                     {% endif %}
                   </label>
                 </div>
                 <div class="col-md-12">
                   <label>
-                    <span style="margin-left: 10px; color: #2f5f98;">ค่าใช้จ่าย :</span>
+                    {% if service_request.cost %}
+                      <span style="margin-left: 10px; color: #2f5f98;">ค่าใช้จ่าย :</span><span style="margin-left: 10px;"> {{ service_request.cost }} </span>
+                    {% else %}
+                      <span style="margin-left: 10px; color: #2f5f98;">ค่าใช้จ่าย :</span>
+                    {% endif %}
+                      
                   </label>
                 </div>
                 <div class="col-md-12">
