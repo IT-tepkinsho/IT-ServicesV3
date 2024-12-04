@@ -5,11 +5,10 @@
     <main id="main" class="main">
 
         <div class="pagetitle">
-            <h3>service request</h3>
             <nav>
               <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item active">service request</li>
+                <li class="breadcrumb-item active">Claim for Repair</li>
               </ol>
             </nav>
           </div><!-- End Page Title -->
@@ -19,15 +18,16 @@
             <div class="col-lg-12">
     
               <div class="card">
+                <h5 class="card-header" style="background-color: #2f5f98; color: aliceblue;">Claim for Repair</h5>
                 <div class="card-body">
-                  <h5 class="card-title">Claim for Repair</h5>
-                  <h1>Create Claim for Repair of {{ repair.request.equipment.name }}</h1>
-                  <form method="post">
+                  <form method="post" class="row g-3 mt-3" enctype="multipart/form-data">
                       {% csrf_token %}
                       {{ form.as_p }}
-                      <button type="submit">Submit</button>
+                      <div style="text-align: right; margin-top: 30px;">
+                        <a href="{% url 'claim_list' %}" class="btn btn-danger">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                      </div>
                   </form>
-                  <a href="{% url 'service_request_list' %}">Back to List</a>
                 </div>
               </div>
     

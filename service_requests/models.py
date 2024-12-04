@@ -1,5 +1,6 @@
+from pickle import TRUE
 from django.db import models
-from repair_management.models import RepairType, RepairTopic # เชื่อมโยงกับโมเดล RepairType, RepairTopic
+from repair_management.models import RepairType, RepairTopic, Vendor # เชื่อมโยงกับโมเดล RepairType, RepairTopic
 from user_management.models import Department, User # เชื่อมโยงกับโมเดล Department, User
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
@@ -83,6 +84,38 @@ class ServiceRequest(models.Model):
     
     def __str__(self):
         return f"{self.service_request_number}"
+    
+
+class RepairClaim(models.Model):
+    claim_number = models.CharField(max_length=20, unique=True, blank=True, null=True)  # เลขที่เคลม
+    service_request = models.ForeignKey(ServiceRequest, on_delete=models.SET_NULL, null=True)  # FK to ServiceRequest
+    company = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True)  # FK to Vendor
+    claim_date = models.DateField(null=True)  # วันที่ส่งเคลม
+    vehicle_type = models.CharField(max_length=50, null=True)  # ชนิดรถ
+    license_plate = models.CharField(max_length=50, null=True)  # หมายเลขทะเบียน
+    purpose_of_out = models.TextField()  # วัตถุประสงค์ในการนำออก
+    equipment = models.CharField(max_length=50)  # รหัสอุปกรณ์
+    cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="ค่าใช้จ่าย", null=True, blank=True)  # ค่าใช้จ่าย
+    claim_status = models.CharField(max_length=50, choices=[
+        ('pending', 'Pending'),
+        ('completed', 'Completed'),
+        ('canceled', 'Canceled'),
+    ])
+
+    def save(self, *args, **kwargs):
+        if not self.claim_number:  # ตรวจสอบว่าฟิลด์นี้ยังไม่มีค่า
+            last_claim = RepairClaim.objects.filter(claim_number__startswith="CIT-").order_by('-claim_number').first()
+            if last_claim:
+                # แยกตัวเลขท้ายสุดจาก claim_number และเพิ่มค่า
+                last_number = int(last_claim.claim_number.split('-')[1])
+                new_number = f"CIT-{last_number + 1:04d}"
+            else:
+                new_number = "CIT-0001"  # เริ่มต้นที่เลขแรก
+            self.claim_number = new_number
+        super().save(*args, **kwargs)  # เรียกเมธอด save ดั้งเดิม
+
+    def __str__(self):
+        return f"{self.claim_number} for {self.service_request}"
     
 
 class Repair(models.Model):

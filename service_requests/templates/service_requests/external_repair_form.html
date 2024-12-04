@@ -32,45 +32,76 @@
               <form method="post" class="row g-3 mt-3" enctype="multipart/form-data">
                 {% csrf_token %}
                 
-                <div class="col-md-6">
-                  <label for="service_request_number" class="form-label">เลขที่ใบแจ้งซ่อม :</label>
-                  <input type="text" class="form-control" name="service_request_number">
-                </div>
-
                 <div class="col-md-3">
-                  <label for="claim" class="form-label">วันที่ส่งเคลม :</label>
-                  <input type="date" class="form-control" name="claim">
+                  <label for="service_request_number" class="form-label">เลขที่ใบแจ้งซ่อม :</label>
+                  {{ form.service_request }}
+                  {% if form.service_request.errors %}
+                    <div class="text-danger">{{ form.service_request.errors }}</div>
+                  {% endif %}
                 </div>
 
                 <div class="col-md-3">
                   <label for="equipment_code" class="form-label">รหัสอุปกรณ์ :</label>
-                  <input type="text" class="form-control" name="equipment_code">
+                  {{ form.equipment }}
+                  {% if form.equipment.errors %}
+                    <div class="text-danger">{{ form.equipment.errors }}</div>
+                  {% endif %}
                 </div>
 
+                <div class="col-md-3">
+                  <label for="date_claim" class="form-label">วันที่ส่งเคลม :</label>
+                  {{ form.claim_date }}
+                  {% if form.claim_date.errors %}
+                    <div class="text-danger">{{ form.claim.errors }}</div>
+                  {% endif %}
+                </div>
 
-                <div class="col-md-6">
+                <div class="col-md-3">
+                  <label for="date_claim" class="form-label">วันที่ส่งเคลม :</label>
+                  {{ form.claim_status }}
+                  {% if form.claim_status.errors %}
+                    <div class="text-danger">{{ form.claim.errors }}</div>
+                  {% endif %}
+                </div>
+
+                <div class="col-md-5">
                   <label for="company" class="form-label">ชื่อบริษัท :</label>
-                  <input type="number" class="form-control" name="company">
+                  {{ form.company }}
+                  {% if form.company.errors %}
+                    <div class="text-danger">{{ form.company.errors }}</div>
+                  {% endif %}
                 </div>
 
                 <div class="col-md-3">
                   <label for="car_type" class="form-label">ชนิดรถ :</label>
-                  <input type="text" class="form-control" name="car_type">
+                  {{ form.vehicle_type }}
+                  {% if form.vehicle_type.errors %}
+                    <div class="text-danger">{{ form.vehicle_type.erros }}</div>
+                  {% endif %}
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-2">
                   <label for="number_register" class="form-label">หมายเลขทะเบียน :</label>
-                  <input type="text" class="form-control" name="number_register">
+                  {{ form.license_plate }}
+                  {% if form.license_plate.errors %}
+                    <div class="text-danger">{{ form.license_plate.errors }}</div>
+                  {% endif %}
+                </div>
+
+                <div class="col-md-2">
+                  <label for="cost" class="form-label">ค่าใช้จ่าย :</label>
+                  {{ form.cost }}
+                  {% if form.cost.errors %}
+                    <div class="text-danger">{{ form.cost.errors }}</div>
+                  {% endif %}
                 </div>
 
                 <div class="col-md-6">
                   <label for="method" class="form-label">วัตถุประสงค์ในการนำออก :</label>
-                  <textarea type="text" class="form-control" name="method" rows="3"></textarea>
-                </div>
-
-                <div class="col-md-3">
-                  <label for="cost" class="form-label">ค่าใช้จ่าย :</label>
-                  <input type="number" class="form-control" name="cost">
+                  {{ form.purpose_of_out }}
+                  {% if form.purpose_of_out.errors %}
+                    <div class="text-danger">{{ form.purpose_of_the.errors }}</div>
+                  {% endif %}
                 </div>
 
                 <div style="text-align: right; margin-top: 30px;">
@@ -87,16 +118,4 @@
 
 </main>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const checkbox = document.querySelector('input[name="change_device"]');
-
-    checkbox.addEventListener('change', function() {
-      if (this.checked) {
-        // Redirect to the new form page when checkbox is checked
-        window.location.href = "{% url 'new_device_form' %}";
-      }
-    });
-  });
-</script>
 {% endblock  %}

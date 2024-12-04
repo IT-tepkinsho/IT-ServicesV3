@@ -1,7 +1,8 @@
 from django.urls import path
-from .views import (cancel_service_request, external_repair_form, get_repair_list, it_repair_form, new_device_form, repair_detail_view, service_request_detail, service_request_job_detail, service_request_list, 
-    create_service_request, create_repair, create_claim, get_repair_topics, service_request_history, 
-    get_repair_history, get_user_details, ticket_request, update_repair_by, update_repair_details, update_status)
+from .views import (cancel_service_request, claim_list, delete_claim, external_repair_form, get_repair_list, it_repair_form, new_device_form, repair_detail_view, 
+                    service_request_detail, service_request_job_detail, service_request_list, 
+                    create_service_request, create_repair, create_claim, get_repair_topics, service_request_history, 
+                    get_repair_history, get_user_details, ticket_request, update_claim, update_repair_by, update_repair_details, update_status)
                     
 
 urlpatterns = [
@@ -20,9 +21,13 @@ urlpatterns = [
     path('update-status/', update_status, name='update_status'),
     path('update-repair-details/', update_repair_details, name='update_repair_details'),
     path('it-repair-form/<int:request_id>/', it_repair_form, name='it-repair-form'),
-     path('update-repair-by/<int:request_id>/', update_repair_by, name='update_repair_by'),
-    path('external-repair-form/', external_repair_form, name='external-repair-form'),
+    path('update-repair-by/<int:request_id>/', update_repair_by, name='update_repair_by'),
+    path('external-repair-form/<int:request_id>/', external_repair_form, name='external-repair-form'),
     path('new-device-form/', new_device_form, name='new_device_form'),
     path('ticket-request/', ticket_request, name='ticket_request'),
+    path('claims/', claim_list, name='claim_list'),
+    path('claims/create/', create_claim, name='create_claim'),
+    path('claims/update/<int:pk>/', update_claim, name='update_claim'),
+    path('claims/delete/<int:pk>/', delete_claim, name='delete_claim'),
 ]
 

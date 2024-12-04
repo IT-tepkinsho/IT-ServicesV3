@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from repair_management.models import RepairType, RepairTopic 
 from user_management.models import User, Department
-from .models import ServiceRequest, Repair, RequestStatus, RepairUpdateLog
+from .models import ServiceRequest, Repair, Claim, RequestStatus, RepairUpdateLog
 from .forms import ServiceRequestForm, RepairForm, ClaimForm, RepairDetailForm
 from django.http import JsonResponse
 import json
@@ -271,19 +271,44 @@ def create_repair(request, request_id):
     return render(request, 'service_requests/repair_form.html', {'form': form, 'service_request': service_request})
 
 
-# สร้าง Claim
-def create_claim(request, repair_id):
-    repair = get_object_or_404(Repair, id=repair_id)
+# สร้าง Claim ใหม่
+def create_claim(request):
     if request.method == 'POST':
         form = ClaimForm(request.POST)
         if form.is_valid():
-            claim = form.save(commit=False)
-            claim.repair = repair
-            claim.save()
-            return redirect('service_request_list')
+            form.save()
+            messages.success(request, 'Claim has been created successfully!')
+            return redirect('claim_list')  
     else:
         form = ClaimForm()
-    return render(request, 'service_requests/claim_form.html', {'form': form, 'repair': repair})
+    return render(request, 'service_requests/external_repair_form.html', {'form': form})
+
+# แสดงรายการ Claim ทั้งหมด
+def claim_list(request):
+    claims = Claim.objects.all()
+    return render(request, 'service_requests/tracking_claim.html', {'claims': claims})
+
+# แก้ไข Claim
+def update_claim(request, pk):
+    claim = get_object_or_404(Claim, pk=pk)
+    if request.method == 'POST':
+        form = ClaimForm(request.POST, instance=claim)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Claim has been updated successfully!')
+            return redirect('claim_list')
+    else:
+        form = ClaimForm(instance=claim)
+    return render(request, 'service_requests/external_repair_form.html', {'form': form, 'claim': claim})
+
+# ลบ Claim
+def delete_claim(request, pk):
+    claim = get_object_or_404(Claim, pk=pk)
+    if request.method == 'POST':
+        claim.delete()
+        messages.success(request, 'Claim has been deleted successfully!')
+        return redirect('claim_list')
+    return render(request, 'service_requests/delete_claim.html', {'claim': claim})
 
 # Form IT_Repair
 def it_repair_form(request, request_id):
@@ -325,8 +350,22 @@ def it_repair_form(request, request_id):
     
     return render(request, 'service_requests/it_repair_form.html', {'form': form, 'service_request': service_request})
 
-def external_repair_form(request):
-    return render(request, 'service_requests/external_repair_form.html')
+def external_repair_form(request, request_id):
+    # ดึงข้อมูล ServiceRequest ตาม request_id
+    service_request = get_object_or_404(ServiceRequest, id=request_id)
+
+    if request.method == 'POST':
+        form = ClaimForm(request.POST, service_request_instance=service_request)
+        if form.is_valid():
+            # บันทึกข้อมูล RepairClaim
+            claim = form.save(commit=False)
+            claim.service_request = service_request  # ผูกกับ ServiceRequest
+            claim.save()
+            return redirect('service_request_job_detail', service_request_id=request_id)  # redirect ไปหน้ารายละเอียด
+    else:
+        form = ClaimForm(service_request_instance=service_request)
+
+    return render(request, 'service_requests/external_repair_form.html', {'form': form, 'service_request': service_request})
 
 def new_device_form(request):
     return render(request, 'service_requests/new_device_form.html')

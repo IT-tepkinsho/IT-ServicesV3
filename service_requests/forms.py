@@ -1,5 +1,5 @@
 from django import forms
-from .models import RepairUpdateLog, ServiceRequest, Repair, Claim, RequestStatus, RepairType
+from .models import RepairClaim, RepairUpdateLog, ServiceRequest, Repair, RepairClaim, RequestStatus, RepairType
 from user_management.models import User, Department
 from django.utils import timezone
 
@@ -48,8 +48,36 @@ class RepairForm(forms.ModelForm):
 
 class ClaimForm(forms.ModelForm):
     class Meta:
-        model = Claim
-        fields = ['repair', 'claim_description', 'claim_status']
+        model = RepairClaim
+        fields = [
+            'service_request', 'company', 'claim_date', 
+            'vehicle_type', 'license_plate', 'purpose_of_out', 
+            'equipment', 'cost', 'claim_status'
+        ]
+        widgets = {
+            'service_request': forms.TextInput(attrs={'readonly': 'readonly', 'class': 'form-control'}),
+            'claim_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'company': forms.Select(attrs={'class': 'form-control'}),
+            'vehicle_type': forms.TextInput(attrs={'class': 'form-control'}),
+            'license_plate': forms.TextInput(attrs={'class': 'form-control'}),
+            'purpose_of_out': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'equipment': forms.TextInput(attrs={'class': 'form-control'}),
+            'cost': forms.NumberInput(attrs={'class': 'form-control'}),
+            'claim_status': forms.Select(attrs={'class': 'form-select'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        service_request_instance = kwargs.pop('service_request_instance', None)
+        super().__init__(*args, **kwargs)
+
+        # เพิ่มการตั้งค่า initial สำหรับ 'equipment'
+        service_request = kwargs.get('initial', {}).get('service_request')
+        if service_request:
+            kwargs['initial']['equipment'] = service_request.equipment
+
+        if service_request_instance:
+            self.fields['service_request'].initial = service_request_instance.id
+            self.fields['equipment'].initial = service_request_instance.equipment
 
 
 class RepairDetailForm(forms.ModelForm):
