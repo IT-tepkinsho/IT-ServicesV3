@@ -10,205 +10,221 @@
         <nav>
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-            <li class="breadcrumb-item active">Tracking Claim</li>
+            <li class="breadcrumb-item active">Ticket Request</li>
           </ol>
         </nav>
     </div><!-- End Page Title -->
 
-  <section class="section dashboard">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="row">
-                     
-                <div class="col-lg-12">
-                    <div class="card recent-sales overflow-auto" style="border-bottom: 3px solid #2f5f98;">
-                        <h5 class="card-header" style="background-color: #2f5f98; color: aliceblue;">รายการใบแจ้งซ่อม</h5>
-                        <div class="card-body">
-                            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab" aria-controls="tab1" aria-selected="true">รอรับงาน
-                                    <span class="badge bg-danger">{{ pending_count }}</span>
-                                </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab" aria-controls="tab2" aria-selected="false">รอการแก้ไข
-                                    <span class="badge bg-primary">{{ in_progress_count }}</span>
-                                </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab" aria-controls="tab3" aria-selected="false">แก้ไขเรียบร้อย
-                                    <span class="badge bg-success">{{ completed_count }}</span>
-                                </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" type="button" role="tab" aria-controls="tab4" aria-selected="false">รายการยกเลิก
-                                    <span class="badge bg-secondary">{{ canceled_count }}</span>
-                                </button>
-                                </li>
-                            </ul>
-                            <!-- Table with stripped rows -->
-                            <div class="tab-content" id="myTabContent">
-                                <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
-                                <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff;">
-                                <table id="table-pending" class="table table-striped mt-3 text-center" style="font-size: 14px; ">
-                                    <thead class="text-center">
-                                    <tr>
-                                        <th>เลขที่ใบแจ้งซ่อม</th>
-                                        <th>หน่วยงาน</th>
-                                        <th>ผู้แจ้ง</th>
-                                        <th style="text-align: left;">รายละเอียดปัญหา</th>
-                                        <th>วันเวลาที่แจ้ง</th>
-                                        <th>สถานะ</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for request in pending_requests %}
-                                            <tr>
-                                                <td><a href="{% url 'service_request_job' request.pk %}">{{ request.service_request_number }}</a></td>
-                                                <td>{{ request.user_department }}</td>
-                                                <td>{{ request.user_name }}</td>
-                                                <td style="text-align: left;">{{ request.request_description }}</td>
-                                                <td>{{ request.request_date|date:'j N Y, H:i' }}</td>
-                                                <td><i class="fas fa-stopwatch fa-shake" style="color: rgb(255, 160, 44);"></i></td>
-                                            </tr>
-                                            {% empty %}
-                                            <tr>
-                                                <td colspan="6">ไม่มีคำร้องที่รอการดำเนินการ</td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                                </div>
-                                </div>
-            
-                                <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
-                                    <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff;">
-                                        <table id="table-process" class="table table-striped mt-3" style="font-size: 14px; text-align: center;">
-                                            <thead>
-                                            <tr>
-                                                <th scope="col">เลขที่ใบแจ้งซ่อม</th>
-                                                <th scope="col">หน่วยงาน</th>
-                                                <th scope="col">ผู้แจ้ง</th>
-                                                <th scope="col">รายละเอียดปัญหา</th>
-                                                <th scope="col">วันเวลาที่แจ้ง</th>
-                                                <th scope="col">วันเวลาที่รับงาน</th>
-                                                <th scope="col">วันที่อัพเดต</th>
-                                                <th scope="col">สถานะ</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for request in in_progress_requests %}
-                                                    <tr>
-                                                        <td><a href="{% url 'service_request_job' request.pk %}">{{ request.service_request_number }}</a></td>
-                                                        <td>{{ request.user_department }}</td>
-                                                        <td>{{ request.user_name }}</td>
-                                                        <td style="text-align: left;">{{ request.request_description }}</td>
-                                                        <td>{{ request.request_date|date:'j N Y, H:i' }}</td>
-                                                        <td>{{ request.date_received|default_if_none:""|date:'j N Y, H:i' }}</td>
-                                                        <td>
-                                                            {% with request.repair_updates.last as last_update %}
-                                                                {{ last_update.update_datetime|default_if_none:""|date:'j N Y, H:i' }}
-                                                            {% endwith %}
-                                                        </td>
-                                                        <td><i class="fas fa-spinner fa-spin-pulse" style="color: #235a9e;"></i></td>
-                                                    </tr>
-                                                    {% empty %}
-                                                    <tr>
-                                                        <td colspan="8">ไม่มีคำร้องที่กำลังดำเนินการ</td>
-                                                    </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+    <!-- แสดงข้อความแจ้งเตือนที่นี่ -->
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div class="alert 
+                {% if message.tags == 'success' %}alert-success
+                {% elif message.tags == 'error' %}alert-danger
+                {% elif message.tags == 'warning' %}alert-warning
+                {% elif message.tags == 'info' %}alert-info
+                {% else %}alert-secondary{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 
-                                <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
-                                    <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff;">
-                                        <table id="table-success" class="table table-striped mt-3" style="font-size: 14px;">
-                                            <thead class="text-center">
+    <section class="section dashboard">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+                        
+                    <div class="col-lg-12">
+                        <div class="card recent-sales overflow-auto" style="border-bottom: 3px solid #2f5f98;">
+                            <h5 class="card-header" style="background-color: #2f5f98; color: aliceblue;">รายการใบแจ้งซ่อม</h5>
+                            <div class="card-body">
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab" aria-controls="tab1" aria-selected="true">รอรับงาน
+                                        <span class="badge bg-danger">{{ pending_count }}</span>
+                                    </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab" aria-controls="tab2" aria-selected="false">รอการแก้ไข
+                                        <span class="badge bg-primary">{{ in_progress_count }}</span>
+                                    </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab" aria-controls="tab3" aria-selected="false">แก้ไขเรียบร้อย
+                                        <span class="badge bg-success">{{ completed_count }}</span>
+                                    </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" type="button" role="tab" aria-controls="tab4" aria-selected="false">รายการยกเลิก
+                                        <span class="badge bg-secondary">{{ canceled_count }}</span>
+                                    </button>
+                                    </li>
+                                </ul>
+                                <!-- Table with stripped rows -->
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
+                                    <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff; overflow-x: auto; overflow-y: auto; height: 500px;">
+                                    <table class="table table-striped mt-3 text-center" style="font-size: 14px; text-align: center;">
+                                        <thead>
+                                        <tr>
+                                            <th>เลขที่ใบแจ้งซ่อม</th>
+                                            <th>หน่วยงาน</th>
+                                            <th>ผู้แจ้ง</th>
+                                            <th style="text-align: left;">รายละเอียดปัญหา</th>
+                                            <th>วันเวลาที่แจ้ง</th>
+                                            <th>สถานะ</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for request in pending_requests %}
                                                 <tr>
-                                                    <th scope="col" style="width: 10%;">เลขที่ใบแจ้งซ่อม</th>
-                                                    <th scope="col" style="width: 10%;">หน่วยงาน</th>
+                                                    <td><a href="{% url 'service_request_job' request.pk %}">{{ request.service_request_number }}</a></td>
+                                                    <td>{{ request.user_department }}</td>
+                                                    <td>{{ request.user_name }}</td>
+                                                    <td style="text-align: left;">{{ request.request_description }}</td>
+                                                    <td>{{ request.request_date|date:'j N Y, H:i' }}</td>
+                                                    <td><i class="fas fa-stopwatch fa-shake" style="color: rgb(255, 160, 44);"></i></td>
+                                                </tr>
+                                                {% empty %}
+                                                <tr>
+                                                    <td colspan="6">ไม่มีคำร้องที่รอการดำเนินการ</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    </div>
+                                    </div>
+                
+                                    <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+                                        <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff; overflow-x: auto; overflow-y: auto; height: 500px;">
+                                            <table class="table table-striped mt-3" style="font-size: 14px; text-align: center;">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">เลขที่ใบแจ้งซ่อม</th>
+                                                    <th scope="col">หน่วยงาน</th>
                                                     <th scope="col">ผู้แจ้ง</th>
-                                                    <th scope="col" style="width: 20%;">รายละเอียดปัญหา</th>
-                                                    <th scope="col">ผู้ดำเนินการ</th>
-                                                    <th scope="col">วันที่แจ้ง</th>
+                                                    <th scope="col">รายละเอียดปัญหา</th>
+                                                    <th scope="col">วันเวลาที่แจ้ง</th>
+                                                    <th scope="col">วันเวลาที่รับงาน</th>
+                                                    <th scope="col">วันที่อัพเดต</th>
+                                                    <th scope="col">สถานะ</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for request in in_progress_requests %}
+                                                        <tr>
+                                                            <td><a href="{% url 'service_request_job' request.pk %}">{{ request.service_request_number }}</a></td>
+                                                            <td>{{ request.user_department }}</td>
+                                                            <td>{{ request.user_name }}</td>
+                                                            <td style="text-align: left;">{{ request.request_description }}</td>
+                                                            <td>{{ request.request_date|date:'j N Y, H:i' }}</td>
+                                                            <td>{{ request.date_received|default_if_none:""|date:'j N Y, H:i' }}</td>
+                                                            <td>
+                                                                {% with request.repair_updates.last as last_update %}
+                                                                    {{ last_update.update_datetime|default_if_none:""|date:'j N Y, H:i' }}
+                                                                {% endwith %}
+                                                            </td>
+                                                            <td><i class="fas fa-spinner fa-spin-pulse" style="color: #235a9e;"></i></td>
+                                                        </tr>
+                                                        {% empty %}
+                                                        <tr>
+                                                            <td colspan="8">ไม่มีคำร้องที่กำลังดำเนินการ</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
+                                        <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff; overflow-x: auto; overflow-y: auto; height: 500px;">
+                                            <table class="table table-striped mt-3" style="font-size: 14px; text-align: center;">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col" style="width: 10%;">เลขที่ใบแจ้งซ่อม</th>
+                                                        <th scope="col" style="width: 10%;">หน่วยงาน</th>
+                                                        <th scope="col">ผู้แจ้ง</th>
+                                                        <th scope="col" style="width: 20%;">รายละเอียดปัญหา</th>
+                                                        <th scope="col">ผู้ดำเนินการ</th>
+                                                        <th scope="col">วันที่แจ้ง</th>
+                                                        <th scope="col">วันที่รับงาน</th>
+                                                        <th scope="col">วันที่เสร็จ</th>
+                                                        <th scope="col">รวมเวลาแก้ไข</th>
+                                                        <th scope="col" style="width: 5%;">สถานะ</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for request in completed_requests %}
+                                                        <tr>
+                                                            <td><a href="{% url 'service_request_job' request.pk %}">{{ request.service_request_number }}</a></td>
+                                                            <td>{{ request.user_department }}</td>
+                                                            <td>{{ request.user_name }}</td>
+                                                            <td style="text-align: left;">{{ request.request_description }}</td>
+                                                            <td>{{ request.operator }}</td>
+                                                            <td>{{ request.request_date|default_if_none:""|date:'j N Y, H:i' }}</td>
+                                                            <td>{{ request.date_received|default_if_none:""|date:'j N Y, H:i' }}</td>
+                                                            <td>{{ request.date_completed|default_if_none:""|date:'j N Y, H:i' }}</td>
+                                                            <td>{{ request.total_repair_time|default_if_none:""}}</td>
+                                                            <td><i class="fa-solid fa-circle-check" style="color: rgb(18, 183, 18);"></i></td>
+                                                        </tr>
+                                                        {% empty %}
+                                                        <tr>
+                                                            <td colspan="10">ไม่มีคำร้องที่เสร็จสิ้นแล้ว</td>
+                                                        </tr>   
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4-tab">
+                                        <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff; overflow-x: auto; overflow-y: auto; height: 500px;">
+                                            <table class="table table-striped mt-3" style="font-size: 14px; text-align: center;">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">เลขที่ใบแจ้งซ่อม</th>
+                                                    <th scope="col">หน่วยงาน</th>
+                                                    <th scope="col">ผู้แจ้ง</th>
+                                                    <th scope="col">รายละเอียดปัญหา</th>
+                                                    <th scope="col">วันเวลาที่แจ้ง</th>
                                                     <th scope="col">วันที่รับงาน</th>
                                                     <th scope="col">วันที่เสร็จ</th>
                                                     <th scope="col">รวมเวลาแก้ไข</th>
-                                                    <th scope="col" style="width: 5%;">สถานะ</th>
+                                                    <th scope="col">สถานะ</th>
                                                 </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for request in completed_requests %}
-                                                    <tr>
-                                                        <td><a href="{% url 'service_request_job' request.pk %}">{{ request.service_request_number }}</a></td>
-                                                        <td>{{ request.user_department }}</td>
-                                                        <td>{{ request.user_name }}</td>
-                                                        <td>{{ request.request_description }}</td>
-                                                        <td>{{ request.operator }}</td>
-                                                        <td>{{ request.request_date|default_if_none:""|date:'j N Y, H:i' }}</td>
-                                                        <td>{{ request.date_received|default_if_none:""|date:'j N Y, H:i' }}</td>
-                                                        <td>{{ request.date_completed|default_if_none:""|date:'j N Y, H:i' }}</td>
-                                                        <td>{{ request.total_repair_time|default_if_none:""|date:'j N Y, H:i' }}</td>
-                                                        <td><i class="fa-solid fa-circle-check" style="color: rgb(18, 183, 18);"></i></td>
-                                                    </tr>
-                                                    {% empty %}
-                                                    <tr>
-                                                        <td colspan="10">ไม่มีคำร้องที่เสร็จสิ้นแล้ว</td>
-                                                    </tr>   
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                                <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4-tab">
-                                    <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff;">
-                                        <table id="table-cancel" class="table table-striped mt-3" style="font-size: 14px; ">
-                                            <thead class="text-center">
-                                            <tr>
-                                                <th scope="col">เลขที่ใบแจ้งซ่อม</th>
-                                                <th scope="col">หน่วยงาน</th>
-                                                <th scope="col">ผู้แจ้ง</th>
-                                                <th scope="col">รายละเอียดปัญหา</th>
-                                                <th scope="col">วันเวลาที่แจ้ง</th>
-                                                <th scope="col">วันที่รับงาน</th>
-                                                <th scope="col">วันที่เสร็จ</th>
-                                                <th scope="col">รวมเวลาแก้ไข</th>
-                                                <th scope="col">สถานะ</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for request in canceled_requests %}
-                                                    <tr>
-                                                        <td><a href="{% url 'service_request_job' request.pk %}">{{ request.service_request_number }}</a></td>
-                                                        <td>{{ request.user_department }}</td>
-                                                        <td>{{ request.user_name }}</td>
-                                                        <td>{{ request.request_description }}</td>
-                                                        <td>{{ request.request_date|default_if_none:""|date:'j N Y, H:i' }}</td>
-                                                        <td>{{ request.date_received|default_if_none:""|date:'j N Y, H:i' }}</td>
-                                                        <td>{{ request.date_completed|default_if_none:""|date:'j N Y, H:i' }}</td>
-                                                        <td>{{ request.total_repair_time|default_if_none:""  }}</td>
-                                                        <td><i class="fa-solid fa-circle-xmark" style="color: crimson;"></i></td>
-                                                    </tr>
-                                                    {% empty %}
-                                                    <tr>
-                                                        <td colspan="9">ไม่มีคำร้องที่ถูกยกเลิก</td>
-                                                    </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    {% for request in canceled_requests %}
+                                                        <tr>
+                                                            <td><a href="{% url 'service_request_job' request.pk %}">{{ request.service_request_number }}</a></td>
+                                                            <td>{{ request.user_department }}</td>
+                                                            <td>{{ request.user_name }}</td>
+                                                            <td style="text-align: left;">{{ request.request_description }}</td>
+                                                            <td>{{ request.request_date|default_if_none:""|date:'j N Y, H:i' }}</td>
+                                                            <td>{{ request.date_received|default_if_none:""|date:'j N Y, H:i' }}</td>
+                                                            <td>{{ request.date_completed|default_if_none:""|date:'j N Y, H:i' }}</td>
+                                                            <td>{{ request.total_repair_time|default_if_none:""}}</td>
+                                                            <td><i class="fa-solid fa-circle-xmark" style="color: crimson;"></i></td>
+                                                        </tr>
+                                                        {% empty %}
+                                                        <tr>
+                                                            <td colspan="9">ไม่มีคำร้องที่ถูกยกเลิก</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div><!-- End Recent Sales -->
+                    </div><!-- End Recent Sales -->
+                </div>
             </div>
         </div>
-    </div>
-  </section>
+    </section>
 
 </main><!-- End #main -->
 

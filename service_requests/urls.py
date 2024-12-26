@@ -1,9 +1,9 @@
 from django.urls import path
-from .views import (cancel_service_request, claim_list, delete_claim, external_repair_form, get_repair_list, it_repair_form, new_device_form, repair_detail_view, 
+from .views import (cancel_service_request, claim_list, claim_tracking, complete_claim, delete_claim, external_repair_form, get_repair_list, it_repair_form, new_device_form, repair_detail_view, 
                     service_request_detail, service_request_job_detail, service_request_list, 
                     create_service_request, create_repair, create_claim, get_repair_topics, service_request_history, 
-                    get_repair_history, get_user_details, ticket_request, update_claim, update_repair_by, update_repair_details, update_status)
-                    
+                    get_repair_history, get_user_details, ticket_request, update_claim, update_claim_details, update_repair_by, update_repair_details, update_status)
+from . import views
 
 urlpatterns = [
     path('', service_request_list, name='service_request_list'),
@@ -28,6 +28,11 @@ urlpatterns = [
     path('claims/', claim_list, name='claim_list'),
     path('claims/create/', create_claim, name='create_claim'),
     path('claims/update/<int:pk>/', update_claim, name='update_claim'),
-    path('claims/delete/<int:pk>/', delete_claim, name='delete_claim'),
+    path('claims/delete/<int:pk>/', delete_claim, name='claim_delete'),
+    path('claim-tracking/<int:claim_id>/', claim_tracking, name='claim_tracking'),
+    path('update-claim-details/', update_claim_details, name='update_claim_details'),
+    path('complete_claim/<int:pk>/', complete_claim, name='complete_claim'),
+    path('feedback/<int:pk>/', views.ServiceFeedbackView.as_view(), name='service_feedback'),
+    
 ]
 

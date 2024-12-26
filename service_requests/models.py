@@ -1,9 +1,11 @@
-from pickle import TRUE
+from django.core.mail import send_mail
 from django.db import models
 from repair_management.models import RepairType, RepairTopic, Vendor # เชื่อมโยงกับโมเดล RepairType, RepairTopic
 from user_management.models import Department, User # เชื่อมโยงกับโมเดล Department, User
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
+from django.urls import reverse
+from datetime import timedelta
     
 class ServiceRequestConfig(models.Model):
     base_year = models.IntegerField(default=67)  # Starting year
@@ -50,9 +52,30 @@ class ServiceRequest(models.Model):
     method_of_repair = models.TextField(null=True, blank=True, default='')  # วิธีดำเนินการ
     date_received = models.DateTimeField(null=True, blank=True)  # วันที่รับงาน
     date_completed = models.DateTimeField(null=True, blank=True)  # วันที่ซ่อมเสร็จ
-    total_repair_time = models.DurationField(null=True, blank=True)  # รวมเวลาซ่อม
+    # total_repair_time = models.DurationField(null=True, blank=True)  # รวมเวลาซ่อม
+    total_repair_time = models.CharField(max_length=100, null=True, blank=True) # รวมเวลาซ่อม
     operator = models.CharField(max_length=50, null=True, blank=True, default='')  # ผู้ดำเนินการ
 
+    # เก็บคะแนนความพึงพอใจ
+    satisfaction_score = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name="คะแนนความพึงพอใจ",
+        choices=[(i, f"{i} ดาว") for i in range(1, 6)]
+    )
+    feedback_comment = models.TextField(null=True, blank=True, verbose_name="ความคิดเห็นเพิ่มเติม")
+    feedback_submitted = models.BooleanField(default=False, verbose_name="ประเมินเสร็จแล้ว")
+    
+    def send_feedback_email(self):
+        """ส่งอีเมลขอคะแนนความพึงพอใจ"""
+        if self.user_name and self.user_name.email:
+            feedback_url = reverse('service_feedback', args=[self.pk])
+            full_url = f"http://127.0.0.1:8000{feedback_url}"  # เปลี่ยนเป็น URL
+            subject = "ขอความเห็นเกี่ยวกับบริการแจ้งซ่อม"
+            message = (
+                f"เรียน {self.user_name.nameTH},\n\n"
+                f"ใบแจ้งซ่อมของคุณหมายเลข {self.service_request_number} ได้ดำเนินการเสร็จสิ้นแล้ว\n"
+                f"กรุณาประเมินความพึงพอใจของคุณได้ที่ลิงก์ด้านล่าง:\n{full_url}\n\n"
+                f"ขอบคุณที่ใช้บริการของเรา!"
+            )
+            send_mail(subject, message, 'godcatdev@gmail.com', [self.user_name.email])
 
     def save(self, *args, **kwargs):
         # Set service_request_number if it's not set
@@ -69,7 +92,7 @@ class ServiceRequest(models.Model):
             except ObjectDoesNotExist:
                 raise ValueError("ServiceRequestConfig instance not found.")
             
-                # ตั้งค่า repair_status ให้เป็น 'pending' ถ้ายังไม่ถูกตั้งค่า
+        # ตั้งค่า repair_status ให้เป็น 'pending'
         if self.repair_status is None:
             try:
                 self.repair_status = RequestStatus.objects.get(name='pending')  # ค้นหาค่าจากโมเดล RequestStatus
@@ -77,9 +100,23 @@ class ServiceRequest(models.Model):
                 raise ValueError("RequestStatus instance with name 'pending' not found.")
         
         # คำนวณ total_repair_time
-        if self.date_received and self.date_completed:
-            self.total_repair_time = self.date_completed - self.date_received
+        # if self.date_received and self.date_completed:
+        #     self.total_repair_time = self.date_completed - self.date_received
             
+        # คำนวณ total_repair_time
+        if self.date_received and self.date_completed:
+            # คำนวณระยะเวลาระหว่างสองวันที่
+            delta = self.date_completed - self.date_received
+            days = delta.days
+            hours, remainder = divmod(delta.seconds, 3600)
+            minutes, _ = divmod(remainder, 60)
+
+            
+            if days > 0:
+                self.total_repair_time = f"{days} วัน {hours} ชั่วโมง {minutes} นาที"
+            else:
+                self.total_repair_time = f"{hours} ชั่วโมง {minutes} นาที"
+
         super(ServiceRequest, self).save(*args, **kwargs) 
     
     def __str__(self):
@@ -103,27 +140,45 @@ class RepairClaim(models.Model):
     ])
 
     def save(self, *args, **kwargs):
-        if not self.claim_number:  # ตรวจสอบว่าฟิลด์นี้ยังไม่มีค่า
-            last_claim = RepairClaim.objects.filter(claim_number__startswith="CIT-").order_by('-claim_number').first()
+        if not self.claim_number:
+            # Auto-generate claim_number in the format CIT-0001, CIT-0002
+            last_claim = RepairClaim.objects.all().order_by('id').last()
             if last_claim:
-                # แยกตัวเลขท้ายสุดจาก claim_number และเพิ่มค่า
                 last_number = int(last_claim.claim_number.split('-')[1])
-                new_number = f"CIT-{last_number + 1:04d}"
+                new_number = f"{last_number + 1:04d}"
             else:
-                new_number = "CIT-0001"  # เริ่มต้นที่เลขแรก
-            self.claim_number = new_number
-        super().save(*args, **kwargs)  # เรียกเมธอด save ดั้งเดิม
+                new_number = "0001"
+            self.claim_number = f"CIT-{new_number}"
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.claim_number
+    
+class ClaimUpdate(models.Model):
+    claim = models.ForeignKey(RepairClaim, on_delete=models.CASCADE, related_name="updates", verbose_name="การเคลม")
+    update_date = models.DateField(null=True, blank=True, verbose_name="วันที่อัปเดต")
+    details = models.TextField(null=True, blank=True, verbose_name="รายละเอียดเพิ่มเติม")
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ('pending', 'Pending'),
+            ('in_progress', 'In Progress'),
+            ('completed', 'Completed'),
+        ],
+        default='pending',
+        verbose_name="สถานะ"
+    )
 
     def __str__(self):
-        return f"{self.claim_number} for {self.service_request}"
+        return f"อัปเดตเมื่อ {self.update_date} - {self.claim.claim_number}"
     
-
 class Repair(models.Model):
     request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
     repair_details = models.TextField()
     repair_date = models.DateTimeField(auto_now_add=True)
     repair_status = models.CharField(max_length=50, choices=[
         ('completed', 'Completed'),
+        ('in_progress', 'In Progress'),
         ('pending', 'Pending'),
     ])
 

@@ -1,5 +1,6 @@
 {% extends 'general/components/base.html' %}
 {% load static %}
+{% load tz %}
 
 {% block content %}
 <main id="main" class="main">
@@ -14,7 +15,7 @@
       </nav>
     </div><!-- End Page Title -->
   
-     <!-- แสดงข้อความแจ้งเตือนที่นี่ -->
+    <!-- แสดงข้อความแจ้งเตือนที่นี่ -->
     {% if messages %}
         <div>
             {% for message in messages %}
@@ -81,8 +82,7 @@
                 <div class="card info-card month-card" style="border-top: 3px solid #ec9158;">
   
                 <div class="card-body">
-                    <h6 class="card-title">ใบแจ้งซ่อมประจำเดือน </h6>
-  
+                    <h6 class="card-title">ใบแจ้งซ่อมประจำเดือน {{ month_name }}</h6>
                     <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                         <i class="bx bxs-calendar"></i>
@@ -103,7 +103,7 @@
                 <div class="card info-card years-card" style="border-top: 3px solid #2f5f98;">
   
                 <div class="card-body">
-                    <h6 class="card-title">ใบแจ้งซ่อมประจำปี </h6>
+                    <h6 class="card-title">ใบแจ้งซ่อมประจำปี {{ current_year }}</h6>
   
                     <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -156,7 +156,7 @@
                       <div class="tab-content" id="myTabContent">
                           <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
                           <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff;">
-                          <table id="table-pending" class="table table-striped mt-3 text-center" style="font-size: 14px; ">
+                          <table class="table table-striped mt-3 text-center" style="font-size: 14px; ">
                               <thead class="text-center">
                               <tr>
                                   <th>เลขที่ใบแจ้งซ่อม</th>
@@ -188,7 +188,7 @@
                           </div>
   
                           <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
-                          <table id="table-process" class="table table-striped mt-3" style="font-size: 14px; text-align: center;">
+                          <table  class="table table-striped mt-3" style="font-size: 14px; text-align: center;">
                               <thead>
                               <tr>
                                   <th scope="col">เลขที่ใบแจ้งซ่อม</th>
@@ -225,10 +225,10 @@
                               </tbody>
                           </table>
                           </div>
-                          <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab" style="overflow-x: auto;">
-                              <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff; overflow-x: auto;">
-                                  <table id="table-success" class="table table-striped mt-3" style="font-size: 14px;">
-                                      <thead class="text-center">
+                          <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
+                              <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff; overflow-x: auto; overflow-y: auto; height: 500px;">
+                                  <table class="table table-striped mt-3" style="font-size: 14px;">
+                                      <thead>
                                           <tr>
                                               <th scope="col" style="width: 10%;">เลขที่ใบแจ้งซ่อม</th>
                                               <th scope="col" style="width: 10%;">หน่วยงาน</th>
@@ -250,7 +250,7 @@
                                                 <td>{{ request.user_name }}</td>
                                                 <td>{{ request.request_description }}</td>
                                                 <td>{{ request.operator }}</td>
-                                                <td>{{ request.request_date|default_if_none:""|date:'j N Y, H:i' }}</td>
+                                                <td>{{ request.request_date|default_if_none:""|localtime|date:'j N Y, H:i' }}</td>
                                                 <td>{{ request.date_received|default_if_none:""|date:'j N Y, H:i' }}</td>
                                                 <td>{{ request.date_completed|default_if_none:""|date:'j N Y, H:i' }}</td>
                                                 <td>{{ request.total_repair_time|default_if_none:""}}</td>
@@ -265,10 +265,10 @@
                                   </table>
                               </div>
                           </div>
-                          <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4-tab" style="overflow-x: auto;">
-                              <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff; overflow-x: auto;">
-                                  <table id="table-cancel" class="table table-striped mt-3" style="font-size: 14px; ">
-                                      <thead class="text-center">
+                          <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4-tab">
+                              <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff; overflow-x: auto; overflow-y: auto; height: 300px;">
+                                  <table class="table table-striped mt-3" style="font-size: 14px; ">
+                                      <thead style="position: sticky; top: 0; background-color: #fff; z-index: 1;">
                                       <tr>
                                           <th scope="col">เลขที่ใบแจ้งซ่อม</th>
                                           <th scope="col">หน่วยงาน</th>
@@ -291,7 +291,7 @@
                                                 <td>{{ request.request_date|default_if_none:""|date:'j N Y, H:i' }}</td>
                                                 <td>{{ request.date_received|default_if_none:""|date:'j N Y, H:i' }}</td>
                                                 <td>{{ request.date_completed|default_if_none:""|date:'j N Y, H:i' }}</td>
-                                                <td>{{ request.total_repair_time|default_if_none:""  }}</td>
+                                                <td>{{ request.total_repair_time|default_if_none:""}}</td>
                                                 <td><i class="fa-solid fa-circle-xmark" style="color: crimson;"></i></td>
                                             </tr>
                                             {% empty %}
@@ -331,51 +331,39 @@
                             <div class="tab-content" id="tabStatisticsContent">
                                 <div class="tab-pane fade show active" id="Statistics1" role="tabpanel" aria-labelledby="Statistics1-tab">
                                     <div class="mt-5">
+                                        <!-- ฟอร์มสำหรับเลือกเดือนและปี -->
                                         <form method="get" action="">
                                             <div class="row align-items-end">
-                                                <!-- Month selection -->
                                                 <label class="col-auto col-form-label" style="text-align: right;">เดือน :</label>
                                                 <div class="col-auto">
-                                                    <select class="form-select" aria-label="Select month">
-                                                        <option selected>---------</option>
-                                                        <option value="1">มกราคม</option>
-                                                        <option value="2">กุมภาพันธ์</option>
-                                                        <option value="3">มีนาคม</option>
-                                                        <option value="4">เมษายน</option>
-                                                        <option value="5">พฤษภาคม</option>
-                                                        <option value="6">มิถุนายน</option>
-                                                        <option value="7">กรกฏาคม</option>
-                                                        <option value="8">สิงหาคม</option>
-                                                        <option value="9">กันยายน</option>
-                                                        <option value="10">ตุลาคม</option>
-                                                        <option value="11">พฤศจิกายน</option>
-                                                        <option value="12">ธันวาคม</option>
+                                                    <select class="form-select" name="month" aria-label="Select month">
+                                                        <option value="" {% if not request.GET.month %}selected{% endif %}>---------</option>
+                                                        <option value="1" {% if request.GET.month == "1" %}selected{% endif %}>มกราคม</option>
+                                                        <option value="2" {% if request.GET.month == "2" %}selected{% endif %}>กุมภาพันธ์</option>
+                                                        <option value="3" {% if request.GET.month == "3" %}selected{% endif %}>มีนาคม</option>
+                                                        <option value="4" {% if request.GET.month == "4" %}selected{% endif %}>เมษายน</option>
+                                                        <option value="5" {% if request.GET.month == "5" %}selected{% endif %}>พฤษภาคม</option>
+                                                        <option value="6" {% if request.GET.month == "6" %}selected{% endif %}>มิถุนายน</option>
+                                                        <option value="7" {% if request.GET.month == "7" %}selected{% endif %}>กรกฏาคม</option>
+                                                        <option value="8" {% if request.GET.month == "8" %}selected{% endif %}>สิงหาคม</option>
+                                                        <option value="9" {% if request.GET.month == "9" %}selected{% endif %}>กันยายน</option>
+                                                        <option value="10" {% if request.GET.month == "10" %}selected{% endif %}>ตุลาคม</option>
+                                                        <option value="11" {% if request.GET.month == "11" %}selected{% endif %}>พฤศจิกายน</option>
+                                                        <option value="12" {% if request.GET.month == "12" %}selected{% endif %}>ธันวาคม</option>
+                                                        
                                                     </select>
                                                 </div>
-                                        
-                                                <!-- Year selection -->
+
                                                 <label class="col-auto col-form-label" style="text-align: right;">ปี :</label>
                                                 <div class="col-auto">
-                                                    <select class="form-select" aria-label="Select year">
-                                                        <option selected>---------</option>
-                                                        <option value="2020">2020</option>
-                                                        <option value="2021">2021</option>
-                                                        <option value="2022">2022</option>
-                                                        <option value="2023">2023</option>
-                                                        <option value="2024">2024</option>
-                                                        <option value="2025">2025</option>
-                                                        <option value="2026">2026</option>
-                                                        <option value="2027">2027</option>
-                                                        <option value="2028">2028</option>
-                                                        <option value="2029">2029</option>
+                                                    <select class="form-select" name="year" aria-label="Select year">
+                                                        {% for year in years %}
+                                                            <option value="{{ year }}" {% if year == current_year %}selected{% endif %}>{{ year }}</option>
+                                                        {% endfor %}
                                                     </select>
                                                 </div>
-                                        
-                                                <!-- Search button -->
                                                 <div class="col-auto">
-                                                    <button type="submit" class="btn btn-outline-primary" name="search">
-                                                        <i class="fas fa-search"></i> search
-                                                    </button>
+                                                    <button type="submit" class="btn btn-primary">Submit</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -386,7 +374,7 @@
                                             <tr>
                                                 <th rowspan="2">ลำดับ</th>
                                                 <th rowspan="2">รายงาน</th>
-                                                <th colspan="3">ปี 2567</th>
+                                                <th colspan="3">ปี {{ current_year }}</th>
                                             </tr>
                                             <tr>
                                                 <th>ผู้ใช้บริการ</th>
@@ -395,91 +383,66 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td class="text-center">1</td>
-                                                <td colspan="4">ด้านอุปกรณ์เทคโนโลยีสารสนเทศ</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>- เกี่ยวกับเครื่องคอมพิวเตอร์ลูกข่าย (Case/CPU,Monitor)</td>
-                                                <td class="text-center">36</td>
-                                                <td>IT = 36 , Outsource = 0</td>
-                                                <td>41,560</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>- เกี่ยวกับเครื่องปริ้นเตอร์</td>
-                                                <td class="text-center">19</td>
-                                                <td>IT = 19 , Outsource = 0</td>
-                                                <td>39,560</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>- เกี่ยวกับเครื่องสำรองไฟ</td>
-                                                <td class="text-center">21</td>
-                                                <td>IT = 21 , Outsource = 0</td>
-                                                <td>22,580</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>- เกี่ยวกับอุปกรณ์ต่อพ่วง (เม้าส์, คีย์บอร์ด ฯลฯ)</td>
-                                                <td class="text-center">71</td>
-                                                <td>IT = 71 , Outsource = 0</td>
-                                                <td>32,240</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>รวม</td>
-                                                <td class="text-center">147</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center">2</td>
-                                                <td>ด้าน Software</td>
-                                                <td class="text-center">9</td>
-                                                <td>IT = 9 , Outsource = 0</td>
-                                                <td>50</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center">3</td>
-                                                <td>ด้าน Network และ Internet</td>
-                                                <td class="text-center">4</td>
-                                                <td>IT = 4 , Outsource = 0</td>
-                                                <td>26,900</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center">4</td>
-                                                <td>กล้องวงจรปิด</td>
-                                                <td class="text-center">21</td>
-                                                <td>IT = 21 , Outsource = 0</td>
-                                                <td>18,700</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center">5</td>
-                                                <td>ประชาสัมพันธ์บนป้ายโฆษณา LED</td>
-                                                <td class="text-center">1</td>
-                                                <td>IT = 1 , Outsource = 0</td>
-                                                <td>0</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center">6</td>
-                                                <td>ขอรับบริการเครื่องพิมพ์ขนาดใหญ่</td>
-                                                <td class="text-center">49</td>
-                                                <td>IT = 49 , Outsource = 0</td>
-                                                <td>7,316</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center">7</td>
-                                                <td>ขอรับบริการ VDO Conference</td>
-                                                <td class="text-center">27</td>
-                                                <td>IT = 27 , Outsource = 0</td>
-                                                <td>0</td>
-                                            </tr>
+                                            {% for repair_type, data in summary_data.items %}
+                                                {% if repair_type in it_repair_types %}
+                                                    <!-- แถวประเภท "อุปกรณ์ IT" -->
+                                                    <tr>
+                                                        <td class="text-center">{{ forloop.counter }}</td>
+                                                        <td colspan="4">{{ repair_type }}</td>
+                                                    </tr>
+                                    
+                                                    <!-- แสดง subtopics สำหรับประเภท "อุปกรณ์ IT" -->
+                                                    {% for subtopic_title, subtopic in data.subtopics.items %}
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>- {{ subtopic_title }}</td>
+                                                            <td class="text-center">
+                                                                <a href="{% url 'service_request_list' %}?month={{ request.GET.month }}&year={{ request.GET.year }}&repair_type={{ repair_type }}&subtopic_title={{ subtopic_title }}">
+                                                                    {{ subtopic.total_requests }}
+                                                                </a>
+                                                            </td>
+                                                            <td class="text-center">IT = {{ subtopic.it_count }} , Outsource = {{ subtopic.outsource_count }}</td>
+                                                            <td class="text-center">{{ subtopic.total_cost|floatformat:2 }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                    
+                                                    <!-- แถวรวมสำหรับประเภท "อุปกรณ์ IT" -->
+                                                    <tr>
+                                                        <td></td>
+                                                        <td style="text-align: right;">รวม</td>
+                                                        <td style="text-align: center;">
+                                                            <a href="{% url 'service_request_list' %}?month={{ request.GET.month }}&year={{ request.GET.year }}&repair_type={{ repair_type }}">
+                                                                {{ data.total_requests }}
+                                                            </a>
+                                                        </td>
+                                                        <td></td>
+                                                        <td style="text-align: center;">{{ data.total_cost|floatformat:2 }}</td>
+                                                    </tr>
+                                    
+                                                {% else %}
+                                                    <!-- สำหรับประเภทอื่น ๆ ที่ไม่ใช่ "อุปกรณ์ IT" -->
+                                                    <tr>
+                                                        <td class="text-center">{{ forloop.counter }}</td>
+                                                        <td>{{ repair_type }}</td>
+                                                        <td class="text-center">
+                                                            <a href="{% url 'service_request_list' %}?month={{ request.GET.month }}&year={{ request.GET.year }}&repair_type={{ repair_type }}">
+                                                                {{ data.total_requests }}
+                                                            </a>
+                                                        </td> 
+                                                        <td class="text-center">IT = {{ data.it_count }} , Outsource = {{ data.outsource_count }}</td>
+                                                        <td class="text-center">{{ data.total_cost|floatformat:2 }}</td>
+                                                    </tr>
+                                                {% endif %}
+                                                
+                                            {% endfor %}
+                                    
+                                            <!-- แถวรวมทั้งหมด -->
                                             <tr>
                                                 <td></td>
                                                 <td style="text-align: right;">รวมทั้งสิ้น</td>
-                                                <td class="text-center">312 รายการ</td>
-                                                <td></td>
-                                                <td>220,718</td>
+                                                <td style="text-align: center;">{{ total_requests_all }}</td>
+                                                <td style="text-align: center;"></td>
+                                                <td style="text-align: center;">{{ total_cost_all|floatformat:2 }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -648,48 +611,48 @@
             <div class="card">
     
                 <div class="card-body pb-0">
-                <h6 style="color: #2f5f98;">สถิติการแจ้งซ่อม</h6>
-    
-                <div id="repairChart" style="min-height: 400px;" class="echart"></div>
+                    <h6 style="color: #2f5f98;">สถิติการแจ้งซ่อมในปี {{ current_year }}</h6>
 
-                <script>
-                    document.addEventListener("DOMContentLoaded", () => {
-                      echarts.init(document.querySelector("#repairChart")).setOption({
-                        tooltip: {
-                            trigger: 'item'
-                        },
-                        legend: {
-                            top: '5%',
-                            orient: 'horizontal',
-                            left: 'left'
-                        },
-                        series: [
-                            {
-                            top: '15%',
-                            name: 'สถิติการแจ้งซ่อม',
-                            type: 'pie',
-                            radius: '50%',
-                            data: [
-                                { value: 1048, name: 'อุปกรณ์ IT' },
-                                { value: 735, name: 'โปรแกรมและระบบ ERP' },
-                                { value: 580, name: 'ระบบ Network' },
-                                { value: 484, name: 'กล้องวงจรปิด' },
-                                { value: 300, name: 'ประชาสัมพันธ์บนป้ายโฆษณา LED' },
-                                { value: 250, name: 'ขอรับบริการเครื่องพิมพ์ขนาดใหญ่' },
-                                { value: 200, name: 'ขอรับบริการ VDO Conference' },
-                            ],
-                            emphasis: {
-                                itemStyle: {
-                                shadowBlur: 10,
-                                shadowOffsetX: 0,
-                                shadowColor: 'rgba(0, 0, 0, 0.5)'
-                                }
-                            }
-                            }
-                        ]
-                      });
-                    });
-                </script>
+                    <div id="repairChart" style="min-height: 350px;" class="echart"></div>
+                    
+                    <script>
+                        // กราฟการแจ้งซ่อม
+                        document.addEventListener("DOMContentLoaded", () => {
+                            const repairChartData = JSON.parse('{{ repair_chart_data|safe }}');
+                            const repairChart = echarts.init(document.querySelector('#repairChart'));
+                            repairChart.setOption({ 
+                                tooltip: {
+                                trigger: 'item'
+                                },
+                                legend: {
+                                    top: '5%',
+                                    left: 'center'
+                                },
+                                series: [
+                                    {
+                                        top: '15%',
+                                        name: 'Repair Types',
+                                        type: 'pie',
+                                        radius: '50%',
+                                        data: repairChartData,
+
+                                        label: {
+                                        show: true,
+                                        position: 'outside',
+                                        formatter: '{b}: ({d}%)',
+                                        distance: 20
+                                        },
+                                        labelLine: {
+                                            show: true,
+                                            smooth: true,
+                                            length: 15,
+                                            length2: 25
+                                        }
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
     
                 </div>
             </div><!-- End Repair Chart -->
@@ -700,39 +663,49 @@
             <div class="card">
     
                 <div class="card-body pb-0">
-                <h6 style="color: #2f5f98;">สรุปความพึงพอใจในปี 2567</h6>
+                <h6 style="color: #2f5f98;">สรุปความพึงพอใจใบแจ้งซ่อมในปี {{ current_year }}</h6>
     
-                <div id="scoreChart" style="min-height: 400px;" class="echart"></div>
+                <div id="scoreChart" style="min-height: 350px;" class="echart"></div>
 
                 <script>
                     document.addEventListener("DOMContentLoaded", () => {
-                      echarts.init(document.querySelector("#scoreChart")).setOption({
-                        tooltip: {
-                            trigger: 'item'
-                        },
-                        legend: {
-                            top: '5%',
-                            left: 'center'
-                        },
-                        series: [
-                            {
-                            name: 'ความพึงพอใจ',
-                            type: 'pie',
-                            radius: ['40%', '70%'],
-                            center: ['50%', '70%'],
-                            // adjust the start and end angle
-                            startAngle: 180,
-                            endAngle: 360,
-                            data: [
-                                { value: 1048, name: 'พอใจมากที่สุด' },
-                                { value: 735, name: 'พอใจมาก' },
-                                { value: 580, name: 'พอใจปานกลาง' },
-                                { value: 484, name: 'พอใจน้อย' },
-                                { value: 300, name: 'พอใจน้อยที่สุด' }
-                            ],
-                            }
-                        ]
-                      });
+                        const chartData = JSON.parse('{{ chart_data|safe }}');
+                        const chart = echarts.init(document.querySelector("#scoreChart"));
+                        chart.setOption({
+                            tooltip: {
+                                trigger: 'item'
+                            },
+                            legend: {
+                                top: '5%',
+                                left: 'center'
+                            },
+                            color: ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff'],
+                            series: [
+                                {
+                                    
+                                    name: 'ความพึงพอใจ',
+                                    type: 'pie',
+                                    radius: ['40%', '70%'],
+                                    center: ['50%', '70%'],
+                                    startAngle: 180,
+                                    endAngle: 360,
+                                    avoidLabelOverlap: true,
+                                    data: chartData,
+                                    label: {
+                                        show: true,
+                                        position: 'outside',
+                                        formatter: '{b}: {c} ({d}%)',
+                                        distance: 20
+                                    },
+                                    labelLine: {
+                                        show: true,
+                                        smooth: true,
+                                        length: 15,
+                                        length2: 25
+                                    }
+                                }
+                            ]
+                        });
                     });
                 </script>
     
@@ -744,4 +717,6 @@
     </section>
   
   </main><!-- End #main -->
+
+
 {% endblock content %}

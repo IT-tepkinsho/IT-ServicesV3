@@ -117,10 +117,10 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label for="{{ form.purchase_date.id_for_label }}" class="form-label">Purchase Date :</label>
-                        {{ form.purchase_date }}
-                        {% if form.purchase_date.errors %}
-                            <div class="text-danger">{{ form.purchase_date.errors }}</div>
+                        <label for="{{ form.program.id_for_label }}" class="form-label">โปรแกรมพิเศษ :</label>
+                        {{ form.program }}
+                        {% if form.program.errors %}
+                            <div class="text-danger">{{ form.program.errors }}</div>
                         {% endif %}
                     </div>
 
@@ -235,49 +235,41 @@
                   
                     <div class="col-md-12">
                       <hr>
-                      <p class="btn btn-info">Software</class=>
-                      <!-- <button type="button" id="add-software" class="btn btn-outline-success btn-sm">
-                        <i class="bi bi-plus"></i> Add Software
-                      </button> -->
+                      <p class="btn btn-info">Software Info</p>
                     </div>
 
                     <!-- Container for software forms -->
                     <div id="software-forms">
-                      <div class="row align-items-center software-form">
-                          <div class="col-md-3">
-                              <label for="{{ form.software.id_for_label }}" class="form-label">รหัส software :</label>
-                              {{ form.software }}
-                              {% if form.software.errors %}
-                                  <div class="text-danger">{{ form.software.errors }}</div>
-                              {% endif %}
-                          </div>
-                          
-                          <div class="col-md-4">
-                              <label for="{{ form.software_name.id_for_label }}" class="form-label">ชื่อโปรแกรม :</label>
-                              {{ form.software_name }}
-                              {% if form.software_name.errors %}
-                                  <div class="text-danger">{{ form.software_name.errors }}</div>
-                              {% endif %}
-                          </div>
-                          
-                          <div class="col-md-4">
-                              <label for="{{ form.license_key.id_for_label }}" class="form-label">License key :</label>
-                              {{ form.license_key }}
-                              {% if form.license_key.errors %}
-                                  <div class="text-danger">{{ form.license_key.errors }}</div>
-                              {% endif %}
-                          </div>
-                          
-                            <!-- No "remove" button for the first row -->
-                            <div class="col-md-1 d-flex align-items-end mt-4">
-                              <button type="button" id="add-software" class="btn btn-outline-success btn-sm">
-                                  <i class="fa fa-plus"></i> Add
-                              </button>
-                          </div>
-                      </div>
+                        <div class="software-form-row">
+                            <div class="row align-items-center software-form">
+                                <div class="col-md-3">
+                                    <label for="{{ form.software.id_for_label }}" class="form-label">รหัส software :</label>
+                                    {{ form.software }}
+                                    {% if form.software.errors %}
+                                        <div class="text-danger">{{ form.software.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <label for="software_name" class="form-label">ชื่อโปรแกรม :</label>
+                                    <input type="text" class="form-control" id="software_name" readonly>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <label for="license_key" class="form-label">License key :</label>
+                                    <input type="text" class="form-control" id="license_key" readonly>
+                                </div>
+                                
+                                <div class="col-md-1 d-flex align-items-end mt-4">
+                                    <button type="button" id="add-software" class="btn btn-outline-success btn-sm">
+                                        <i class="fa fa-plus"></i> Add
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!-- HTML -->
-                    
+
                     <div style="text-align: right; margin-top: 50px;">
                         <button type="cancel" class="btn btn-danger">Cancel</button>
                         <button type="submit" class="btn btn-primary">Save</button>
@@ -292,200 +284,83 @@
 
 </main><!-- End #main -->
 
-<script type="text/javascript">
+<script>
 document.addEventListener('DOMContentLoaded', function () {
 
-      var ownerSelect = document.getElementById("id_owner");
-      var departmentInput = document.getElementById("id_department");  
+    $('.select2').select2();
 
-      var monitorSelect = document.getElementById("id_monitor");
-      var monitorModelInput = document.getElementById("id_monitor_model");
+    var ownerSelect = document.getElementById("id_owner");
+    var departmentInput = document.getElementById("id_department");  
 
-      var mouseSelect = document.getElementById("id_mouse");
-      var mouseBrandInput = document.getElementById("id_mouse_brand");
+    var monitorSelect = document.getElementById("id_monitor");
+    var monitorModelInput = document.getElementById("id_monitor_model");
 
-      var keyboardSelect = document.getElementById("id_keyboard");
-      var keyboardBrandInput = document.getElementById("id_keyboard_brand");
+    var mouseSelect = document.getElementById("id_mouse");
+    var mouseBrandInput = document.getElementById("id_mouse_brand");
 
-      var printerSelect = document.getElementById("id_printer");
-      var printerModelInput = document.getElementById("id_printer_model");
+    var keyboardSelect = document.getElementById("id_keyboard");
+    var keyboardBrandInput = document.getElementById("id_keyboard_brand");
 
-      var scannerSelect = document.getElementById("id_scanner");
-      var scannerModelInput = document.getElementById("id_scanner_model");
+    var printerSelect = document.getElementById("id_printer");
+    var printerModelInput = document.getElementById("id_printer_model");
 
-      var upsSelect = document.getElementById("id_ups");
-      var upsModelInput = document.getElementById("id_ups_model");
+    var scannerSelect = document.getElementById("id_scanner");
+    var scannerModelInput = document.getElementById("id_scanner_model");
 
-      ownerSelect.addEventListener("change", function () {
-          var ownerId = ownerSelect.value;
+    var upsSelect = document.getElementById("id_ups");
+    var upsModelInput = document.getElementById("id_ups_model");
 
-          if (ownerId) {
-            fetch(`/equipments/get_owner_details/${ownerId}/`)
-              .then(response => {
-                  if (!response.ok) {
-                      throw new Error('Network response was not ok');
-                  }
-                  return response.json();
-              })
-              .then(data => {
-                  if (data && data.department) {
-                      departmentInput.value = data.department;
-                  }
-              })
-              .catch(error => {
-                  console.error("Error fetching owner department:", error);
-              });
-          }
-      })
+    $(ownerSelect).on('select2:select', function (e) {
+        var ownerId = e.params.data.id;
 
-      monitorSelect.addEventListener("change", function () {
-          var monitorId = monitorSelect.value;
+        if (ownerId) {
+        fetch(`/equipments/get_owner_details/${ownerId}/`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.department) {
+                    departmentInput.value = data.department;
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching owner department:", error);
+            });
+        }
+    })
 
-          // ทำการดึงข้อมูลจาก server เมื่อเลือก monitor
-          if (monitorId) {
-            fetch(`/equipments/get_monitor_details/${monitorId}/`)
-              .then(response => {
-                  if (!response.ok) {
-                      throw new Error('Network response was not ok');
-                  }
-                  return response.json();
-              })
-              .then(data => {
-                  if (data && data.model) {
-                      monitorModelInput.value = data.model;
-                  }
-              })
-              .catch(error => {
-                  console.error("Error fetching monitor model:", error);
-              });
-          }
-      });
+    $(monitorSelect).on('select2:select', function (e) {
+        var monitorId = e.params.data.id;
 
-      mouseSelect.addEventListener("change", function () {
-          var mouseId = mouseSelect.value;
+        if (monitorId) {
+        fetch(`/equipments/get_monitor_details/${monitorId}/`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.model) {
+                    monitorModelInput.value = data.model;
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching monitor model:", error);
+            });
+        }
+    });
 
-          // ทำการดึงข้อมูลจาก server เมื่อเลือก mouse
-          if (mouseId) {
+ 
+    $(mouseSelect).on('select2:select', function (e) {
+        var mouseId = e.params.data.id; 
+
+        if (mouseId) {
+
             fetch(`/equipments/get_mouse_details/${mouseId}/`)
-              .then(response => {
-                  if (!response.ok) {
-                      throw new Error('Network response was not ok');
-                  }
-                  return response.json();
-              })
-              .then(data => {
-                  if (data && data.brand) {
-                      mouseBrandInput.value = data.brand;
-                  }
-              })
-              .catch(error => {
-                  console.error("Error fetching mouse brand:", error);
-              });
-          }
-      });
-
-      keyboardSelect.addEventListener("change", function () {
-          var keyboardId = keyboardSelect.value;
-
-          // ทำการดึงข้อมูลจาก server เมื่อเลือก keyboard
-          if (keyboardId) {
-            fetch(`/equipments/get_keyboard_details/${keyboardId}/`)
-              .then(response => {
-                  if (!response.ok) {
-                      throw new Error('Network response was not ok');
-                  }
-                  return response.json();
-              })
-              .then(data => {
-                  if (data && data.brand) {
-                      keyboardBrandInput.value = data.brand;
-                  }
-              })
-              .catch(error => {
-                  console.error("Error fetching keyboard brand:", error);
-              });
-          }
-      });
-
-      printerSelect.addEventListener("change", function () {
-          var printerId = printerSelect.value;
-
-          // ทำการดึงข้อมูลจาก server เมื่อเลือก printer
-          if (printerId) {
-            fetch(`/equipments/get_printer_details/${printerId}/`)
-              .then(response => {
-                  if (!response.ok) {
-                      throw new Error('Network response was not ok');
-                  }
-                  return response.json();
-              })
-              .then(data => {
-                  if (data && data.model) {
-                      printerModelInput.value = data.model;
-                  }
-              })
-              .catch(error => {
-                  console.error("Error fetching printer model:", error);
-              });
-          }
-      });
-
-      scannerSelect.addEventListener("change", function () {
-          var scannerId = scannerSelect.value;
-
-          // ทำการดึงข้อมูลจาก server เมื่อเลือก scanner
-          if (scannerId) {
-            fetch(`/equipments/get_scanner_details/${scannerId}/`)
-              .then(response => {
-                  if (!response.ok) {
-                      throw new Error('Network response was not ok');
-                  }
-                  return response.json();
-              })
-              .then(data => {
-                  if (data && data.model) {
-                      scannerModelInput.value = data.model;
-                  }
-              })
-              .catch(error => {
-                  console.error("Error fetching scanner model:", error);
-              });
-          }
-      });
-
-      upsSelect.addEventListener("change", function () {
-          var upsId = upsSelect.value;
-
-          // ทำการดึงข้อมูลจาก server เมื่อเลือก ups
-          if (upsId) {
-            fetch(`/equipments/get_ups_details/${upsId}/`)
-              .then(response => {
-                  if (!response.ok) {
-                      throw new Error('Network response was not ok');
-                  }
-                  return response.json();
-              })
-              .then(data => {
-                  if (data && data.model) {
-                      upsModelInput.value = data.model;
-                  }
-              })
-              .catch(error => {
-                  console.error("Error fetching ups model:", error);
-              });
-          }
-      });
-
-
-  });
-
-// Function สำหรับเพิ่ม Event Listener ให้กับ dropdown software
-function addEventListenerToSoftwareDropdown(softwareSelect, softwareModelInput, softwareLicenseInput) {
-    softwareSelect.addEventListener("change", function () {
-        const softwareId = softwareSelect.value;
-
-        if (softwareId) {
-            fetch(`/equipments/get_software_details/${softwareId}/`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -493,65 +368,180 @@ function addEventListenerToSoftwareDropdown(softwareSelect, softwareModelInput, 
                     return response.json();
                 })
                 .then(data => {
-                    if (data && data.name && data.license_key) {
-                        softwareModelInput.value = data.name;
-                        softwareLicenseInput.value = data.license_key;
+                    if (data && data.brand) {
+                        mouseBrandInput.value = data.brand;
                     }
                 })
                 .catch(error => {
-                    console.error("Error fetching software details:", error);
+                    console.error("Error fetching mouse brand:", error);
                 });
         }
     });
-}
 
-// เพิ่ม Event Listener ให้กับฟอร์มแรกตอนโหลดหน้าเว็บ
-document.addEventListener("DOMContentLoaded", function () {
-    const softwareForms = document.getElementById('software-forms');
-    const firstForm = softwareForms.children[0];
+    $(keyboardSelect).on('select2:select', function (e) {
+        var keyboardId = e.params.data.id;
+        
+        if (keyboardId) {
+        fetch(`/equipments/get_keyboard_details/${keyboardId}/`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.brand) {
+                    keyboardBrandInput.value = data.brand;
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching keyboard brand:", error);
+            });
+        }
+    });
 
-    const softwareSelect = firstForm.querySelector('select[id^="id_software"]');
-    const softwareModelInput = firstForm.querySelector('input[id^="id_software_name"]');
-    const softwareLicenseInput = firstForm.querySelector('input[id^="id_license_key"]');
+    $(printerSelect).on('select2:select', function (e) {
+        var printerId = e.params.data.id;
 
-    addEventListenerToSoftwareDropdown(softwareSelect, softwareModelInput, softwareLicenseInput);
+        if (printerId) {
+        fetch(`/equipments/get_printer_details/${printerId}/`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.model) {
+                    printerModelInput.value = data.model;
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching printer model:", error);
+            });
+        }
+    });
+
+    $(scannerSelect).on('select2:select', function (e) {
+        var scannerId = e.params.data.id;
+
+        if (scannerId) {
+        fetch(`/equipments/get_scanner_details/${scannerId}/`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.model) {
+                    scannerModelInput.value = data.model;
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching scanner model:", error);
+            });
+        }
+    });
+
+    $(upsSelect).on('select2:select', function (e) {
+        var upsId = e.params.data.id;
+
+        if (upsId) {
+        fetch(`/equipments/get_ups_details/${upsId}/`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.model) {
+                    upsModelInput.value = data.model;
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching ups model:", error);
+            });
+        }
+    });
+
 });
 
-// อัปเดตโค้ดในส่วนที่สร้างฟอร์มใหม่
-document.getElementById('add-software').addEventListener('click', function () {
-    const softwareForms = document.getElementById('software-forms');
-    const newForm = softwareForms.children[0].cloneNode(true);
+document.addEventListener('DOMContentLoaded', function() {
+    const addButton = document.getElementById('add-software');
+    const softwareFormsContainer = document.getElementById('software-forms');
 
-    // เคลียร์ค่าในฟอร์มที่คัดลอก
-    newForm.querySelectorAll('input').forEach(input => input.value = '');
-    newForm.querySelectorAll('select').forEach(select => select.value = '');
+    // ฟังก์ชันสำหรับเพิ่ม event listener ให้กับ dropdown ในแต่ละแถว
+    function addEventListenerToSoftwareDropdown(softwareSelect, softwareModelInput, softwareLicenseInput) {
+        softwareSelect.addEventListener("change", function () {
+            const softwareId = softwareSelect.value;
 
-    // อัปเดต ID และ Name ของ Input เพื่อป้องกัน ID ซ้ำ
-    newForm.querySelectorAll('input, select').forEach(input => {
-        const newId = `${input.id}_${softwareForms.children.length}`;
-        input.id = newId;
-        input.name = newId;
+            if (softwareId) {
+                // ทำการ fetch ข้อมูลจากเซิร์ฟเวอร์ตามรหัสซอฟต์แวร์
+                fetch(`/equipments/get_software_details/${softwareId}/`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // ตรวจสอบข้อมูลที่ได้รับจาก server
+                        if (data && data.name && data.license_key) {
+                            softwareModelInput.value = data.name;  // ใส่ชื่อโปรแกรม
+                            softwareLicenseInput.value = data.license_key;  // ใส่ license key
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error fetching software details:", error);
+                    });
+            }
+        });
+    }
+
+    addButton.addEventListener('click', function() {
+        const newFormRow = document.querySelector('.software-form-row').cloneNode(true); // คัดลอกแถวแรก
+
+        // ล้างค่าฟิลด์ในแถวที่คัดลอกเพื่อให้มันเป็นช่องว่างเมื่อเพิ่ม
+        const inputs = newFormRow.querySelectorAll('input');
+        inputs.forEach(input => input.value = '');
+
+        // ลบปุ่ม "Add" จากแถวที่คัดลอก
+        const addButtonClone = newFormRow.querySelector('#add-software');
+        addButtonClone.remove();
+
+        // เพิ่มปุ่มลบให้กับแถวที่คัดลอก
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.className = 'btn btn-outline-danger btn-sm';
+        removeButton.innerHTML = '<i class="fa fa-trash-alt"> </i>';
+        removeButton.addEventListener('click', function() {
+            newFormRow.remove(); // ลบแถวฟอร์มเมื่อคลิกที่ปุ่ม "ลบ"
+        });
+
+        // เพิ่มปุ่มลบเข้าไปในแถวที่คัดลอก
+        newFormRow.querySelector('.col-md-1').appendChild(removeButton);
+
+        // เชื่อมโยง event listener กับ dropdown ใหม่ที่เพิ่มเข้าไป
+        const softwareSelect = newFormRow.querySelector('[name="software"]');
+        const softwareModelInput = newFormRow.querySelector('#software_name');  // ใช้ id ของ input
+        const softwareLicenseInput = newFormRow.querySelector('#license_key');  // ใช้ id ของ input
+        
+        // เพิ่ม event listener สำหรับ dropdown ของแถวใหม่
+        addEventListenerToSoftwareDropdown(softwareSelect, softwareModelInput, softwareLicenseInput);
+
+        // เพิ่มแถวใหม่ลงใน container
+        softwareFormsContainer.appendChild(newFormRow);
     });
 
-    // เพิ่ม Event Listener ให้กับ dropdown software ใหม่
-    const softwareSelect = newForm.querySelector('select[id^="id_software"]');
-    const softwareModelInput = newForm.querySelector('input[id^="id_software_name"]');
-    const softwareLicenseInput = newForm.querySelector('input[id^="id_license_key"]');
-
-    addEventListenerToSoftwareDropdown(softwareSelect, softwareModelInput, softwareLicenseInput);
-
-    // เปลี่ยนปุ่ม "Add" ของฟอร์มใหม่ให้เป็นปุ่ม "ลบ"
-    const addButton = newForm.querySelector('#add-software');
-    addButton.classList.remove('btn-outline-success');
-    addButton.classList.add('btn-outline-danger', 'remove-software');
-    addButton.innerHTML = '<i class="fa fa-trash-alt"></i>';
-    addButton.removeAttribute('id'); // ลบ id="add-software" ออกจากปุ่มใหม่
-
-    addButton.addEventListener('click', function () {
-        softwareForms.removeChild(newForm);
-    });
-
-    softwareForms.appendChild(newForm);
+    // เพิ่ม event listener สำหรับแถวแรก
+    const initialSoftwareSelect = document.querySelector('[name="software"]');
+    const initialSoftwareModelInput = document.querySelector('#software_name');
+    const initialSoftwareLicenseInput = document.querySelector('#license_key');
+    
+    // เพิ่ม event listener สำหรับ dropdown ของแถวแรก
+    addEventListenerToSoftwareDropdown(initialSoftwareSelect, initialSoftwareModelInput, initialSoftwareLicenseInput);
 });
 </script>
 

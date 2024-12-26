@@ -9,13 +9,7 @@
 
     <div class="pagetitle">
         <h5>รายละเอียดการแจ้งซ่อม</h5>
-        <!-- <nav>
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-            <li class="breadcrumb-item active">รายการซ่อม</li>
-          </ol>
-        </nav> -->
-      </div><!-- End Page Title -->
+      </div>
   
     <section class="section">
       <div class="row">
@@ -29,12 +23,12 @@
                       <span style="margin-left: 10px; color: #2f5f98;">เลขที่ใบแจ้งซ่อม : </span><span style="margin-left: 10px; ">{{ service_request.service_request_number }} </span>
                     </label>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <label for="inputZip" class="form-label">
                       <span style="margin-left: 10px; color: #2f5f98;">วันที่แจ้งซ่อม : </span><span style="margin-left: 10px;"> {{ service_request.request_date|date:'j N Y' }} </span>
                     </label>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <label for="inputZip" class="form-label">
                       <span style="margin-left: 10px; color: #2f5f98;">สถานะ : </span>
                         {% if service_request.repair_status.name == 'pending' %}
@@ -74,14 +68,25 @@
                       <span style="margin-left: 10px; color: #2f5f98;">ผู้แจ้ง : </span><span style="margin-left: 10px;"> {{ service_request.user_name }} </span>
                     </label>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <label for="inputZip" class="form-label">
                       <span style="margin-left: 10px; color: #2f5f98;">เบอร์ติดต่อ : </span><span style="margin-left: 10px;"> {{ service_request.user_contact }} </span>
                     </label>
                 </div>
-                <div class="col-md-2">
-                  <button type="submit" class="btn btn-outline-danger">ยกเลิกใบแจ้งซ่อม</button>
+                <div class="col-md-3">
+                  <label for="inputZip" class="form-label">
+                  {% if service_request.repair_status.name == 'completed' %}
+                    {% if service_request.feedback_submitted %}
+                      <span style="margin-left: 10px; color: #2f5f98;">คะแนนความพึงพอใจ : </span><span style="margin-left: 10px;"> {{ service_request.satisfaction_score }} ดาว </span>
+                      {% else %}
+                        <span class="text-muted" style="margin-left: 10px;"> ยังไม่มีการประเมินความพึงพอใจจากผู้ใช้ </span>
+                      {% endif %}
+                  {% else %}
+                      <button type="submit" class="btn btn-outline-danger">ยกเลิกใบแจ้งซ่อม</button>
+                  {% endif %}
+                  </label>
                 </div>
+
                 <div class="col-md-12">
                     <label for="inputZip" class="form-label">
                       <span style="margin-left: 10px; color: #2f5f98;">ปัญหา / อาการเบื้องต้น : </span><span style="margin-left: 10px;"> {{ service_request.request_description }} </span>

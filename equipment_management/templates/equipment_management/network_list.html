@@ -12,23 +12,136 @@
         </nav>
       </div><!-- End Page Title -->
 
+    <!-- แสดงข้อความแจ้งเตือนที่นี่ -->
+    {% if messages %}
+    <div>
+        {% for message in messages %}
+        <div class="alert 
+            {% if message.tags == 'success' %}alert-success
+            {% elif message.tags == 'error' %}alert-danger
+            {% elif message.tags == 'warning' %}alert-warning
+            {% elif message.tags == 'info' %}alert-info
+            {% else %}alert-secondary{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="row">
+      <div class="col-md-2">
+        <div class="card info-card" style="border-top: 4px solid #c231af; background-color: #fcf9f9;">
+          <div class="card-body">
+              <h6 class="card-title text-center">จำนวนทั้งหมด</h6>
+
+              <div class="d-flex align-items-center">
+              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-tv"></i>
+              </div>
+              <div class="ps-5">
+                  <h6>{{ network_count }} <span class="text-muted pt-2 ps-3"> เครื่อง </span></h6>
+              </div>
+              </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="card info-card" style="border-top: 4px solid #31c236; background-color: #fcf9f9;">
+          <div class="card-body">
+              <h6 class="card-title text-center">เครื่องใช้งาน</h6>
+
+              <div class="d-flex align-items-center">
+              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-tv"></i>
+              </div>
+              <div class="ps-5">
+                  <h6>{{ available_count }} <span class="text-muted pt-2 ps-3"> เครื่อง </span></h6>
+              </div>
+              </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="card info-card" style="border-top: 4px solid #3175c2; background-color: #fcf9f9;">
+          <div class="card-body">
+              <h6 class="card-title text-center">เครื่องว่าง</h6>
+
+              <div class="d-flex align-items-center">
+              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-tv"></i>
+              </div>
+              <div class="ps-5">
+                  <h6>{{ empty_count }} <span class="text-muted pt-2 ps-3"> เครื่อง </span></h6>
+              </div>
+              </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="card info-card" style="border-top: 4px solid #c23131; background-color: #fcf9f9;">
+          <div class="card-body">
+              <h6 class="card-title text-center">เครื่องส่งเคลม</h6>
+
+              <div class="d-flex align-items-center">
+              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-tv"></i>
+              </div>
+              <div class="ps-5">
+                  <h6>{{ claim_count }} <span class="text-muted pt-2 ps-3"> เครื่อง </span></h6>
+              </div>
+              </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-2">
+        <div class="card info-card" style="border-top: 4px solid #e7e12d; background-color: #fcf9f9;">
+          <div class="card-body">
+              <h6 class="card-title text-center">เครื่องบริจาค</h6>
+
+              <div class="d-flex align-items-center">
+              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-tv"></i>
+              </div>
+              <div class="ps-5">
+                  <h6>{{ donate_count }} <span class="text-muted pt-2 ps-3"> เครื่อง </span></h6>
+              </div>
+              </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
     <section class="section">
       <div class="row">
         <div class="col-lg-12">
 
           <div class="card" style="border-top: 3px solid #2f5f98;">
-            <h5 class="card-header" style="background-color: #1f579c; color: aliceblue;">Network List</h5>
+            <div class="card-header" style="background-color: #1f579c; color: aliceblue;">
+              <div class="row">
+                <div class="col-md-6 d-flex justify-content-start">
+                  <h5 style="text-align: left;">Network List</h5>  
+                </div>
+                <div class="col-md-6 d-flex justify-content-end">
+                  <a href="{% url 'network_create' %}" class="btn btn-light btn-sm"><i class="fa fa-plus"></i> Add Network</a></h5>
+                </div>
+              </div>
+            </div>
             <div class="card-body">
-              <a href="{% url 'network_create' %}" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus"></i> Add Equipment</a>
-              <table class="table table-bordered table-striped  mt-3 text-center">
+              <table id="table-network" class="table table-bordered table-striped  mt-3 text-center">
                 <thead>
                   <tr>
-                    <th>รหัสอุปกรณ์</th>
-                    <th>Name</th>
-                    <th>Location</th>
-                    <th>IP Adderss</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th class="text-center">รหัสอุปกรณ์</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Location</th>
+                    <th class="text-center">IP Adderss</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Actions</th>
                 </tr>
                 <tbody>
                 {% for network in networks %}
@@ -37,7 +150,21 @@
                     <td style="width: 15%;">{{ network.name }}</td>
                     <td style="width: 15%;">{{ network.location }}</td>
                     <td style="width: 10%;">{{ network.ip_address }}</td>
-                    <td style="width: 10%;">{{ network.status }}</td>
+                    <td style="width: 10%;">
+                      {% if network.status.name == 'กำลังใช้งาน' %}
+                      <span class="badge bg-success">{{ network.status }}</span>
+                      {% elif network.status.name == 'ว่าง' %}
+                      <span class="badge bg-primary">{{ network.status }}</span>
+                      {% elif network.status.name == 'ชำรุดรอซ่อม' %}
+                      <span class="badge bg-info">{{ network.status }}</span>
+                      {% elif network.status.name == 'ส่งเคลม' %}
+                      <span class="badge bg-danger">{{ network.status }}</span>
+                      {% elif network.status.name == 'บริจาค' %}
+                      <span class="badge bg-warning">{{ network.status }}</span>
+                      {% elif network.status.name == 'เลิกใช้งาน' %}
+                      <span class="badge bg-secondary">{{ network.status }}</span>
+                      {% endif %}
+                    </td>
                     <td style="width: 5%;">
                         <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-equipment-id="{{ network.pk }}"><i class="fa fa-trash-alt"></i> Delete</button>
                     </td>

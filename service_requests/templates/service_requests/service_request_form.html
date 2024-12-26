@@ -51,7 +51,7 @@
             
                 <div class="col-md-6">
                     <label for="{{ form.user_name.id_for_label }}" class="form-label">ผู้แจ้ง <span style="color: red;">*</span></label>
-                    {{ form.user_name|add_class:"select2" }}
+                    {{ form.user_name|add_class:"user-name-field select2" }}
                     {% if form.user_name.errors %}
                         <div class="text-danger">{{ form.user_name.errors }}</div>
                     {% endif %}
@@ -159,4 +159,5 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 {% endblock content %}
+
 

@@ -76,7 +76,7 @@
                       {% endif %}
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                       <label for="{{ form.group_program.id_for_label }}" class="form-label">Group program :</label>
                       {{ form.group_program }}
                       {% if form.group_program.errors %}
@@ -84,11 +84,43 @@
                       {% endif %}
                     </div>
                     
+                    <div class="col-md-2">
+                      <label for="{{ form.software_type.id_for_label }}" class="form-label">software type :</label>
+                      {{ form.software_type }}
+                      {% if form.software_type %}
+                        
+                      {% endif %}
+                    </div>
+
                     <div class="col-md-4">
                       <label for="{{ form.owner.id_for_label }}" class="form-label">owner :</label>
                       {{ form.owner }}
                       {% if form.owner.errors %}
-                          <div class="text-danger">{{ form.owner.errors }}</div>
+                        <div class="text-danger">{{ form.owner.errors }}</div>
+                      {% endif %}
+                    </div>
+
+                    <div class="col-md-2">
+                      <label for="{{ form.computer.id_for_label }}" class="form-label">Computer :</label>
+                      {{ form.computer }}
+                      {% if form.computer.errors %}
+                        <div class="text-danger">{{ form.computer.errors }}</div>
+                      {% endif %}
+                    </div>
+
+                    <div class="col-md-2">
+                      <label for="{{ form.status.id_for_label }}">Status :</label>
+                      {{ form.status }}
+                      {% if form.status.errors %}
+                        <div class="text-danger">{{ form.status.errors }}</div>
+                      {% endif %}
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="{{ form.other.id_for_label }}" class="form-label">หมายเหตุ :</label>
+                      {{ form.other }}
+                      {% if form.other.errors %}
+                        <div class="text-danger">{{ form.other.errors }}</div>
                       {% endif %}
                     </div>
 

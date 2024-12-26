@@ -20,7 +20,8 @@ class UserForm(forms.ModelForm):
             'email',
             'role',
             'username',
-            'password'
+            'password',
+            'name'
         ]
         widgets = {
             'nameTH': forms.TextInput(attrs={'class': 'form-control'}),
@@ -31,4 +32,5 @@ class UserForm(forms.ModelForm):
             'role': forms.Select(attrs={'class': 'form-select'}),
             'username': forms.TextInput(attrs={'class': 'form-control'}),
             'password': forms.PasswordInput(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'})
         }

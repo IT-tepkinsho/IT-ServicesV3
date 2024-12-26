@@ -11,7 +11,22 @@
         <h5>รายละเอียดการแจ้งซ่อม</h5>
 
       </div><!-- End Page Title -->
-  
+      <!-- แสดงข้อความแจ้งเตือนที่นี่ -->
+      {% if messages %}
+      <div>
+          {% for message in messages %}
+          <div class="alert 
+              {% if message.tags == 'success' %}alert-success
+              {% elif message.tags == 'error' %}alert-danger
+              {% elif message.tags == 'warning' %}alert-warning
+              {% elif message.tags == 'info' %}alert-info
+              {% else %}alert-secondary{% endif %}">
+              {{ message }}
+          </div>
+          {% endfor %}
+      </div>
+      {% endif %}
+      
     <section class="section">
       <div class="row">
         <div class="col-lg-12">
@@ -24,12 +39,12 @@
                       <span style="margin-left: 10px; color: #2f5f98;">เลขที่ใบแจ้งซ่อม : </span><span style="margin-left: 10px; ">{{ service_request.service_request_number }} </span>
                     </label>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <label for="inputZip" class="form-label">
                       <span style="margin-left: 10px; color: #2f5f98;">วันที่แจ้งซ่อม : </span><span style="margin-left: 10px;"> {{ service_request.request_date|date:'j N Y' }} </span>
                     </label>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <label for="inputZip" class="form-label">
                       <span style="margin-left: 10px; color: #2f5f98;">สถานะ : </span>
                         {% if service_request.repair_status.name == 'pending' %}
@@ -69,10 +84,21 @@
                       <span style="margin-left: 10px; color: #2f5f98;">ผู้แจ้ง : </span><span style="margin-left: 10px;"> {{ service_request.user_name }} </span>
                     </label>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <label for="inputZip" class="form-label">
                       <span style="margin-left: 10px; color: #2f5f98;">เบอร์ติดต่อ : </span><span style="margin-left: 10px;"> {{ service_request.user_contact }} </span>
                     </label>
+                </div>
+                <div class="col-md-3">
+                  <label for="inputZip" class="form-label">
+                  {% if service_request.repair_status.name == 'completed' %}
+                    {% if service_request.feedback_submitted %}
+                    <span style="margin-left: 10px; color: #2f5f98;">คะแนนความพึงพอใจ : </span><span style="margin-left: 10px;"> {{ service_request.satisfaction_score }} ดาว </span>
+                    {% else %}
+                      <span class="text-muted" style="margin-left: 10px;"> ยังไม่มีการประเมินความพึงพอใจจากผู้ใช้ </span>
+                    {% endif %}
+                  {% endif %}
+                  </label>
                 </div>
                 <div class="col-md-12">
                     <label for="inputZip" class="form-label">
@@ -236,12 +262,12 @@
 <script>
 document.getElementById("repairOptions").addEventListener("change", function () {
     const selectedOption = this.value;
-    const requestId = "{{ service_request.id }}"; // ดึง request_id
+    const requestId = "{{ service_request.id }}";
     console.log("Selected option: ", selectedOption);
     console.log("Request ID: ", requestId);
 
     // ดึง CSRF token จาก DOM
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;  // เอา csrf token
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value; 
     const data = {
         repair_by: selectedOption,
         csrfmiddlewaretoken: csrfToken
@@ -345,10 +371,8 @@ function saveRepairDetails() {
         return response.json();
     })
     .then(data => {
-        if (data.success) {
-            alert('บันทึกรายละเอียดการซ่อมสำเร็จ!');
-            $('#updateWorkModal').modal('hide');
-            location.reload(); // รีเฟรชหน้า
+      if (data.success && data.redirect) {
+            location.reload();
         } else {
             alert('ไม่สามารถบันทึกรายละเอียดได้: ' + (data.message || 'เกิดข้อผิดพลาด.'));
         }

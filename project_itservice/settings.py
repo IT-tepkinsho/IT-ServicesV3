@@ -20,6 +20,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_URL = '/media/'  # URL สำหรับเข้าถึงไฟล์
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # โฟลเดอร์ที่เก็บไฟล์ที่อัปโหลด
 
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'godcatdev@gmail.com'
+EMAIL_HOST_PASSWORD = 'yuhb ruwb aaty ehdu'
+
+
+SELECT2_JS = 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js'
+SELECT2_CSS = 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -47,6 +64,8 @@ INSTALLED_APPS = [
     'user_management.apps.UserManagementConfig',
     'django_select2',
     'staff.apps.StaffConfig',
+
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -91,9 +110,11 @@ DATABASES = {
         'PASSWORD': 'password1234',
         'HOST': '127.0.0.1',
         'PORT': '3306',
+        'OPTIONS': {
+            'sql_mode': 'STRICT_TRANS_TABLES',  # ลองเพิ่มหรือปรับโหมดนี้
+        },
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -123,7 +144,7 @@ TIME_ZONE = 'Asia/Bangkok'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

@@ -5,3 +5,5 @@ class ServiceRequestsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'service_requests'
 
+    def ready(self):
+        import service_requests.signals  # เชื่อมต่อ signals

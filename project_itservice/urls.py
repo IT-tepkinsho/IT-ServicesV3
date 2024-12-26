@@ -27,6 +27,7 @@ urlpatterns = [
     path('managements/', include('repair_management.urls')),
     path('users/', include('user_management.urls')),
     path('dashboard/', include('staff.urls')),
+    path("select2/", include("django_select2.urls")),
     
 ]
 

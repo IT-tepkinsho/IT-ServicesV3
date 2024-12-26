@@ -31,8 +31,7 @@
               <!-- Multi Columns Form -->
               <form method="post" class="row g-3 mt-3" enctype="multipart/form-data">
                 {% csrf_token %}
-                
-                
+             
                 <div class="col-md-6">
                   <label for="{{ form.method_of_repair.id_for_label }}" class="form-label">วิธีการแก้ไข :</label>
                   {{ form.method_of_repair }}

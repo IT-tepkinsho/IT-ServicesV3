@@ -1,0 +1,111 @@
+{% extends 'general/components/base.html' %}
+{% load static %}
+
+{% block site_title %}Service Feedback | {% endblock  %}
+{% block content %}
+    
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item active">ServiceFeedback</li>
+          </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+  <section class="section dashboard">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <!-- Recent Sales -->
+                <div class="col-lg-7">
+                    <div class="card recent-sales overflow-auto mt-3" style="border-top: 3px solid #2f5f98;">
+                        <h5 class="card-header" style="background-color: #2f5f98; color: aliceblue;">ประเมินความพึงพอใจ</h5>
+                            <div class="card-body">
+                              <div class="divtriangle" style="border-radius: 5px;padding:10px; background:#fff;">
+                              <!-- <h3 style="color: #2f5f98; margin-bottom: 20px;">ประเมินความพึงพอใจ</h3> -->
+
+                                {% if success %}
+                                    <div class="alert alert-success" role="alert">
+                                        <h5 style="color: #1c7e08;"><i class="fa fa-check-circle"></i> ขอบคุณสำหรับการประเมินความพึงพอใจของคุณ!</h5>
+                                    </div>
+                                {% elif message %}
+                                    <div class="alert alert-warning" role="alert">
+                                        <h5 style="color: #ecb100;"><i class="fa fa-triangle-exclamation"></i> {{ message }}</h5>
+                                    </div>
+                                {% else %}
+                                    <form method="post" class="text-center">
+                                        {% csrf_token %}
+                                        <p style="color: #2f5f98; font-size: 17px;">กรุณาให้คะแนนความพึงพอใจของคุณ:</p>
+                                        <div class="rating">
+                                            {% for i in "12345" %}
+                                                <input type="radio" name="satisfaction_score" value="{{ forloop.counter }}" id="star{{ forloop.counter }}" class="rating-input" required>
+                                                <label for="star{{ forloop.counter }}" class="rating-star">&#9733;</label>
+                                            {% endfor %}
+                                        </div>
+                                        <br>
+                                        <p style="text-align: left;">ความคิดเห็นเพิ่มเติม (ถ้ามี) :</p>
+                                        <textarea class="form-control" name="feedback_comment" rows="4"></textarea>
+                                        <br>
+                                        <button type="submit" class="btn btn-primary">ส่งความคิดเห็น</button>
+                                    </form>
+                                {% endif %}
+                              </div>
+                            </div>
+                        <!-- </div> -->
+                    </div>
+                </div><!-- End Recent Sales -->
+            </div>
+        </div>
+    </div>
+  </section>
+
+</main><!-- End #main -->
+
+<script>
+document.querySelectorAll('.rating-input').forEach((radio) => {
+    radio.addEventListener('change', () => {
+        let selectedValue = radio.value;
+        // เปลี่ยนสีดาวทั้งหมดตามค่าที่เลือก
+        updateStarColors(selectedValue);
+    });
+});
+
+document.querySelectorAll('.rating-star').forEach((star, index) => {
+    star.addEventListener('mouseover', () => {
+        // เปลี่ยนสีดาวทั้งหมดก่อนเมื่อเลื่อนเมาส์
+        let stars = document.querySelectorAll('.rating-star');
+        stars.forEach((s, i) => {
+            s.style.color = i <= index ? '#ffcc00' : '#ccc'; // สีเหลืองตาม index
+        });
+    });
+
+    star.addEventListener('mouseleave', () => {
+        // รีเซ็ตสีดาวเมื่อเลื่อนเมาส์ออก
+        let selectedRadio = document.querySelector('.rating-input:checked');
+        let stars = document.querySelectorAll('.rating-star');
+        stars.forEach((s, i) => {
+            s.style.color = i < (selectedRadio ? selectedRadio.value - 1 : 0) ? '#ffcc00' : '#ccc';  // รีเซ็ตให้เป็นสีเหลืองตามที่เลือก
+        });
+    });
+});
+
+// ฟังก์ชันที่ใช้เปลี่ยนสีดาวทั้งหมดตามคะแนนที่เลือก
+function updateStarColors(selectedValue) {
+    let stars = document.querySelectorAll('.rating-star');
+    stars.forEach((s, i) => {
+        s.style.color = i < selectedValue ? '#ffcc00' : '#ccc';  // สีเหลืองสำหรับดาวที่เลือก
+    });
+}
+
+// ฟังก์ชันนี้เพื่อให้ดาวที่เลือกแสดงสีเหลืองเมื่อมีการโหลดหน้าใหม่
+document.addEventListener('DOMContentLoaded', () => {
+    let selectedRadio = document.querySelector('.rating-input:checked');
+    if (selectedRadio) {
+        updateStarColors(selectedRadio.value);  // ฟังก์ชันนี้เพื่อให้ดาวที่เลือกแสดงสีเหลือง
+    }
+});
+</script>
+{% endblock content %}

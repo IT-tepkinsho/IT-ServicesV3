@@ -243,39 +243,41 @@
 
                     <!-- Container for software forms -->
                     <div id="software-forms">
-                      <div class="row align-items-center software-form">
-                          <div class="col-md-3">
-                              <label for="{{ form.software.id_for_label }}" class="form-label">รหัส software :</label>
-                              {{ form.software }}
-                              {% if form.software.errors %}
-                                  <div class="text-danger">{{ form.software.errors }}</div>
-                              {% endif %}
-                          </div>
-                          
-                          <div class="col-md-4">
-                              <label for="{{ form.software_name.id_for_label }}" class="form-label">ชื่อโปรแกรม :</label>
-                              {{ form.software_name }}
-                              {% if form.software_name.errors %}
-                                  <div class="text-danger">{{ form.software_name.errors }}</div>
-                              {% endif %}
-                          </div>
-                          
-                          <div class="col-md-4">
-                              <label for="{{ form.license_key.id_for_label }}" class="form-label">License key :</label>
-                              {{ form.license_key }}
-                              {% if form.license_key.errors %}
-                                  <div class="text-danger">{{ form.license_key.errors }}</div>
-                              {% endif %}
-                          </div>
-                          
-                            <!-- No "remove" button for the first row -->
-                            <div class="col-md-1 d-flex align-items-end mt-4">
-                              <button type="button" id="add-software" class="btn btn-outline-success btn-sm">
-                                  <i class="fa fa-plus"></i> Add
-                              </button>
-                          </div>
-                      </div>
-                    </div>
+                        <div class="row align-items-center software-form">
+                            <div class="col-md-3">
+                                <label for="{{ form.software.id_for_label }}" class="form-label">รหัส software :</label>
+                                {{ form.software }}
+                                {% if form.software.errors %}
+                                    <div class="text-danger">{{ form.software.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label for="{{ form.software_name.id_for_label }}" class="form-label">ชื่อโปรแกรม :</label>
+                                {{ form.software_name }}
+                                {% if form.software_name.errors %}
+                                    <div class="text-danger">{{ form.software_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label for="{{ form.license_key.id_for_label }}" class="form-label">License key :</label>
+                                {{ form.license_key }}
+                                {% if form.license_key.errors %}
+                                    <div class="text-danger">{{ form.license_key.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                                <!-- No "remove" button for the first row -->
+                                <div class="col-md-1 d-flex align-items-end mt-4">
+                                <button type="button" id="add-software" class="btn btn-outline-success btn-sm">
+                                    <i class="fa fa-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                        </div>
+                        <!-- HTML -->
+
                     <div style="text-align: right;">
                         <button type="reset" class="btn btn-danger">Cancel</button>
                         <button type="submit" class="btn btn-primary">Save</button>

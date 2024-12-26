@@ -1,0 +1,337 @@
+{% extends 'general/components/base.html' %}
+{% load static %}
+
+{% block site_title %}Service request detail | {% endblock  %}
+
+{% block content %}
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h5>อัพเดตงานส่งเคลม</h5>
+      </div><!-- End Page Title -->
+  
+    <!-- แสดงข้อความแจ้งเตือนที่นี่ -->
+    {% if messages %}
+    <div>
+        {% for message in messages %}
+        <div class="alert 
+            {% if message.tags == 'success' %}alert-success
+            {% elif message.tags == 'error' %}alert-danger
+            {% elif message.tags == 'warning' %}alert-warning
+            {% elif message.tags == 'info' %}alert-info
+            {% else %}alert-secondary{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card mt-3" style="border-top: 3px solid #2f5f98;">
+            <div class="card-header" style="background-color: rgb(255, 255, 255);">
+              <div class="row">
+                <div class="col-md-12 d-flex justify-content-end">
+                  <button type="button" class="btn btn-light" style="background-color: #67ca4e; color: aliceblue;" 
+                    data-bs-toggle="modal" data-bs-target="#completeWorkModal" data-complete-id="{{ claim.pk }}">
+                    <i class="fa fa-screwdriver-wrench"></i> completed
+                  </button>
+                  <button type="button" class="btn btn-light" style="background-color: #4e63ca; color: aliceblue;" 
+                      data-bs-toggle="modal" data-bs-target="#updateWorkModal" data-claim-id="{{ claim.pk }}">
+                      <i class="fa fa-edit"></i> อัพเดตงาน
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <form method="post" action="" class="row g-4 mt-2">
+                {% csrf_token %}
+
+
+
+                <div class="col-md-5">
+                    <label for="inputZip" class="form-label">
+                      <span style="margin-left: 10px; color: #2f5f98;">เลขที่เคลม : </span><span style="margin-left: 10px; ">{{ claim.claim_number }} </span>
+                    </label>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="inputZip" class="form-label">
+                      <span style="margin-left: 10px; color: #2f5f98;">วันที่ส่งเคลม : </span><span style="margin-left: 10px;"> {{ claim.claim_date|date:'j N Y' }} </span>
+                    </label>
+                </div>
+                <div class="col-md-3">
+                  <label for="inputZip" class="form-label">
+                    <span style="margin-left: 10px; color: #2f5f98;">สถานะ : </span>
+                      {% if claim.claim_status == 'pending' %}
+                          <span style="margin-left: 10px; color: rgb(255, 160, 44);">
+                              <i class="fa fa-stopwatch fa-shake"></i> Pending
+                          </span>
+                      
+                      {% elif claim.claim_status == 'in_progress' %}
+                          <span style="margin-left: 10px; color: #235a9e;">
+                              <i class="fa fa-spinner fa-spin-pulse"></i> In Progress
+                          </span>
+
+                      {% elif claim.claim_status == 'completed' %}
+                          <span style="margin-left: 10px; color: rgb(18, 183, 18);">
+                              <i class="fa fa-circle-check"></i> Completed
+                          </span>
+
+                      {% elif  claim.claim_status == 'canceled' %}
+                              <span style="margin-left: 10px; color: crimson;">
+                                  <i class="fa fa-circle-xmark"></i> Canceled
+                              </span>
+                      {% endif %}
+                  </label>
+                </div>
+                <div class="col-md-5">
+                  <label for="inputZip" class="form-label">
+                    <span style="margin-left: 10px; color: #2f5f98;">เลขที่ใบแจ้งซ่อม : </span><span style="margin-left: 10px; ">{{ claim.service_request }} </span>
+                  </label>
+                </div>
+                
+                <div class="col-md-6">
+                    <label for="inputZip" class="form-label">
+                      <span style="margin-left: 10px; color: #2f5f98;">บริษัทที่เคลม : </span><span style="margin-left: 10px;"> {{ claim.company }} </span>
+                    </label>
+                </div>
+                <div class="col-md-5">
+                    <label for="inputZip" class="form-label">
+                      <span style="margin-left: 10px; color: #2f5f98;">ทะเบียนรถ : </span><span style="margin-left: 10px;"> {{ claim.license_plate }} </span>
+                    </label>
+                </div>
+                <div class="col-md-7">
+                    <label for="inputZip" class="form-label">
+                      <span style="margin-left: 10px; color: #2f5f98;">วัตถุประสงค์การเคลม : </span><span style="margin-left: 10px;"> {{ claim.purpose_of_out }} </span>
+                    </label>
+                </div>
+                
+              </form>
+            </div>
+          </div>
+
+          <!-- Timeline Claim -->
+          <div class="card mt-3" style="border-top: 3px solid #98392f;">
+            <div class="card-header" style="background-color: rgb(255, 245, 244);">
+                <strong>งานส่งเคลม :</strong> รหัสเคลม {{ claim.claim_number }}
+            </div>
+            <div class="card-body">
+                <div class="claim-details">
+                    <div class="timeline">
+                        {% for update in updates %}
+                        <div class="timeline-item">
+                            <!-- วันที่อัพเดต -->
+                            <div class="timeline-date">
+                                <strong>วันที่อัพเดต :</strong> {{ update.update_date|date:"d/m/Y" }}
+                            </div>
+                            <!-- ไอคอนแสดงสถานะ -->
+                            <!-- <div class="timeline-icon">
+                                <i class="fa fa-check-circle"></i>
+                            </div> -->
+                            <!-- เนื้อหาของการอัพเดต -->
+                            <div class="timeline-content">
+                                <strong>รายละเอียดเพิ่มเติม :</strong> {{ update.details }}
+                                <br>
+                                <strong>สถานะ :</strong>
+                                    {% if update.status == 'pending' %}
+                                        กำลังดำเนินการ
+                                    {% elif update.status == 'in_progress' %}
+                                        อยู่ระหว่างการตรวจเช็ค และแก้ไข
+                                    {% elif update.status == 'completed' %}
+                                        ดำเนินการสำเร็จ
+                                    {% endif %}
+                                
+                            </div>
+                            <!-- แสดงป้าย "COMPLETED" หากสถานะสุดท้ายเป็นสำเร็จ -->
+                            {% if forloop.last and update.status == 'completed' %}
+                            <div class="completed-badge">
+                                <span>COMPLETED</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <!-- เส้นแบ่งระหว่างแต่ละรายการ -->
+                        {% if not forloop.last %}
+                        <div class="timeline-separator">
+                            <span class="icon-arrow-down"></span>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  
+</main><!-- End #main -->
+<!-- Modal for Updating Work Details -->
+<div class="modal fade" id="updateWorkModal" tabindex="-1" aria-labelledby="updateWorkModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="updateWorkModalLabel">อัพเดตข้อมูลการซ่อม</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <form id="ClaimForm">
+                  {% csrf_token %}
+                  <div class="row mb-3">
+                    <label for="details" class="form-label">รายละเอียด</label>
+                    <textarea class="form-control" id="details" rows="3"></textarea>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="update_date" class="form-label">วันที่อัพเดต</label>
+                    <input type="date" class="form-control" id="update_date">
+                  </div>
+                  <div class="row mb-3">
+                    <label for="status" class="form-label">สถานะ</label>
+                    <select class="form-select" id="status" aria-label="Select status">
+                      <option selected>---------</option>
+                      <option value="pending">Pending</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="completed">Completed</option>
+                    </select>
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+              <button type="button" class="btn btn-primary" onclick="saveClaimDetails()">บันทึก</button>
+          </div>
+      </div>
+  </div>
+</div>  
+
+<!-- Modal for Complete Work -->
+<div class="modal fade" id="completeWorkModal" tabindex="-1" aria-labelledby="completeWorkModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="completeWorkModalLabel">อัพเดตข้อมูลการซ่อม</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <form id="CompleteWorkForm">
+                  {% csrf_token %}
+                  <div class="row mb-3">
+                    <label for="method_of_repair" class="form-label">รายละเอียดการแก้ไข</label>
+                    <textarea class="form-control" id="method_of_repair" rows="3"></textarea>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="cost" class="form-label">ค่าใช้จ่าย</label>
+                    <input type="text" class="form-control" id="cost">
+                  </div>
+                  <div class="row mb-3">
+                    <label for="operator" class="form-label">ผู้ดำเนินการ</label>
+                    <input type="text" class="form-control" id="operator" value="{{ operator }}">
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+              <button type="button" class="btn btn-primary" onclick="saveCompleteWork()">บันทึก</button>
+          </div>
+      </div>
+  </div>
+</div>  
+
+<script>
+  // ฟังก์ชันดึงค่า CSRF Token
+function getCSRFToken() {
+    return document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+}
+
+document.getElementById('updateWorkModal').addEventListener('show.bs.modal', function (event) {
+    var button = event.relatedTarget;
+    var claimId = button.getAttribute('data-claim-id');
+    window.currentClaimId = claimId; 
+    document.getElementById('details').value = '';
+    document.getElementById('update_date').value = '';
+    document.getElementById('status').value = '';
+});
+
+// ฟังก์ชันบันทึกการซ่อม
+function saveClaimDetails() {
+    const claimId = window.currentClaimId;
+    const claimDetails = document.getElementById('details').value;
+    const claimDate = document.getElementById('update_date').value;
+    const claimStatus = document.getElementById('status').value;
+
+    fetch('/requests/update-claim-details/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken(),
+        },
+        body: JSON.stringify({
+            claim_id: claimId,
+            details: claimDetails,
+            update_date: claimDate,
+            status: claimStatus,
+        })
+    })
+    .then(response => {
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        return response.json();
+    })
+    .then(data => {
+      if (data.success && data.redirect) {
+          location.reload();
+        } else {
+            alert('ไม่สามารถบันทึกรายละเอียดได้: ' + (data.message || 'เกิดข้อผิดพลาด.'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('เกิดข้อผิดพลาด.');
+    });
+}
+
+document.getElementById('completeWorkModal').addEventListener('show.bs.modal', function (event) {
+    var button = event.relatedTarget;
+    var claimId = button.getAttribute('data-complete-id');
+    window.currentClaimId = claimId; 
+    document.getElementById('method_of_repair').value = '';
+    document.getElementById('cost').value = '';
+    document.getElementById('operator').value = '';
+});
+
+function saveCompleteWork() {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const claimId = "{{ claim.pk }}";
+    const methodOfRepair = document.getElementById('method_of_repair').value;
+    const cost = document.getElementById('cost').value;
+    const operator = document.getElementById('operator').value;
+
+    fetch(`/requests/complete_claim/${claimId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify({
+            method_of_repair: methodOfRepair,
+            cost: cost,
+            operator: operator
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('อัปเดตสำเร็จ!');
+            location.reload();
+        } else {
+            alert('เกิดข้อผิดพลาด: ' + data.error);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+</script>
+{% endblock  %}

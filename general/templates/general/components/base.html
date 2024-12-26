@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="{% static 'general/vendor/quill/quill.bubble.css' %}">
     <link rel="stylesheet" href="{% static 'general/vendor/remixicon/remixicon.css' %}">
     <link rel="stylesheet" href="{% static 'general/vendor/select2/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'general/vendor/DataTables/datatables.min.css' %}">
     <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" /> -->
 
 </head>
@@ -33,8 +34,8 @@
     {% include 'general/components/site_footer.html' %}
 
 
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="{% static 'general/js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'general/vendor/select2/js/select2.min.js' %}"></script>
     <script src="{% static 'general/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'general/vendor/apexcharts/apexcharts.min.js' %}"></script>
     <script src="{% static 'general/vendor/glightbox/js/glightbox.min.js' %} "></script>
@@ -43,40 +44,45 @@
     <script src="{% static 'general/vendor/quill/quill.js' %}"></script>
     <script src="{% static 'general/vendor/tinymce/tinymce.min.js' %}"></script>
     <script src="{% static 'general/vendor/DataTables/datatables.min.js' %}"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script> -->
-    <script src="{% static 'general/vendor/select2/js/select2.min.js' %}"></script>
     <script src="{% static 'general/js/main.js' %}"></script>
+    <script src="{% static 'general/js/function.js' %}"></script>
     
-    <script>      
-        $(document).ready(function() {
-            const userNameField = $('#{{ form.user_name.id_for_label }}');
-            if (userNameField.length) {
-                userNameField.select2({
-                    placeholder: "---------",
-                    allowClear: true
-                });
-            }
+    <script>
 
-            $('#user_name_select').change(function() {
-                var userId = $(this).val();
-                if (userId) {
-                    $.ajax({
-                        url: "{% url 'get_user_details' %}",
-                        data: {
-                            'user_id': userId
-                        },
-                        success: function(data) {
-                            $('#id_user_department').val(data.department);
-                            $('#id_user_contact').val(data.contact);
-                        }
-                    });
-                } else {
-                    $('#id_user_department').val('');
-                    $('#id_user_contact').val('');
-                }
+    $(document).ready(function() {
+        $('.select2').select2(); 
+    });
+
+    // Select2 Form Service Request
+    $(document).ready(function() {
+        const userNameField = $('#{{ form.user_name.id_for_label }}');
+        if (userNameField.length) {
+            userNameField.select2({
+                placeholder: "---------",
+                allowClear: true
             });
-        });
-    </script>
+        }
 
+        $('#user_name_select').change(function() {
+            var userId = $(this).val();
+            if (userId) {
+                $.ajax({
+                    url: "{% url 'get_user_details' %}",
+                    data: {
+                        'user_id': userId
+                    },
+                    success: function(data) {
+                        $('#id_user_department').val(data.department);
+                        $('#id_user_contact').val(data.contact);
+                    }
+                });
+            } else {
+                $('#id_user_department').val('');
+                $('#id_user_contact').val('');
+            }
+        });
+    });
+
+    </script>
 </body>
 </html>

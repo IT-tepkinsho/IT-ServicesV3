@@ -2,8 +2,9 @@ from django.urls import path
 from .views import (camera_cctv_create, camera_cctv_delete, camera_cctv_list, camera_cctv_update, computer_create, computer_delete, computer_list, computer_update, equipment_list, 
                     equipment_create, equipment_update, equipment_delete, get_keyboard_details, get_mouse_details, get_owner_details, get_printer_details, get_scanner_details, get_software_details, get_ups_details, 
                     keyboard_create, keyboard_delete, keyboard_list, keyboard_update, monitor_create, monitor_list, monitor_delete, monitor_update, mouse_create, mouse_delete, 
-                    mouse_list, mouse_update, network_create, network_delete, network_list, network_update, printer_create, printer_delete, printer_list, printer_update, scanner_create, scanner_delete, scanner_list, 
-                    scanner_update, server_list, server_create, server_update, server_delete, software_create, software_delete, software_list, software_update, ups_create, ups_delete, ups_list, ups_update, get_monitor_details)
+                    mouse_list, mouse_update, network_create, network_delete, network_list, network_update, other_create, other_delete, other_list, other_update, printer_create, printer_delete, printer_list, printer_update, scanner_create, scanner_delete, scanner_list, 
+                    scanner_update, server_list, server_create, server_update, server_delete, software_create, software_delete, software_list, software_update, tablet_create, tablet_delete, tablet_list, tablet_update, ups_create, 
+                    ups_delete, ups_list, ups_update, get_monitor_details)
 
 urlpatterns = [
     path('', equipment_list, name='equipment_list'),
@@ -62,4 +63,13 @@ urlpatterns = [
     path('softwares/create/', software_create, name='software_create'),
     path('softwares/update/<int:pk>/', software_update, name='software_update'),
     path('softwares/delete/<int:pk>/', software_delete, name='software_delete'),
+    path('tablets/', tablet_list, name='tablet_list'),
+    path('tablets/create/', tablet_create, name='tablet_create'),
+    path('tablets/update/<int:pk>/', tablet_update, name='tablet_update'),
+    path('tablets/delete/<int:pk>/', tablet_delete, name='tablet_delete'),
+    path('others/', other_list, name='other_list'),
+    path('others/create/', other_create, name='other_create'),
+    path('others/update/<int:pk>/', other_update, name='other_update'),
+    path('others/delete/<int:pk>/', other_delete, name='other_delete'),
+
 ]

@@ -1,4 +1,4 @@
-from platform import mac_ver
+
 from django.db import models
 from repair_management.models import Vendor
 from user_management.models import User
@@ -160,9 +160,18 @@ class GroupProgram(models.Model):
 
     def __str__(self):
         return f"{self.name}"
-    
+
+class SoftwareType(models.Model):
+    name = models.CharField(max_length=100, null=True, blank=True)
+    group = models.ForeignKey(GroupProgram, on_delete=models.SET_NULL, null=True, blank=True, related_name='software_types')
+
 
 class Software(models.Model):
+    STATUS_CHOICES = [
+        ('enable', 'enable'),
+        ('disable', 'disable'),
+    ]
+        
     equipment_code = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=100, null=True, blank=True)
     version = models.CharField(max_length=50, null=True, blank=True)
@@ -170,7 +179,10 @@ class Software(models.Model):
     cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     computer = models.ForeignKey('Computer', on_delete=models.SET_NULL, null=True, blank=True, related_name='install_software')
     group_program = models.ForeignKey(GroupProgram, on_delete=models.SET_NULL, null=True, blank=True, related_name='software')
+    software_type = models.ForeignKey(SoftwareType, on_delete=models.SET_NULL, null=True, blank=True, related_name='software')
+    status = models.CharField(choices=STATUS_CHOICES, max_length=20, null=True, blank=True) #สถานะ software
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='software')
+    other = models.TextField(null=True, blank=True, verbose_name='หมายเหตุ')
 
     def __str__(self):
         return f" {self.equipment_code} ({self.name})"
@@ -216,9 +228,7 @@ class Computer(models.Model):
     ups_model = models.CharField(max_length=255, null=True, blank=True)
     scanner = models.ForeignKey(Scanner, on_delete=models.SET_NULL, null=True, verbose_name="Scanner")
     scanner_model = models.CharField(max_length=255, null=True, blank=True)
-    software = models.ForeignKey(Software, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="software license", related_name='computers')
-    software_name = models.CharField(max_length=255, null=True, blank=True)
-    license_key = models.CharField(max_length=255, null=True, blank=True)
+    software = models.ManyToManyField(Software, blank=True, related_name='software_computers')
     program = models.CharField(max_length=255, null=True, blank=True, verbose_name="โปรแกรมพิเศษ")
     purchase_date = models.DateField(null=True, blank=True)
     equipment_type = models.ForeignKey(EquipmentType, on_delete=models.SET_NULL, null=True, blank=True, related_name='computers')
@@ -226,7 +236,7 @@ class Computer(models.Model):
     department = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
-        return f" {self.equipment_code} ({self.owner})"
+        return f" {self.equipment_code}"
 
 class Network(models.Model):
     equipment_code = models.CharField(max_length=50, unique=True)
@@ -255,6 +265,37 @@ class CameraCCTV(models.Model):
     ip_address = models.CharField(max_length=50, null=True, blank=True)
     warranty = models.DateField(null=True, blank=True)
     vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, blank=True, related_name='cctvs')
+    condition = models.ForeignKey(EquipmentCondition, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สภาพอุปกรณ์")
     status = models.ForeignKey(EquipmentStatus, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สถานะอุปกรณ์")
     equipment_type = models.ForeignKey(EquipmentType, on_delete=models.CASCADE, related_name='cctvs')
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='cctvs')
+
+class Tablet(models.Model):
+    equipment_code = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=100, null=True, blank=True)
+    brand = models.CharField(max_length=50, null=True, blank=True)
+    model = models.CharField(max_length=50, null=True, blank=True)
+    cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    ip_address = models.CharField(max_length=50, null=True, blank=True)
+    warranty = models.DateField(null=True, blank=True)
+    vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, blank=True, related_name='tablets')
+    condition = models.ForeignKey(EquipmentCondition, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สภาพอุปกรณ์")
+    status = models.ForeignKey(EquipmentStatus, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สถานะอุปกรณ์")
+    equipment_type = models.ForeignKey(EquipmentType, on_delete=models.CASCADE, related_name='tablets')
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='tablets')
+    department = models.CharField(max_length=50, null=True, blank=True)
+
+class Other(models.Model):
+    equipment_code = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=100, null=True, blank=True)
+    brand = models.CharField(max_length=50, null=True, blank=True)
+    model = models.CharField(max_length=50, null=True, blank=True)
+    cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    ip_address = models.CharField(max_length=50, null=True, blank=True)
+    warranty = models.DateField(null=True, blank=True)
+    vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, blank=True, related_name='others')
+    condition = models.ForeignKey(EquipmentCondition, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สภาพอุปกรณ์")
+    status = models.ForeignKey(EquipmentStatus, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="สถานะอุปกรณ์")
+    equipment_type = models.ForeignKey(EquipmentType, on_delete=models.CASCADE, related_name='others')
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='others')
+    department = models.CharField(max_length=50, null=True, blank=True)

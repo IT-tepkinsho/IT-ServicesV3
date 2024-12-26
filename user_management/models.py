@@ -14,15 +14,15 @@ class User(models.Model):
         ('user', 'User'),
     ]
 
-    nameEN = models.CharField(max_length=100, verbose_name='ชื่ออังกฤษ')
-    nameTH = models.CharField(max_length=100, verbose_name='ชื่อไทย')
+    nameEN = models.CharField(max_length=100, null=True, blank=True, verbose_name='ชื่ออังกฤษ')
+    nameTH = models.CharField(max_length=100, null=True, blank=True, verbose_name='ชื่อไทย')
     department = models.ForeignKey(Department, related_name='dept', on_delete=models.CASCADE, verbose_name='ฝ่าย')
     phone_number = models.CharField(max_length=15, verbose_name='เบอร์โต๊ะ')
     email = models.EmailField(max_length=254, verbose_name='อีเมล')
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, verbose_name='ระดับผู้ใช้งาน')
     name = models.CharField(max_length=50, null=True, verbose_name='ชื่อกลาง')
-    username = models.CharField(max_length=150, unique=True, verbose_name='ชื่อผู้ใช้งาน')
-    password = models.CharField(max_length=128, verbose_name='รหัสผ่าน')  # เก็บรหัสผ่านแบบเข้ารหัส
+    username = models.CharField(max_length=150, null=True, blank=True, unique=True, verbose_name='ชื่อผู้ใช้งาน')
+    password = models.CharField(max_length=128, null=True, blank=True, verbose_name='รหัสผ่าน')  # เก็บรหัสผ่านแบบเข้ารหัส
 
     def __str__(self):
         return f"{self.nameTH}"
